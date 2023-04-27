@@ -80,17 +80,17 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
             } else if (json.has(PacketDataKeys.TYPE_EVENT)) {
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
                 switch (typeEvent) {
-                    case "db":
+                    case "db": // dashboard
                         Application.lwafCurrentUser = (User) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ACCOUNT), User.class);
                         HashMap<String, Object> data = new HashMap<>();
                         data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_LIST);
                         this.socketHelper.sendData(new JSONObject(data));
                         break;
-                    case "rli":
+                    case "rli": // room list
                         List<RoomInLobby> roomsInLobby = JsonUtils.convertJsonNodeToList(json.get("rr"), RoomInLobby.class);
                         changesRooms(roomsInLobby);
                         break;
-                    case "lo":
+                    case "lo": // logout
                         SharedPreferences sPref = getSharedPreferences("lwaf_user", 0);
                         SharedPreferences.Editor ed = sPref.edit();
                         ed.putString("access_token", "");
@@ -101,13 +101,13 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
             } else if (json.has(PacketDataKeys.ROOM_TYPE_EVENT)) {
                 String roomTypeEvent = json.get(PacketDataKeys.ROOM_TYPE_EVENT).asText();
                 switch(roomTypeEvent) {
-                    case "rc":
+                    case "rc": // room create
                         RoomInLobby newRoom = JsonUtils.convertJsonNodeToObject(json.get("rr"), RoomInLobby.class);
                         List<RoomInLobby> newList = new ArrayList<>(rooms);
                         newList.add(newRoom);
                         changesRooms(newList);
                         break;
-                    case "pcs":
+                    case "pcs": // players count size
                         String roomId = json.get(PacketDataKeys.ROOM_IDENTIFICATOR).asText();
                         for (RoomInLobby roomInLobby : rooms) {
                             if (roomInLobby.roomId.equals(roomId)) {
@@ -116,7 +116,7 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                         }
                         changesRooms(rooms);
                         break;
-                    case "dr":
+                    case "dr": // delete room
                         Iterator<RoomInLobby> it = rooms.iterator();
                         while (it.hasNext()) {
                             if (it.next().roomId.equals(json.get(PacketDataKeys.ROOM_IDENTIFICATOR).asText())) {
