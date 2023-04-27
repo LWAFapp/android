@@ -43,7 +43,7 @@ public class BaseActivity extends ABCActivity implements SocketHelper.SocketList
     public void onConnected() {
         String access_token = getSharedPreferences("lwaf_user", 0).getString("access_token", "");
         if (access_token.isEmpty()) {
-            newActivity(WelcomeActivity.class, true);
+            newActivity(WelcomeActivity.class, true, null);
         } else {
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ACCOUNT_SIGNIN);
@@ -64,10 +64,10 @@ public class BaseActivity extends ABCActivity implements SocketHelper.SocketList
         this.runOnUiThread(() -> {
             if (json.has(PacketDataKeys.ERROR)) {
                 new DialogTextBox(BaseActivity.this, Config.ERRORS.get(json.get(PacketDataKeys.ERROR).asInt())).show();
-                newActivity(WelcomeActivity.class, true);
+                newActivity(WelcomeActivity.class, true, null);
             } else if (json.get(PacketDataKeys.TYPE_EVENT).asText().equals(PacketDataKeys.ACCOUNT_SIGNIN)) {
                 Application.lwafCurrentUser = (User) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ACCOUNT), User.class);
-                newActivity(DashboardFragment.class, true);
+                newActivity(DashboardFragment.class, true, null);
             }
         });
     }

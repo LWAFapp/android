@@ -81,6 +81,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".room.RoomActivity"
+            android:exported="true"
+            android:label="@string/room_label"
+            android:theme="@style/Base.Theme.LWAF">
+            <intent-filter>
+                <action android:name="com.Zakovskiy.lwaf.room.RoomActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@
     <string name="login_activity_label">LoginActivity</string>
     <string name="registration_activity_label">RegistrationActivity</string>
     <string name="global_conversation_label">GlobalConversationActivity</string>
+    <string name="room_label">RoomActivity</string>
     <string name="welcome_activity_label">WelcomeActivity</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>

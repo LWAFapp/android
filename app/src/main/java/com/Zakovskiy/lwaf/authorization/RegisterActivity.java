@@ -82,7 +82,7 @@ public class RegisterActivity extends ABCActivity implements SocketHelper.Socket
                     SharedPreferences.Editor ed = sPref.edit();
                     ed.putString("access_token", Application.lwafCurrentUser.accessToken);
                     ed.apply();
-                    newActivity(DashboardFragment.class, true);
+                    newActivity(DashboardFragment.class, true, null);
                 }
             }
             Logs.info("RECV: " + json.toString());

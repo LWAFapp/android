@@ -17,6 +17,7 @@ import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.network.SocketHelper;
+import com.Zakovskiy.lwaf.room.RoomActivity;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
@@ -24,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -95,7 +97,13 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                         SharedPreferences.Editor ed = sPref.edit();
                         ed.putString("access_token", "");
                         ed.apply();
-                        newActivity(WelcomeActivity.class, true);
+                        newActivity(WelcomeActivity.class, true, null);
+                        break;
+                    case "rj": // room join
+                        RoomInLobby room = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ROOM), RoomInLobby.class);
+                        Bundle b = new Bundle();
+                        b.putSerializable("room", room);
+                        newActivity(RoomActivity.class, b);
                         break;
                 }
             } else if (json.has(PacketDataKeys.ROOM_TYPE_EVENT)) {
