@@ -6,6 +6,7 @@ public enum MessageType {
     LEFT(3);
 
     private Integer type;
+
     private MessageType(Integer type) {
         this.type = type;
     }

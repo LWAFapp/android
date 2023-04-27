@@ -14,6 +14,7 @@ import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.dashboard.adapters.RoomsAdapter;
 import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
+import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
@@ -110,7 +111,7 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                         String roomId = json.get(PacketDataKeys.ROOM_IDENTIFICATOR).asText();
                         for (RoomInLobby roomInLobby : rooms) {
                             if (roomInLobby.roomId.equals(roomId)) {
-                                roomInLobby.players = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), Object.class);
+                                roomInLobby.players = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), ShortUser.class);
                             }
                         }
                         changesRooms(rooms);
