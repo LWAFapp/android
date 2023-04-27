@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context="com.Zakovskiy.lwaf.authorization.RegisterActivity">
+
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/registration"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rectangle"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="200sp"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_title"
+            android:textColorHint="@color/hint"
+            app:counterEnabled="true"
+            app:counterMaxLength="15">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextLogin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLength="15"
+                android:inputType="text"
+                android:textColor="#FFFFFF" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="200sp"
+            android:layout_height="wrap_content"
+            android:hint="@string/password_hint"
+            app:endIconMode="password_toggle"
+            android:textColorHint="@color/hint">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLength="50"
+                android:inputType="textPassword"
+                android:textColor="#FFFFFF"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonLogIn"
+            android:layout_width="130sp"
+            android:layout_height="35sp"
+            android:layout_marginTop="5sp"
+            android:background="@drawable/rounded"
+            android:onClick="onRegistration"
+            android:text="@string/registration"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:onClick="onHavedAccount"
+            android:text="@string/you_have_account"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

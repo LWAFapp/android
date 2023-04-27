@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.LWAF"
+        android:name=".application.Application"
+        tools:targetApi="31">
+        <activity
+            android:name=".BaseActivity"
+            android:exported="true"
+            android:label="@string/title_activity_base"
+            android:theme="@style/Base.Theme.LWAF">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".authorization.LoginActivity"
+            android:exported="true"
+            android:label="@string/login_activity_label"
+            android:theme="@style/Base.Theme.LWAF">
+            <intent-filter>
+                <action android:name="com.Zakovskiy.lwaf.authorization.LoginActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".dashboard.DashboardFragment"
+            android:exported="true"
+            android:label="@string/dashboard_activity_label"
+            android:theme="@style/Base.Theme.LWAF">
+            <intent-filter>
+                <action android:name="com.Zakovskiy.lwaf.dashboard.DashboardFragment" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".WelcomeActivity"
+            android:exported="true"
+            android:label="@string/welcome_activity_label"
+            android:theme="@style/Base.Theme.LWAF">
+            <intent-filter>
+                <action android:name="com.Zakovskiy.lwaf.WelcomeActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".authorization.RegisterActivity"
+            android:exported="true"
+            android:label="@string/registration_activity_label"
+            android:theme="@style/Base.Theme.LWAF">
+            <intent-filter>
+                <action android:name="com.Zakovskiy.lwaf.authorization.RegisterActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".globalConversation.GlobalConversationActivity"
+            android:exported="true"
+            android:label="@string/global_conversation_label"
+            android:theme="@style/Base.Theme.LWAF">
+            <intent-filter>
+                <action android:name="com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

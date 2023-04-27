@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/background"
+    tools:context=".WelcomeActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="400sp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="#FFFFFF"
+            android:textSize="70sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_lozung"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rectangle"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="25sp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonLogIn2"
+            android:layout_width="250sp"
+            android:layout_height="50sp"
+            android:background="@drawable/rounded"
+            android:fontFamily="sans-serif"
+            android:onClick="onLogin"
+            android:text="@string/login"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5sp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonLogIn3"
+            android:layout_width="250sp"
+            android:layout_height="50sp"
+            android:background="@drawable/rounded"
+            android:fontFamily="sans-serif"
+            android:onClick="onRegistration"
+            android:text="@string/registration"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>
