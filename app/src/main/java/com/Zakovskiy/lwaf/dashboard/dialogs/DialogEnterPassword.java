@@ -8,6 +8,7 @@ import android.widget.EditText;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
 
@@ -31,12 +32,12 @@ public class DialogEnterPassword extends Dialog {
         getWindow().setBackgroundDrawableResource(R.color.transparent);
         setContentView(R.layout.dialog_room_password);
         setCancelable(true);
-        EditText roomPassword = findViewById(R.id.editRoomPassword);
+        TextInputLayout roomPassword = findViewById(R.id.editRoomPassword);
         findViewById(R.id.button_submit).setOnClickListener(view -> {
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_JOIN);
             data.put(PacketDataKeys.ROOM_IDENTIFICATOR, this.roomId);
-            data.put(PacketDataKeys.ROOM_PASSWORD, roomPassword);
+            data.put(PacketDataKeys.ROOM_PASSWORD, roomPassword.getEditText().getText().toString());
             socketHelper.sendData(new JSONObject(data));
             DialogEnterPassword.this.dismiss();
         });
