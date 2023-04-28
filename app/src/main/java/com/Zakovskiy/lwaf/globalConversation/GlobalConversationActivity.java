@@ -20,6 +20,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private ListView listMessages;
 
     private MessagesAdapter messagesAdapter;
+    private List<GlobalMessage> globalMessages = new ArrayList<>();;
 
 
     @Override
@@ -59,7 +61,10 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
             dataMessage.put(PacketDataKeys.CONTENT, this.inputNewMessage.getEditText().getText().toString());
             dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, "");
             this.socketHelper.sendData(new JSONObject(dataMessage));
+            this.inputNewMessage.getEditText().setText("");
         });
+        this.messagesAdapter = new MessagesAdapter(this, this.globalMessages);
+        this.listMessages.setAdapter(this.messagesAdapter);
     }
 
     @Override
@@ -105,16 +110,13 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие о юзерах чата. Здесь должны быть обработки ListView и адаптеров
                          */
                         List<ShortUser> usersInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), ShortUser.class);
-                        messagesAdapter = new MessagesAdapter(this, usersInConversation, null);
-                        listMessages.setAdapter(messagesAdapter);
                         break;
                     case "gcgm":
                         /*
                         Событие о сообщениях чата. Тоже самое что и выше.
                          */
                         List<GlobalMessage> messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), GlobalMessage.class);
-                        messagesAdapter = new MessagesAdapter(this, null, messagesInConversation);
-                        listMessages.setAdapter(messagesAdapter);
+                        changesMessages(messagesInConversation);
                         break;
                     case "gcnm":
                         /*
@@ -137,6 +139,12 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                 }
             }
         });
+    }
+
+    public void changesMessages(List<GlobalMessage> list) {
+        globalMessages.clear();
+        globalMessages.addAll(list);
+        messagesAdapter.notifyDataSetChanged();
     }
 
     @Override
