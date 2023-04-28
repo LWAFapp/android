@@ -9,7 +9,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/titleBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -20,37 +20,48 @@
                 android:textSize="20sp" />
         </LinearLayout>
         <LinearLayout android:gravity="center" android:orientation="vertical" android:background="@color/white" android:padding="24dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="150dp">
-
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editRoomTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:hint="@string/room_name"
-                android:inputType="text"
-                android:textColor="#000000"
-                android:textColorHint="@color/hint" />
+                android:textColorHint="@color/hint">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLength="20"
+                    android:inputType="text"
+                    android:textColor="#000000"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editRoomPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:hint="@string/password_hint"
-                android:inputType="text"
-                android:textColor="#000000"
-                android:textColorHint="@color/hint" />
-
-            <EditText
+                app:endIconMode="password_toggle"
+                android:textColorHint="@color/hint">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLength="10"
+                    android:inputType="textPassword"
+                    android:textColor="#000000"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editRoomPlayersCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="2"
                 android:hint="@string/players_count_size"
-                android:inputType="number"
-                android:text="5"
-                android:textColor="#000000"
-                android:textColorHint="@color/hint" />
+                android:textColorHint="@color/hint">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLength="1"
+                    android:text="5"
+                    android:inputType="number"
+                    android:textColor="#000000"/>
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <LinearLayout
