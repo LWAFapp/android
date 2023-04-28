@@ -71,4 +71,6 @@
     <string name="this_room_with_password">Эта комната под замком</string>
     <string name="global_conversation">Общий чат</string>
     <string name="message">Сообщение</string>
+    <string name="username">Username</string>
+    <string name="plain_message">Message</string>
 </resources>

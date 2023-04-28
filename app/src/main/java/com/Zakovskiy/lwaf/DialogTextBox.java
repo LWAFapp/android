@@ -16,7 +16,7 @@ public class DialogTextBox extends Dialog {
         super(context);
         initDialog(null, message);
     }
-
+    /*pudj*/
     public DialogTextBox(Context context, String title, String message) {
         super(context);
         initDialog(title, message);

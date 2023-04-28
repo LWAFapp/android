@@ -7,6 +7,7 @@ import android.widget.ListView;
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
 import com.Zakovskiy.lwaf.models.GlobalMessage;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.ShortUser;
@@ -28,6 +29,9 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private TextInputLayout inputNewMessage;
     private ListView listUsers;
     private ListView listMessages;
+
+    private MessagesAdapter messagesAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +105,16 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие о юзерах чата. Здесь должны быть обработки ListView и адаптеров
                          */
                         List<ShortUser> usersInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), ShortUser.class);
+                        messagesAdapter = new MessagesAdapter(this, usersInConversation, null);
+                        listMessages.setAdapter(messagesAdapter);
                         break;
                     case "gcgm":
                         /*
                         Событие о сообщениях чата. Тоже самое что и выше.
                          */
                         List<GlobalMessage> messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), GlobalMessage.class);
+                        messagesAdapter = new MessagesAdapter(this, null, messagesInConversation);
+                        listMessages.setAdapter(messagesAdapter);
                         break;
                     case "gcnm":
                         /*
