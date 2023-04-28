@@ -20,6 +20,7 @@ import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.room.RoomActivity;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
+import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -125,13 +126,15 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                         changesRooms(rooms);
                         break;
                     case "dr": // delete room
-                        Iterator<RoomInLobby> it = rooms.iterator();
+                        List<RoomInLobby> newRooms = new ArrayList<>(rooms);
+                        Iterator<RoomInLobby> it = newRooms.iterator();
                         while (it.hasNext()) {
                             if (it.next().roomId.equals(json.get(PacketDataKeys.ROOM_IDENTIFICATOR).asText())) {
+                                Logs.debug("remove room");
                                 it.remove();
                             }
                         }
-                        changesRooms(this.rooms);
+                        changesRooms(newRooms);
                         break;
                 }
             }
