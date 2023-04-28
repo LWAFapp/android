@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:maxLength="1"
-                    android:text="5"
+                    android:text="@string/default_players_size"
                     android:inputType="number"
                     android:textColor="#000000"/>
             </com.google.android.material.textfield.TextInputLayout>

@@ -65,7 +65,8 @@
     <string name="chat">Чат</string>
     <string name="im">Я</string>
     <string name="room_name">Название комнаты</string>
-    <string name="players_count_size">Количество игроков</string>
+    <string name="players_count_size">Количество пользователей</string>
+    <string name="default_players_size">5</string>
     <string name="enter_password">Ввести пароль</string>
     <string name="this_room_with_password">Эта комната под замком</string>
     <string name="global_conversation">Общий чат</string>
