@@ -16,6 +16,7 @@ import com.Zakovskiy.lwaf.dashboard.DashboardFragment;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
 
@@ -39,20 +40,20 @@ public class DialogCreateRoom extends Dialog {
         setContentView(R.layout.dialog_create_room);
         setCancelable(true);
         String last_room_name = this.context.getSharedPreferences("lwaf_user", 0).getString("last_room_name", "");
-        EditText roomName = findViewById(R.id.editRoomTitle);
-        roomName.setText(last_room_name);
-        EditText roomPlayersCountSize = findViewById(R.id.editRoomPlayersCount);
-        EditText roomPassword = findViewById(R.id.editRoomPassword);
-        ((LinearLayout) findViewById(R.id.button_submit)).setOnClickListener(view -> {
+        TextInputLayout roomName = findViewById(R.id.editRoomTitle);
+        roomName.getEditText().setText(last_room_name);
+        TextInputLayout roomPlayersCountSize = findViewById(R.id.editRoomPlayersCount);
+        TextInputLayout roomPassword = findViewById(R.id.editRoomPassword);
+        findViewById(R.id.button_submit).setOnClickListener(view -> {
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_CREATE);
-            data.put(PacketDataKeys.ROOM_NICKNAME, roomName.getText().toString());
-            data.put(PacketDataKeys.ROOM_PASSWORD, roomPassword.getText().toString());
-            data.put(PacketDataKeys.ROOM_PLAYERS_COUNT, Integer.valueOf(roomPlayersCountSize.getText().toString()));
+            data.put(PacketDataKeys.ROOM_NICKNAME, roomName.getEditText().getText().toString());
+            data.put(PacketDataKeys.ROOM_PASSWORD, roomPassword.getEditText().getText().toString());
+            data.put(PacketDataKeys.ROOM_PLAYERS_COUNT, Integer.valueOf(roomPlayersCountSize.getEditText().getText().toString()));
             this.socketHelper.sendData(new JSONObject(data));
             SharedPreferences sPref = this.context.getSharedPreferences("lwaf_user", 0);
             SharedPreferences.Editor ed = sPref.edit();
-            ed.putString("last_room_name", roomName.getText().toString());
+            ed.putString("last_room_name", roomName.getEditText().getText().toString());
             ed.apply();
             DialogCreateRoom.this.dismiss();
         });
