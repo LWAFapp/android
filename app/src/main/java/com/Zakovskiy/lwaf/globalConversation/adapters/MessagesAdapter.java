@@ -53,7 +53,8 @@ public class MessagesAdapter extends ArrayAdapter {
             TextView username = (TextView) view.findViewById(R.id.username_view);
             username.setText(globalMessage.user.nickname);
             TextView message = (TextView) view.findViewById(R.id.plain_message_view);
-            message.setText(this.messages.get(position).toString());
+            message.setText(globalMessage.message);
+
         }
 
         return view;
