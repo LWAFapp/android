@@ -40,9 +40,11 @@ public class DialogCreateRoom extends Dialog {
         setContentView(R.layout.dialog_create_room);
         setCancelable(true);
         String last_room_name = this.context.getSharedPreferences("lwaf_user", 0).getString("last_room_name", "");
+        Integer last_players_count_size = this.context.getSharedPreferences("lwaf_user", 0).getInt("last_room_players_count_size", 5);
         TextInputLayout roomName = findViewById(R.id.editRoomTitle);
         roomName.getEditText().setText(last_room_name);
         TextInputLayout roomPlayersCountSize = findViewById(R.id.editRoomPlayersCount);
+        roomPlayersCountSize.getEditText().setText(String.valueOf(last_players_count_size));
         TextInputLayout roomPassword = findViewById(R.id.editRoomPassword);
         findViewById(R.id.button_submit).setOnClickListener(view -> {
             HashMap<String, Object> data = new HashMap<>();
@@ -54,6 +56,7 @@ public class DialogCreateRoom extends Dialog {
             SharedPreferences sPref = this.context.getSharedPreferences("lwaf_user", 0);
             SharedPreferences.Editor ed = sPref.edit();
             ed.putString("last_room_name", roomName.getEditText().getText().toString());
+            ed.putInt("last_room_players_count_size", Integer.parseInt(roomPlayersCountSize.getEditText().getText().toString()));
             ed.apply();
             DialogCreateRoom.this.dismiss();
         });

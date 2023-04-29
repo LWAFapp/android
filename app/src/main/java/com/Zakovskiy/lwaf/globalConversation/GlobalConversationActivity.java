@@ -59,11 +59,12 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
         HashMap<String, Object> data = new HashMap<>();
         data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_LEFT);
+        this.socketHelper.unsubscribe(this);
         this.socketHelper.sendData(new JSONObject(data));
+        super.onStop();
     }
 
     @Override

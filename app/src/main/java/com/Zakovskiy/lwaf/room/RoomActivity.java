@@ -29,6 +29,12 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     }
 
     @Override
+    public void onStop() {
+        this.socketHelper.unsubscribe(this);
+        super.onStop();
+    }
+
+    @Override
     public void onReceive(JsonNode json) {
         this.runOnUiThread(() -> {
             if (json.has(PacketDataKeys.ERROR)) {
