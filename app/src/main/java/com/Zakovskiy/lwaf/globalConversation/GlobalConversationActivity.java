@@ -30,7 +30,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private TextInputLayout inputNewMessage;
     private ListView listUsers;
-
+    private ListView listMessages;
     private MessagesAdapter messagesAdapter;
     private List<GlobalMessage> globalMessages = new ArrayList<>();;
 
@@ -44,21 +44,17 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         this.socketHelper.sendData(new JSONObject(data));
         setContentView(R.layout.activity_global_conversation);
         this.listUsers = (ListView) findViewById(R.id.listViewUsers);
-        ListView listMessagesView = (ListView) findViewById(R.id.listViewMessages);
+        this.listMessages = (ListView) findViewById(R.id.listViewMessages);
         this.inputNewMessage = (TextInputLayout)findViewById(R.id.inputLayoutSendMessage);
         messagesAdapter = new MessagesAdapter(this, globalMessages);
-        listMessagesView.setAdapter(messagesAdapter);
+        this.listMessages.setAdapter(messagesAdapter);
         this.inputNewMessage.setEndIconOnClickListener(v -> {
-            /*
-            Отправка сообщения.
-            Можешь сделать ещё возможность отвечать на сообщения (параметр REPLY_MESSAGE_ID).
-             */
             HashMap<String, Object> dataMessage = new HashMap<>();
             dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_SEND_MESSAGE);
-            dataMessage.put(PacketDataKeys.CONTENT, this.inputNewMessage.getEditText().getText().toString());
+            dataMessage.put(PacketDataKeys.MESSAGE, this.inputNewMessage.getEditText().getText().toString());
+            this.inputNewMessage.getEditText().setText("");
             dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, "");
             this.socketHelper.sendData(new JSONObject(dataMessage));
-            this.inputNewMessage.getEditText().setText("");
         });
     }
 
@@ -114,6 +110,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Logs.info("GCGM RUNNING");
                         List<GlobalMessage> messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), GlobalMessage.class);
                         changesMessages(messagesInConversation);
+                        this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
                         break;
                     case "gcnm":
                         /*
