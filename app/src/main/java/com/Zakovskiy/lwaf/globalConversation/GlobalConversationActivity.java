@@ -30,7 +30,6 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private TextInputLayout inputNewMessage;
     private ListView listUsers;
-    private ListView listMessages;
 
     private MessagesAdapter messagesAdapter;
     private List<GlobalMessage> globalMessages = new ArrayList<>();;
@@ -44,14 +43,11 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_JOIN);
         this.socketHelper.sendData(new JSONObject(data));
         setContentView(R.layout.activity_global_conversation);
-        /*
-        В папке ./globaConversation/adapters создашь 2 адаптера для юзеров и сообщений, посмотришь
-            как я сделал это в списке рум (./dashboard/), и на основе этого сделаешь.
-        Все события с сервера можешь получать в логах (отдел Logcat).
-         */
         this.listUsers = (ListView) findViewById(R.id.listViewUsers);
-        this.listMessages = (ListView) findViewById(R.id.listViewMessages);
+        ListView listMessagesView = (ListView) findViewById(R.id.listViewMessages);
         this.inputNewMessage = (TextInputLayout)findViewById(R.id.inputLayoutSendMessage);
+        messagesAdapter = new MessagesAdapter(this, globalMessages);
+        listMessagesView.setAdapter(messagesAdapter);
         this.inputNewMessage.setEndIconOnClickListener(v -> {
             /*
             Отправка сообщения.
@@ -64,8 +60,6 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
             this.socketHelper.sendData(new JSONObject(dataMessage));
             this.inputNewMessage.getEditText().setText("");
         });
-        messagesAdapter = new MessagesAdapter(this, globalMessages);
-        this.listMessages.setAdapter(messagesAdapter);
     }
 
     @Override
@@ -145,6 +139,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     }
 
     public void changesMessages(List<GlobalMessage> list) {
+        Logs.debug("messages"+list.toString());
         globalMessages.clear();
         globalMessages.addAll(list);
         messagesAdapter.notifyDataSetChanged();

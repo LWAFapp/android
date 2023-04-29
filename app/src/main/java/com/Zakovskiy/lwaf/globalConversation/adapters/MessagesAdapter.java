@@ -25,7 +25,7 @@ public class MessagesAdapter extends ArrayAdapter<GlobalMessage> {
     private List<GlobalMessage> messages;
 
     public MessagesAdapter(Context context, List<GlobalMessage> messages) {
-        super(context, R.layout.item_user_message);
+        super(context, R.layout.item_user_message, messages);
         this.context = context;
         this.messages = messages;
     }
@@ -48,15 +48,19 @@ public class MessagesAdapter extends ArrayAdapter<GlobalMessage> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.item_user_message, parent, false);
         GlobalMessage globalMessage = getItem(position);
         Logs.info("MessagesAdapter RUNNING");
+        View view = new View(this.context);
         if (globalMessage.type == MessageType.TEXT) {
+            view = inflater.inflate(R.layout.item_user_message, parent, false);
             TextView username = (TextView) view.findViewById(R.id.username_view);
             username.setText(globalMessage.user.nickname);
             TextView message = (TextView) view.findViewById(R.id.plain_message_view);
             message.setText(globalMessage.message);
-
+        } else if (globalMessage.type == MessageType.JOIN) {
+            view = inflater.inflate(R.layout.item_system_message, parent, false);
+        } else if (globalMessage.type == MessageType.LEFT) {
+            view = inflater.inflate(R.layout.item_system_message, parent, false);
         }
 
         return view;

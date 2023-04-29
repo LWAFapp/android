@@ -13,15 +13,17 @@
             android:id="@+id/username_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/username" />
+            android:text="@string/username"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/plain_message_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/plain_message" />
+            android:paddingStart="5sp"
+            android:text="@string/plain_message"
+            android:textAlignment="viewStart" />
 
     </LinearLayout>
 
