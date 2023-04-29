@@ -64,8 +64,8 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
             this.socketHelper.sendData(new JSONObject(dataMessage));
             this.inputNewMessage.getEditText().setText("");
         });
-        this.messagesAdapter = new MessagesAdapter(this, this.globalMessages);
-        this.listMessages.setAdapter(this.messagesAdapter);
+        messagesAdapter = new MessagesAdapter(this, globalMessages);
+        this.listMessages.setAdapter(messagesAdapter);
     }
 
     @Override

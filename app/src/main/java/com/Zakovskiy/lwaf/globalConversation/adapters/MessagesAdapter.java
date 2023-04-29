@@ -19,7 +19,7 @@ import com.Zakovskiy.lwaf.utils.Logs;
 
 import java.util.List;
 
-public class MessagesAdapter extends ArrayAdapter {
+public class MessagesAdapter extends ArrayAdapter<GlobalMessage> {
 
     private Context context;
     private List<GlobalMessage> messages;
