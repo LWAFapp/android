@@ -111,7 +111,9 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Logs.info("GCGM RUNNING");
                         List<GlobalMessage> messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), GlobalMessage.class);
                         changesMessages(messagesInConversation);
-                        this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
+                        this.listMessages.post(()->{
+                            this.listMessages.setSelection(messagesAdapter.getCount() - 1);
+                        });
                         break;
                     case "gcnm":
                         /*
