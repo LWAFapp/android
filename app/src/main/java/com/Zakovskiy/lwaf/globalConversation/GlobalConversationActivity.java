@@ -14,6 +14,7 @@ import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
+import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.android.material.textfield.TextInputLayout;
@@ -110,11 +111,13 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие о юзерах чата. Здесь должны быть обработки ListView и адаптеров
                          */
                         List<ShortUser> usersInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), ShortUser.class);
+
                         break;
                     case "gcgm":
                         /*
                         Событие о сообщениях чата. Тоже самое что и выше.
                          */
+                        Logs.info("GCGM RUNNING");
                         List<GlobalMessage> messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), GlobalMessage.class);
                         changesMessages(messagesInConversation);
                         break;
