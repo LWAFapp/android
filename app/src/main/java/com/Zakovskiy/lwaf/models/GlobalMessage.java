@@ -20,5 +20,6 @@ public class GlobalMessage {
     public String userId = "";
     @JsonProperty("u")
     public ShortUser user = new ShortUser();
-
+    @JsonProperty("rm")
+    public GlobalMessage replyMessage;
 }
