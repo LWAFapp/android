@@ -10,11 +10,13 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/username_view"
+            android:id="@+id/message_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Кто-то вошел/вышел из чата" />
+            android:gravity="center"
+            android:text="Кто-то вошел/вышел из чата"
+            android:textColor="#00FF00" />
 
     </LinearLayout>
 </LinearLayout>

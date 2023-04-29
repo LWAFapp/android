@@ -59,8 +59,20 @@ public class MessagesAdapter extends ArrayAdapter<GlobalMessage> {
             message.setText(globalMessage.message);
         } else if (globalMessage.type == MessageType.JOIN) {
             view = inflater.inflate(R.layout.item_system_message, parent, false);
+            TextView message = (TextView) view.findViewById(R.id.message_view);
+            message.setText(String.format("%s %s %s",
+                    this.context.getString(R.string.user),
+                    globalMessage.user.nickname,
+                    this.context.getString(R.string.join)));
+
         } else if (globalMessage.type == MessageType.LEFT) {
             view = inflater.inflate(R.layout.item_system_message, parent, false);
+            TextView message = (TextView) view.findViewById(R.id.message_view);
+            message.setTextColor(0xFFFF0000);
+            message.setText(String.format("%s %s %s",
+                    this.context.getString(R.string.user),
+                    globalMessage.user.nickname,
+                    this.context.getString(R.string.left)));
         }
 
         return view;

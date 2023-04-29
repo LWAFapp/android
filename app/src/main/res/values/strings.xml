@@ -73,4 +73,7 @@
     <string name="message">Сообщение</string>
     <string name="username">Username</string>
     <string name="plain_message">Message</string>
+    <string name="user">Пользователь </string>
+    <string name="join"> вошёл</string>
+    <string name="left"> вышел</string>
 </resources>

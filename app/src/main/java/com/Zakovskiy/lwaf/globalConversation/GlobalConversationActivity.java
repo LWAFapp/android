@@ -131,7 +131,13 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         /*
                         Событие если кто-то выйдет из чата. Тоже самое что и выше.
                          */
-                        String userId = json.get(PacketDataKeys.USER_ID).asText();
+                        String userIdLeft = json.get(PacketDataKeys.USER_ID).asText();
+                        break;
+                    case "gcpj":
+                        /*
+                        Событие если кто-то войдет в чат. Тоже самое что и выше.
+                         */
+                        String userIdJoin = json.get(PacketDataKeys.USER_ID).asText();
                         break;
                 }
             }
