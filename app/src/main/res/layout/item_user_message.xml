@@ -37,15 +37,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingStart="10sp">
+            android:paddingStart="10sp"
+            android:visibility="gone">
 
             <View
                 android:id="@+id/replyLine"
                 android:layout_width="2sp"
-                android:layout_height="50sp"
+                android:layout_height="match_parent"
+                android:layout_below="@id/replyContentMessage"
                 android:background="@android:color/white"
-                android:visibility="gone"></View>
+                android:visibility="visible"></View>
+
             <LinearLayout
+                android:id="@+id/replyContentMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -58,7 +62,7 @@
                     android:paddingStart="5sp"
                     android:text="@string/username"
                     android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/replyTextMessage"
@@ -67,7 +71,7 @@
                     android:paddingStart="5sp"
                     android:text="@string/plain_message"
                     android:textAlignment="viewStart"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
 
