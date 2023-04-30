@@ -145,12 +145,20 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие если кто-то выйдет из чата. Тоже самое что и выше.
                          */
                         String userIdLeft = json.get(PacketDataKeys.USER_ID).asText();
+                        for (ShortUser user: usersInConversation) {
+                            if (user.userId.equals(userIdLeft)) {
+                                usersInConversation.remove(usersInConversation.indexOf(user));
+                            }
+                        }
+                        changesUsers(usersInConversation);
                         break;
                     case "gcpj":
                         /*
                         Событие если кто-то войдет в чат. Тоже самое что и выше.
                          */
-                        String userIdJoin = json.get(PacketDataKeys.USER_ID).asText();
+                        ShortUser user = (ShortUser) JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.USER), ShortUser.class);
+                        usersInConversation.add(user);
+                        changesUsers(usersInConversation);
                         break;
                 }
             }
