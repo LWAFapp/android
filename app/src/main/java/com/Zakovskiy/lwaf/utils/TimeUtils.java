@@ -10,11 +10,9 @@ import java.util.TimeZone;
 
 public class TimeUtils {
     public static String getDateAndTime(long timestamp) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.US);
-        GregorianCalendar gregorianCalendar = new GregorianCalendar(TimeZone.getTimeZone("US/Central"));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
+        GregorianCalendar gregorianCalendar = new GregorianCalendar(TimeZone.getDefault());
         gregorianCalendar.setTimeInMillis(timestamp);
         return simpleDateFormat.format(gregorianCalendar.getTime());
-        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", new Locale("ru"));
-        //return simpleDateFormat.format(new Date());
     }
 }

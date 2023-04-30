@@ -58,7 +58,6 @@
                 android:layout_width="100sp"
                 android:layout_height="match_parent"
                 android:src="@drawable/testimage"
-                android:scaleType="fitXY"
                 app:civ_border_width="2dp"
                 app:civ_border_color="@color/white"
                 />
