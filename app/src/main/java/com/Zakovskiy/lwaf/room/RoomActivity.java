@@ -7,11 +7,13 @@ import android.widget.TextView;
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.globalConversation.adapters.UsersAdapter;
 import com.Zakovskiy.lwaf.room.adapters.MessagesAdapter;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.MessageRoom;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.network.SocketHelper;
+import com.Zakovskiy.lwaf.room.adapters.UsersInRoomAdapter;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
@@ -30,7 +32,9 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private RoomInLobby room;
     private ListView listMessages;
+    private ListView listUsers;
     private MessagesAdapter messagesAdapter;
+    private UsersInRoomAdapter usersAdapter;
     private List<ShortUser> roomUsers = new ArrayList<>();
     private List<MessageRoom> messagesRoom = new ArrayList<>();;
 
@@ -42,9 +46,12 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         this.room = (RoomInLobby) getIntent().getSerializableExtra("room");
         ((TextView)findViewById(R.id.textTitle)).setText(this.room.title);
         this.listMessages = (ListView) findViewById(R.id.listViewMessages);
+        this.listUsers = (ListView) findViewById(R.id.listViewUsers);
         TextInputLayout inputNewMessage = (TextInputLayout)findViewById(R.id.inputLayoutSendMessage);
+        usersAdapter = new UsersInRoomAdapter(this, getSupportFragmentManager(), roomUsers);
         messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), messagesRoom);
         this.listMessages.setAdapter(messagesAdapter);
+        this.listUsers.setAdapter(usersAdapter);
         inputNewMessage.setEndIconOnClickListener(v -> {
             HashMap<String, Object> dataMessage = new HashMap<>();
             dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_SEND_MESSAGE);

@@ -50,7 +50,6 @@ public class MenuButtonAdapter extends ArrayAdapter<MenuButton> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         MenuButton menuButton = getItem(position);
-        Logs.info("MenuButtonAdapter RUNNING"+menuButton.name);
         View view = inflater.inflate(R.layout.item_menu_button, parent, false);
         MaterialButton button = (MaterialButton)view.findViewById(R.id.buttonMenu);
         button.setText(menuButton.name);

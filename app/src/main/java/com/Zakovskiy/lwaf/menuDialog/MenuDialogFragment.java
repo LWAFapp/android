@@ -58,7 +58,6 @@ public class MenuDialogFragment extends DialogFragment {
 
         menuButtonAdapter = new MenuButtonAdapter(this.context, buttons);
         ((ListView)view.findViewById(R.id.menuButtonsList)).setAdapter(menuButtonAdapter);
-        buttons = this.buttons;
         menuButtonAdapter.notifyDataSetChanged();
         return builder.create();
     }
