@@ -127,6 +127,11 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие об удаление сообщения. Тоже самое что и выше.
                          */
                         String messageId = json.get(PacketDataKeys.MESSAGE_ID).asText();
+//                        for (MessageGlobal message: messagesInConversation) {
+//                            if (message.messageId == messageId) {
+//                                messagesInConversation.remove();
+//                            }
+//                        }
                         break;
                     case "gcpl":
                         /*

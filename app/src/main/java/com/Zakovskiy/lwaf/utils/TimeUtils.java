@@ -14,5 +14,7 @@ public class TimeUtils {
         GregorianCalendar gregorianCalendar = new GregorianCalendar(TimeZone.getDefault());
         gregorianCalendar.setTimeInMillis(timestamp);
         return simpleDateFormat.format(gregorianCalendar.getTime());
+        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", new Locale("ru"));
+        //return simpleDateFormat.format(new Date());
     }
 }
