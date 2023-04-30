@@ -39,6 +39,7 @@
             android:layout_weight="1"
             android:gravity="right"
             android:text="01/01/77 00:00"
-            android:textColor="#FFFFFF" />
+            android:textColor="#979797"
+            android:textSize="11sp" />
     </LinearLayout>
 </LinearLayout>

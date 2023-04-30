@@ -14,6 +14,7 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.models.MessageGlobal;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.utils.Logs;
+import com.Zakovskiy.lwaf.utils.TimeUtils;
 
 import java.util.List;
 
@@ -55,6 +56,8 @@ public class MessagesAdapter extends ArrayAdapter<MessageGlobal> {
             username.setText(messageGlobal.user.nickname);
             TextView message = (TextView) view.findViewById(R.id.plain_message_view);
             message.setText(messageGlobal.message);
+            TextView date = (TextView) view.findViewById(R.id.message_datetime);
+            date.setText((String) TimeUtils.getDateAndTime(messageGlobal.timeSend*1000+10800000));
         } else if (messageGlobal.type == MessageType.JOIN) {
             view = inflater.inflate(R.layout.item_system_message, parent, false);
             TextView message = (TextView) view.findViewById(R.id.message_view);
