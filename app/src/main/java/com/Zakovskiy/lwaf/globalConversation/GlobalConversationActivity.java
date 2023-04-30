@@ -1,15 +1,13 @@
 package com.Zakovskiy.lwaf.globalConversation;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ListView;
 
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
-import com.Zakovskiy.lwaf.models.GlobalMessage;
-import com.Zakovskiy.lwaf.models.RoomInLobby;
+import com.Zakovskiy.lwaf.models.MessageGlobal;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
@@ -32,7 +30,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private ListView listUsers;
     private ListView listMessages;
     private MessagesAdapter messagesAdapter;
-    private List<GlobalMessage> globalMessages = new ArrayList<>();;
+    private List<MessageGlobal> globalMessages = new ArrayList<>();;
 
 
     @Override
@@ -109,7 +107,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие о сообщениях чата. Тоже самое что и выше.
                          */
                         Logs.info("GCGM RUNNING");
-                        List<GlobalMessage> messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), GlobalMessage.class);
+                        List<MessageGlobal> messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), MessageGlobal.class);
                         changesMessages(messagesInConversation);
                         this.listMessages.post(()->{
                             this.listMessages.setSelection(messagesAdapter.getCount() - 1);
@@ -119,7 +117,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         /*
                         Событие о нью месседж. Тоже самое что и выше.
                          */
-                        GlobalMessage newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), GlobalMessage.class);
+                        MessageGlobal newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), MessageGlobal.class);
                         break;
                     case "gcdm":
                         /*
@@ -144,7 +142,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         });
     }
 
-    public void changesMessages(List<GlobalMessage> list) {
+    public void changesMessages(List<MessageGlobal> list) {
         Logs.debug("messages"+list.toString());
         globalMessages.clear();
         globalMessages.addAll(list);

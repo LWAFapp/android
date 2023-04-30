@@ -1,5 +1,6 @@
 package com.Zakovskiy.lwaf.models;
 
+import com.Zakovskiy.lwaf.models.abc.ABCMessage;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GlobalMessage {
+public class MessageGlobal extends ABCMessage {
     @JsonProperty("mid")
     public String messageId = "";
     @JsonProperty("m")
@@ -21,5 +22,5 @@ public class GlobalMessage {
     @JsonProperty("u")
     public ShortUser user = new ShortUser();
     @JsonProperty("rm")
-    public GlobalMessage replyMessage;
+    public MessageGlobal replyMessage;
 }

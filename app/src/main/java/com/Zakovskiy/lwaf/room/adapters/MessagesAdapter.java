@@ -1,4 +1,4 @@
-package com.Zakovskiy.lwaf.globalConversation.adapters;
+package com.Zakovskiy.lwaf.room.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,17 +12,18 @@ import androidx.annotation.Nullable;
 
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.models.MessageGlobal;
+import com.Zakovskiy.lwaf.models.MessageRoom;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.utils.Logs;
 
 import java.util.List;
 
-public class MessagesAdapter extends ArrayAdapter<MessageGlobal> {
+public class MessagesAdapter extends ArrayAdapter<MessageRoom> {
 
     private Context context;
-    private List<MessageGlobal> messages;
+    private List<MessageRoom> messages;
 
-    public MessagesAdapter(Context context, List<MessageGlobal> messages) {
+    public MessagesAdapter(Context context, List<MessageRoom> messages) {
         super(context, R.layout.item_user_message, messages);
         this.context = context;
         this.messages = messages;
@@ -33,7 +34,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageGlobal> {
     }
 
     @Override
-    public MessageGlobal getItem(int position) {
+    public MessageRoom getItem(int position) {
         return this.messages.get(position);
     }
 
@@ -46,7 +47,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageGlobal> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        MessageGlobal messageGlobal = getItem(position);
+        MessageRoom messageGlobal = getItem(position);
         Logs.info("MessagesAdapter RUNNING");
         View view = new View(this.context);
         if (messageGlobal.type == MessageType.TEXT) {
