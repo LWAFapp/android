@@ -59,7 +59,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageGlobal> {
             TextView message = (TextView) view.findViewById(R.id.plain_message_view);
             message.setText(messageGlobal.message);
             TextView date = (TextView) view.findViewById(R.id.message_datetime);
-            date.setText((String) TimeUtils.getDateAndTime(messageGlobal.timeSend*1000+10800000)); //Moscow time
+            date.setText((String) TimeUtils.getDateAndTime(messageGlobal.timeSend*1000)); //Moscow time
             if (messageGlobal.replyMessage != null) {
                 TextView reply_username = (TextView) view.findViewById(R.id.replyUsernameMessage);
                 reply_username.setVisibility(View.VISIBLE);
