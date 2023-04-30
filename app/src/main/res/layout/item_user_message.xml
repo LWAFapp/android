@@ -40,29 +40,34 @@
             android:paddingStart="10sp">
 
             <View
+                android:id="@+id/replyLine"
                 android:layout_width="2sp"
                 android:layout_height="50sp"
-                android:background="@android:color/white" >
-            </View>
+                android:background="@android:color/white"
+                android:visibility="gone"></View>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingStart="10sp">
+
                 <TextView
                     android:id="@+id/replyUsernameMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="5sp"
                     android:text="@string/username"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/replyTextMessage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingStart="5sp"
                     android:text="@string/plain_message"
-                    android:textAlignment="viewStart" />
+                    android:textAlignment="viewStart"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
 
