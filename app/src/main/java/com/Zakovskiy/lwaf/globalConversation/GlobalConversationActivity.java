@@ -134,7 +134,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                          */
                         String messageId = json.get(PacketDataKeys.MESSAGE_ID).asText();
                         for (MessageGlobal message: messagesInConversation) {
-                            if (message.messageId == messageId) {
+                            if (message.messageId.equals(messageId)) {
                                messagesInConversation.remove(messagesInConversation.indexOf(message));
                             }
                         }

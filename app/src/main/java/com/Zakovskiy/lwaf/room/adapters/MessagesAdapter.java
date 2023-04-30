@@ -10,25 +10,35 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.menuDialog.MenuButton;
 import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.MessageGlobal;
 import com.Zakovskiy.lwaf.models.MessageRoom;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.utils.Logs;
+import com.Zakovskiy.lwaf.utils.TimeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessagesAdapter extends ArrayAdapter<MessageRoom> {
 
     private Context context;
     private List<MessageRoom> messages;
+    private
+    FragmentManager fragmentManager;
 
-    public MessagesAdapter(Context context, List<MessageRoom> messages) {
+    public MessagesAdapter(Context context,
+                           FragmentManager fragmentManager, List<MessageRoom> messages) {
         super(context, R.layout.item_user_message, messages);
         this.context = context;
         this.messages = messages;
+        this.fragmentManager = fragmentManager;
     }
 
     public int getCount() {
@@ -58,6 +68,8 @@ public class MessagesAdapter extends ArrayAdapter<MessageRoom> {
             username.setText(messageGlobal.user.nickname);
             TextView message = (TextView) view.findViewById(R.id.plain_message_view);
             message.setText(messageGlobal.message);
+            TextView date = (TextView) view.findViewById(R.id.message_datetime);
+            date.setText((String) TimeUtils.getDateAndTime(messageGlobal.timeSend*1000)); //Moscow time
         } else if (messageGlobal.type == MessageType.JOIN) {
             view = inflater.inflate(R.layout.item_system_message, parent, false);
             TextView message = (TextView) view.findViewById(R.id.message_view);
@@ -76,11 +88,15 @@ public class MessagesAdapter extends ArrayAdapter<MessageRoom> {
                     this.context.getString(R.string.left)));
         }
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //((DialogFragment)new MenuDialogFragment(null)).show(context.fragment);
-            }
+        view.setOnClickListener(v -> {
+            List<MenuButton> menuButtons = new ArrayList<>();
+            menuButtons.add(new MenuButton("bebra", "#FFFFFF", (View vi)->{
+                Logs.debug("he");
+            }));
+            menuButtons.add(new MenuButton("bebrishe", "#F34E6E", (View vi)->{
+                Logs.debug("he");
+            }));
+            MenuDialogFragment.newInstance(context, menuButtons).show(fragmentManager.beginTransaction(), "MenuDialog");
         });
 
         return view;

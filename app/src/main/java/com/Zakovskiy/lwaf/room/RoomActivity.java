@@ -43,7 +43,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         ((TextView)findViewById(R.id.textTitle)).setText(this.room.title);
         this.listMessages = (ListView) findViewById(R.id.listViewMessages);
         TextInputLayout inputNewMessage = (TextInputLayout)findViewById(R.id.inputLayoutSendMessage);
-        messagesAdapter = new MessagesAdapter(this, messagesRoom);
+        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), messagesRoom);
         this.listMessages.setAdapter(messagesAdapter);
         inputNewMessage.setEndIconOnClickListener(v -> {
             HashMap<String, Object> dataMessage = new HashMap<>();
