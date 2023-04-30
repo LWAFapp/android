@@ -62,12 +62,10 @@ public class MessagesAdapter extends ArrayAdapter<MessageGlobal> {
             date.setText((String) TimeUtils.getDateAndTime(messageGlobal.timeSend*1000)); //Moscow time
             if (messageGlobal.replyMessage != null) {
                 TextView reply_username = (TextView) view.findViewById(R.id.replyUsernameMessage);
-                reply_username.setVisibility(View.VISIBLE);
                 reply_username.setText(messageGlobal.replyMessage.user.nickname);
                 TextView reply_message = (TextView) view.findViewById(R.id.replyTextMessage);
-                reply_message.setVisibility(View.VISIBLE);
                 reply_message.setText(messageGlobal.replyMessage.message);
-                view.findViewById(R.id.replyLine).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.replyLayout).setVisibility(View.VISIBLE);
             }
         } else if (messageGlobal.type == MessageType.JOIN) {
             view = inflater.inflate(R.layout.item_system_message, parent, false);

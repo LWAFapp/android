@@ -6,9 +6,10 @@ import android.widget.ListView;
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
-import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
+import com.Zakovskiy.lwaf.globalConversation.adapters.*;
 import com.Zakovskiy.lwaf.models.MessageGlobal;
 import com.Zakovskiy.lwaf.models.ShortUser;
+import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
@@ -30,8 +31,11 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private ListView listUsers;
     private ListView listMessages;
     private List<MessageGlobal> messagesInConversation;
+    private List<ShortUser> usersInConversation;
     private MessagesAdapter messagesAdapter;
-    private List<MessageGlobal> globalMessages = new ArrayList<>();;
+    private UsersAdapter usersAdapter;
+    private List<MessageGlobal> globalMessages = new ArrayList<>();
+    private List<ShortUser> globalUsers = new ArrayList<>();
 
 
     @Override
@@ -47,6 +51,8 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         this.inputNewMessage = (TextInputLayout)findViewById(R.id.inputLayoutSendMessage);
         messagesAdapter = new MessagesAdapter(this, globalMessages);
         this.listMessages.setAdapter(messagesAdapter);
+        usersAdapter = new UsersAdapter(this, globalUsers);
+        this.listUsers.setAdapter(usersAdapter);
         this.inputNewMessage.setEndIconOnClickListener(v -> {
             HashMap<String, Object> dataMessage = new HashMap<>();
             dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_SEND_MESSAGE);
@@ -100,8 +106,8 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         /*
                         Событие о юзерах чата. Здесь должны быть обработки ListView и адаптеров
                          */
-                        List<ShortUser> usersInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), ShortUser.class);
-
+                        usersInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), ShortUser.class);
+                        changesUsers(usersInConversation);
                         break;
                     case "gcgm":
                         /*
@@ -127,11 +133,12 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие об удаление сообщения. Тоже самое что и выше.
                          */
                         String messageId = json.get(PacketDataKeys.MESSAGE_ID).asText();
-//                        for (MessageGlobal message: messagesInConversation) {
-//                            if (message.messageId == messageId) {
-//                                messagesInConversation.remove();
-//                            }
-//                        }
+                        for (MessageGlobal message: messagesInConversation) {
+                            if (message.messageId == messageId) {
+                               messagesInConversation.remove(messagesInConversation.indexOf(message));
+                            }
+                        }
+                        changesMessages(messagesInConversation);
                         break;
                     case "gcpl":
                         /*
@@ -155,6 +162,12 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         globalMessages.clear();
         globalMessages.addAll(list);
         messagesAdapter.notifyDataSetChanged();
+    }
+
+    public void changesUsers(List<ShortUser> list) {
+        globalUsers.clear();
+        globalUsers.addAll(list);
+        usersAdapter.notifyDataSetChanged();
     }
 
     @Override
