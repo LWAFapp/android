@@ -57,6 +57,7 @@
     <string name="create_room_title">Создание комнаты</string>
     <string name="players_size">Пользователи</string>
     <string name="ok">OK</string>
+    <string name="set_track">Поставить трек</string>
     <string name="create_room">Создать</string>
     <string name="without_parametrs">Вы не указали один из параметров</string>
     <string name="you_have_account">Уже есть аккаунт?</string>

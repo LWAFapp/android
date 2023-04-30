@@ -9,8 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.MessageGlobal;
 import com.Zakovskiy.lwaf.models.MessageRoom;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
@@ -73,6 +75,13 @@ public class MessagesAdapter extends ArrayAdapter<MessageRoom> {
                     messageGlobal.user.nickname,
                     this.context.getString(R.string.left)));
         }
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //((DialogFragment)new MenuDialogFragment(null)).show(context.fragment);
+            }
+        });
 
         return view;
     }

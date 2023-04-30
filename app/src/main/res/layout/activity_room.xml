@@ -23,7 +23,50 @@
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             android:textStyle="bold" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/trackLayout"
+            android:layout_width="match_parent"
+            android:layout_height="100sp"
+            android:background="@drawable/rounded_rectangle"
+            android:gravity="center">
 
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="200sp"
+                android:layout_height="52sp"
+                android:text="@string/set_track"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/playerLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/playerLayout"
+                app:layout_constraintTop_toTopOf="@+id/playerLayout"
+                app:strokeColor="@color/white"
+                app:strokeWidth="3sp" />
+
+            <LinearLayout
+                android:id="@+id/playerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:layout_editor_absoluteX="0dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/playerTrackIcon"
+                android:layout_width="100sp"
+                android:layout_height="match_parent"
+                android:src="@drawable/testimage"
+                android:scaleType="fitXY"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/white"
+                />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5sp"/>
         <ListView
             android:id="@+id/listViewUsers"
             android:layout_width="match_parent"
@@ -36,7 +79,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="5sp"></Space>
+            android:layout_height="5sp"/>
 
         <ListView
             android:id="@+id/listViewMessages"
