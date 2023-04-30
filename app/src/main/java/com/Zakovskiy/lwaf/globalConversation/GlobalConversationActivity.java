@@ -29,6 +29,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private TextInputLayout inputNewMessage;
     private ListView listUsers;
     private ListView listMessages;
+    private List<MessageGlobal> messagesInConversation;
     private MessagesAdapter messagesAdapter;
     private List<MessageGlobal> globalMessages = new ArrayList<>();;
 
@@ -107,7 +108,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие о сообщениях чата. Тоже самое что и выше.
                          */
                         Logs.info("GCGM RUNNING");
-                        List<MessageGlobal> messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), MessageGlobal.class);
+                        messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), MessageGlobal.class);
                         changesMessages(messagesInConversation);
                         this.listMessages.post(()->{
                             this.listMessages.setSelection(messagesAdapter.getCount() - 1);
@@ -118,6 +119,8 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие о нью месседж. Тоже самое что и выше.
                          */
                         MessageGlobal newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), MessageGlobal.class);
+                        messagesInConversation.add(newMessage);
+                        changesMessages(messagesInConversation);
                         break;
                     case "gcdm":
                         /*

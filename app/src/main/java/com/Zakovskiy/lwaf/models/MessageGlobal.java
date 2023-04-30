@@ -22,5 +22,5 @@ public class MessageGlobal extends ABCMessage {
     @JsonProperty("u")
     public ShortUser user = new ShortUser();
     @JsonProperty("rm")
-    public MessageGlobal replyMessage;
+    public MessageGlobal replyMessage = null;
 }
