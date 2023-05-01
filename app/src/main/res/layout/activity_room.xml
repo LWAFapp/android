@@ -67,6 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="5sp"/>
         <ListView
+            android:theme="@style/AppTheme.ListViewStyle"
             android:id="@+id/listViewUsers"
             android:layout_width="match_parent"
             android:layout_height="170sp"
@@ -81,6 +82,7 @@
             android:layout_height="5sp"/>
 
         <ListView
+            android:theme="@style/AppTheme.ListViewStyle"
             android:id="@+id/listViewMessages"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
