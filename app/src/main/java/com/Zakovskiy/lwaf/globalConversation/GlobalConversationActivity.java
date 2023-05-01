@@ -54,9 +54,11 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         usersAdapter = new UsersAdapter(this, globalUsers);
         this.listUsers.setAdapter(usersAdapter);
         this.inputNewMessage.setEndIconOnClickListener(v -> {
+            String messageString = this.inputNewMessage.getEditText().getText().toString();
+            if (messageString.isEmpty()) return;
             HashMap<String, Object> dataMessage = new HashMap<>();
             dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_SEND_MESSAGE);
-            dataMessage.put(PacketDataKeys.MESSAGE, this.inputNewMessage.getEditText().getText().toString());
+            dataMessage.put(PacketDataKeys.MESSAGE, messageString);
             this.inputNewMessage.getEditText().setText("");
             dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, "");
             this.socketHelper.sendData(new JSONObject(dataMessage));
@@ -127,6 +129,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         MessageGlobal newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), MessageGlobal.class);
                         messagesInConversation.add(newMessage);
                         changesMessages(messagesInConversation);
+                        this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
                         break;
                     case "gcdm":
                         /*

@@ -69,6 +69,7 @@
         <ListView
             android:theme="@style/AppTheme.ListViewStyle"
             android:id="@+id/listViewUsers"
+            android:padding="5sp"
             android:layout_width="match_parent"
             android:layout_height="170sp"
             android:background="@drawable/rounded_rectangle"

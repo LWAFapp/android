@@ -52,10 +52,13 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), messagesRoom);
         this.listMessages.setAdapter(messagesAdapter);
         this.listUsers.setAdapter(usersAdapter);
+        changesUsers(this.room.players);
         inputNewMessage.setEndIconOnClickListener(v -> {
+            String messageString = inputNewMessage.getEditText().getText().toString();
+            if (messageString.isEmpty()) return;
             HashMap<String, Object> dataMessage = new HashMap<>();
             dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_SEND_MESSAGE);
-            dataMessage.put(PacketDataKeys.MESSAGE, inputNewMessage.getEditText().getText().toString());
+            dataMessage.put(PacketDataKeys.MESSAGE, messageString);
             inputNewMessage.getEditText().setText("");
             this.socketHelper.sendData(new JSONObject(dataMessage));
         });
@@ -83,6 +86,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         List<MessageRoom> newList = new ArrayList<>(messagesRoom);
                         newList.add(newMessage);
                         changesMessages(newList);
+                        this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
                         break;
                 }
             }
@@ -109,5 +113,12 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         messagesRoom.clear();
         messagesRoom.addAll(list);
         messagesAdapter.notifyDataSetChanged();
+    }
+
+    public void changesUsers(List<ShortUser> list) {
+        Logs.debug("users"+list.toString());
+        roomUsers.clear();
+        roomUsers.addAll(list);
+        usersAdapter.notifyDataSetChanged();
     }
 }
