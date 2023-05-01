@@ -1,6 +1,7 @@
 package com.Zakovskiy.lwaf.globalConversation.adapters;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,10 @@ import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 
+import java.net.HttpCookie;
 import java.util.List;
+
+//color gold D28726
 
 public class MessagesAdapter extends ArrayAdapter<Message> {
 
@@ -72,19 +76,74 @@ public class MessagesAdapter extends ArrayAdapter<Message> {
         } else if (messageGlobal.type == MessageType.JOIN) {
             view = inflater.inflate(R.layout.item_system_message, parent, false);
             TextView message = (TextView) view.findViewById(R.id.message_view);
-            message.setText(String.format("%s %s %s",
+            message.setTextColor(0xFF5FBD43);
+            message.setText(Html.fromHtml(String.format("%s <b>%s</b> %s",
                     this.context.getString(R.string.user),
                     messageGlobal.user.nickname,
-                    this.context.getString(R.string.join)));
+                    this.context.getString(R.string.join))));
 
         } else if (messageGlobal.type == MessageType.LEFT) {
             view = inflater.inflate(R.layout.item_system_message, parent, false);
             TextView message = (TextView) view.findViewById(R.id.message_view);
-            message.setTextColor(0xFFFF0000);
-            message.setText(String.format("%s %s %s",
+            message.setTextColor(0xFFC10005);
+            message.setText(Html.fromHtml(String.format("%s <b>%s</b> %s",
                     this.context.getString(R.string.user),
                     messageGlobal.user.nickname,
-                    this.context.getString(R.string.left)));
+                    this.context.getString(R.string.left))));
+        } else if (messageGlobal.type == MessageType.ADD_TRACK) {
+            view = inflater.inflate(R.layout.item_system_message, parent, false);
+            TextView message = (TextView) view.findViewById(R.id.message_view);
+            message.setText(Html.fromHtml(String.format("%s <b>%s</b> %s %s",
+                    this.context.getString(R.string.user),
+                    messageGlobal.user.nickname,
+                    this.context.getString(R.string.add_track),
+                    messageGlobal.message)));
+        } else if (messageGlobal.type == MessageType.SET_REACTION_LIKE) {
+            view = inflater.inflate(R.layout.item_system_message, parent, false);
+            TextView message = (TextView) view.findViewById(R.id.message_view);
+            message.setTextColor(0xFF5FBD43);
+            message.setText(Html.fromHtml(String.format("%s <b>%s</b> %s %s %s",
+                    this.context.getString(R.string.user),
+                    messageGlobal.user.nickname,
+                    this.context.getString(R.string.set),
+                    this.context.getString(R.string.like),
+                    this.context.getString(R.string.on_track))));
+        } else if (messageGlobal.type == MessageType.SET_REACTION_DISLIKE) {
+            view = inflater.inflate(R.layout.item_system_message, parent, false);
+            TextView message = (TextView) view.findViewById(R.id.message_view);
+            message.setTextColor(0xFFC10005);
+            message.setText(Html.fromHtml(String.format("%s <b>%s</b> %s %s %s",
+                    this.context.getString(R.string.user),
+                    messageGlobal.user.nickname,
+                    this.context.getString(R.string.set),
+                    this.context.getString(R.string.dislike),
+                    this.context.getString(R.string.on_track))));
+        } else if (messageGlobal.type == MessageType.SET_REACTION_SUPER_LIKE) {
+            view = inflater.inflate(R.layout.item_system_message, parent, false);
+            TextView message = (TextView) view.findViewById(R.id.message_view);
+            message.setTextColor(0xFFD28726);
+            message.setText(Html.fromHtml(String.format("%s <b>%s</b> %s %s %s",
+                    this.context.getString(R.string.user),
+                    messageGlobal.user.nickname,
+                    this.context.getString(R.string.set),
+                    this.context.getString(R.string.superlike),
+                    this.context.getString(R.string.on_track))));
+        } else if (messageGlobal.type == MessageType.REPLACE_TRACK) {
+            view = inflater.inflate(R.layout.item_system_message, parent, false);
+            TextView message = (TextView) view.findViewById(R.id.message_view);
+            message.setText(Html.fromHtml(String.format("%s <b>%s</b> %s %s",
+                    this.context.getString(R.string.user),
+                    messageGlobal.user.nickname,
+                    this.context.getString(R.string.replace),
+                    this.context.getString(R.string.current_track))));
+        } else if (messageGlobal.type == MessageType.DELETE_TRACK) {
+            view = inflater.inflate(R.layout.item_system_message, parent, false);
+            TextView message = (TextView) view.findViewById(R.id.message_view);
+            message.setText(Html.fromHtml(String.format("%s <b>%s</b> %s %s",
+                    this.context.getString(R.string.user),
+                    messageGlobal.user.nickname,
+                    this.context.getString(R.string.delete),
+                    this.context.getString(R.string.current_track))));
         }
 
         return view;

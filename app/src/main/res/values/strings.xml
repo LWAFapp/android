@@ -78,4 +78,13 @@
     <string name="join"> вошёл</string>
     <string name="left"> вышел</string>
     <string name="actions">Действия</string>
+    <string name="add_track">Поставил трек</string>
+    <string name="like">Лайк</string>
+    <string name="dislike">Дизлайк</string>
+    <string name="superlike">СуперЛайк</string>
+    <string name="on_track">на трек</string>
+    <string name="set">поставил</string>
+    <string name="replace">поменял</string>
+    <string name="delete">удалил</string>
+    <string name="current_track">текущий трек</string>
 </resources>
