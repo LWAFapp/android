@@ -7,9 +7,8 @@ import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.globalConversation.adapters.*;
-import com.Zakovskiy.lwaf.models.MessageGlobal;
+import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.ShortUser;
-import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
@@ -30,11 +29,11 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private TextInputLayout inputNewMessage;
     private ListView listUsers;
     private ListView listMessages;
-    private List<MessageGlobal> messagesInConversation;
+    private List<Message> messagesInConversation;
     private List<ShortUser> usersInConversation;
     private MessagesAdapter messagesAdapter;
     private UsersAdapter usersAdapter;
-    private List<MessageGlobal> globalMessages = new ArrayList<>();
+    private List<Message> globalMessages = new ArrayList<>();
     private List<ShortUser> globalUsers = new ArrayList<>();
 
 
@@ -116,7 +115,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие о сообщениях чата. Тоже самое что и выше.
                          */
                         Logs.info("GCGM RUNNING");
-                        messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), MessageGlobal.class);
+                        messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
                         changesMessages(messagesInConversation);
                         this.listMessages.post(()->{
                             this.listMessages.setSelection(messagesAdapter.getCount() - 1);
@@ -126,7 +125,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         /*
                         Событие о нью месседж. Тоже самое что и выше.
                          */
-                        MessageGlobal newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), MessageGlobal.class);
+                        Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
                         messagesInConversation.add(newMessage);
                         changesMessages(messagesInConversation);
                         this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
@@ -136,7 +135,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие об удаление сообщения. Тоже самое что и выше.
                          */
                         String messageId = json.get(PacketDataKeys.MESSAGE_ID).asText();
-                        for (MessageGlobal message: messagesInConversation) {
+                        for (Message message: messagesInConversation) {
                             if (message.messageId.equals(messageId)) {
                                messagesInConversation.remove(messagesInConversation.indexOf(message));
                             }
@@ -168,7 +167,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         });
     }
 
-    public void changesMessages(List<MessageGlobal> list) {
+    public void changesMessages(List<Message> list) {
         Logs.debug("messages"+list.toString());
         globalMessages.clear();
         globalMessages.addAll(list);

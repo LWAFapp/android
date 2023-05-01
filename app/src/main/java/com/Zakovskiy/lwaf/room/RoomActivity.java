@@ -9,7 +9,7 @@ import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
 import com.Zakovskiy.lwaf.globalConversation.adapters.UsersAdapter;
-import com.Zakovskiy.lwaf.models.MessageGlobal;
+import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.network.SocketHelper;
@@ -36,7 +36,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     private MessagesAdapter messagesAdapter;
     private UsersAdapter usersAdapter;
     public List<ShortUser> roomUsers = new ArrayList<>();
-    public List<MessageGlobal> messagesRoom = new ArrayList<>();;
+    public List<Message> messagesRoom = new ArrayList<>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +81,8 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                 String roomTypeEvent = json.get(PacketDataKeys.ROOM_TYPE_EVENT).asText();
                 switch(roomTypeEvent) {
                     case "nm": // new message
-                        MessageGlobal newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.MESSAGE), MessageGlobal.class);
-                        List<MessageGlobal> newList = new ArrayList<>(messagesRoom);
+                        Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.MESSAGE), Message.class);
+                        List<Message> newList = new ArrayList<>(messagesRoom);
                         newList.add(newMessage);
                         changesMessages(newList);
                         this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
@@ -125,7 +125,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
 
     }
 
-    public void changesMessages(List<MessageGlobal> list) {
+    public void changesMessages(List<Message> list) {
         Logs.debug("messages"+list.toString());
         messagesRoom.clear();
         messagesRoom.addAll(list);

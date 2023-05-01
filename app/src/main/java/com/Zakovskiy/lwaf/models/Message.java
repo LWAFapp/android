@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MessageGlobal extends ABCMessage {
+public class Message extends ABCMessage {
     @JsonProperty("mid")
     public String messageId = "";
     @JsonProperty("m")
@@ -22,5 +22,5 @@ public class MessageGlobal extends ABCMessage {
     @JsonProperty("u")
     public ShortUser user = new ShortUser();
     @JsonProperty("rm")
-    public MessageGlobal replyMessage = null;
+    public Message replyMessage = null;
 }

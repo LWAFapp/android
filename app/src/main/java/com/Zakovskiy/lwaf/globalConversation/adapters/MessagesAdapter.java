@@ -12,21 +12,21 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 import com.Zakovskiy.lwaf.R;
-import com.Zakovskiy.lwaf.models.MessageGlobal;
+import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 
 import java.util.List;
 
-public class MessagesAdapter extends ArrayAdapter<MessageGlobal> {
+public class MessagesAdapter extends ArrayAdapter<Message> {
 
     private Context context;
-    private List<MessageGlobal> messages;
+    private List<Message> messages;
     private FragmentManager fragmentManager;
 
     public MessagesAdapter(Context context,
-                           FragmentManager fragmentManager, List<MessageGlobal> messages) {
+                           FragmentManager fragmentManager, List<Message> messages) {
         super(context, R.layout.item_user_message, messages);
         this.context = context;
         this.messages = messages;
@@ -38,7 +38,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageGlobal> {
     }
 
     @Override
-    public MessageGlobal getItem(int position) {
+    public Message getItem(int position) {
         return this.messages.get(position);
     }
 
@@ -51,7 +51,7 @@ public class MessagesAdapter extends ArrayAdapter<MessageGlobal> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        MessageGlobal messageGlobal = getItem(position);
+        Message messageGlobal = getItem(position);
         Logs.info("MessagesAdapter RUNNING");
         View view = new View(this.context);
         if (messageGlobal.type == MessageType.TEXT) {
