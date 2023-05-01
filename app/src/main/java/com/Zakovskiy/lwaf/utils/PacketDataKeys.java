@@ -2,6 +2,7 @@ package com.Zakovskiy.lwaf.utils;
 
 public class PacketDataKeys {
 
+    public static String ACCOUNT_SIGN_VK = "asvk";
     public static String ACCOUNT = "a";
     public static String ACCOUNT_SIGNIN = "asi";
     public static String ACCOUNT_SIGNUP = "asu";
