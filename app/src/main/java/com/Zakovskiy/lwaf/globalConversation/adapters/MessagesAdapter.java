@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.models.MessageGlobal;
@@ -16,19 +17,20 @@ import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 public class MessagesAdapter extends ArrayAdapter<MessageGlobal> {
 
     private Context context;
     private List<MessageGlobal> messages;
+    private FragmentManager fragmentManager;
 
-    public MessagesAdapter(Context context, List<MessageGlobal> messages) {
+    public MessagesAdapter(Context context,
+                           FragmentManager fragmentManager, List<MessageGlobal> messages) {
         super(context, R.layout.item_user_message, messages);
         this.context = context;
         this.messages = messages;
+        this.fragmentManager = fragmentManager;
     }
 
     public int getCount() {

@@ -7,13 +7,12 @@ import android.widget.TextView;
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
 import com.Zakovskiy.lwaf.globalConversation.adapters.UsersAdapter;
-import com.Zakovskiy.lwaf.room.adapters.MessagesAdapter;
+import com.Zakovskiy.lwaf.models.MessageGlobal;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
-import com.Zakovskiy.lwaf.models.MessageRoom;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.network.SocketHelper;
-import com.Zakovskiy.lwaf.room.adapters.UsersInRoomAdapter;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
@@ -25,6 +24,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class RoomActivity extends ABCActivity implements SocketHelper.SocketListener {
@@ -34,9 +34,9 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     private ListView listMessages;
     private ListView listUsers;
     private MessagesAdapter messagesAdapter;
-    private UsersInRoomAdapter usersAdapter;
-    private List<ShortUser> roomUsers = new ArrayList<>();
-    private List<MessageRoom> messagesRoom = new ArrayList<>();;
+    private UsersAdapter usersAdapter;
+    public List<ShortUser> roomUsers = new ArrayList<>();
+    public List<MessageGlobal> messagesRoom = new ArrayList<>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         this.listMessages = (ListView) findViewById(R.id.listViewMessages);
         this.listUsers = (ListView) findViewById(R.id.listViewUsers);
         TextInputLayout inputNewMessage = (TextInputLayout)findViewById(R.id.inputLayoutSendMessage);
-        usersAdapter = new UsersInRoomAdapter(this, getSupportFragmentManager(), roomUsers);
+        usersAdapter = new UsersAdapter(this, getSupportFragmentManager(), roomUsers);
         messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), messagesRoom);
         this.listMessages.setAdapter(messagesAdapter);
         this.listUsers.setAdapter(usersAdapter);
@@ -79,14 +79,31 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
             } else if (json.has(PacketDataKeys.ROOM_TYPE_EVENT)) {
                 String roomTypeEvent = json.get(PacketDataKeys.ROOM_TYPE_EVENT).asText();
-                Logs.debug(roomTypeEvent);
                 switch(roomTypeEvent) {
                     case "nm": // new message
-                        MessageRoom newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.MESSAGE), MessageRoom.class);
-                        List<MessageRoom> newList = new ArrayList<>(messagesRoom);
+                        MessageGlobal newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.MESSAGE), MessageGlobal.class);
+                        List<MessageGlobal> newList = new ArrayList<>(messagesRoom);
                         newList.add(newMessage);
                         changesMessages(newList);
                         this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
+                        break;
+                    case "pl":
+                        List<ShortUser> newUsersOfLeft = new ArrayList<>(roomUsers);
+                        ShortUser leftUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), ShortUser.class);
+                        Iterator<ShortUser> it = newUsersOfLeft.iterator();
+                        while (it.hasNext()) {
+                            if (it.next().userId.equals(leftUser.userId)) {
+                                Logs.debug("user left from room");
+                                it.remove();
+                            }
+                        }
+                        changesUsers(newUsersOfLeft);
+                        break;
+                    case "pj":
+                        List<ShortUser> newUsersOfJoin = new ArrayList<>(roomUsers);
+                        ShortUser joinUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), ShortUser.class);
+                        newUsersOfJoin.add(joinUser);
+                        changesUsers(newUsersOfJoin);
                         break;
                 }
             }
@@ -108,7 +125,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
 
     }
 
-    public void changesMessages(List<MessageRoom> list) {
+    public void changesMessages(List<MessageGlobal> list) {
         Logs.debug("messages"+list.toString());
         messagesRoom.clear();
         messagesRoom.addAll(list);

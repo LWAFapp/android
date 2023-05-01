@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.models.ShortUser;
@@ -22,11 +23,13 @@ public class UsersAdapter extends ArrayAdapter<ShortUser> {
 
     public Context context;
     public List<ShortUser> users;
+    public FragmentManager fragmentManager;
 
-    public UsersAdapter(Context context, List<ShortUser> users) {
+    public UsersAdapter(Context context, FragmentManager fragmentManager, List<ShortUser> users) {
         super(context, R.layout.item_user_in_listview, users);
         this.context = context;
         this.users = users;
+        this.fragmentManager = fragmentManager;
     }
     public int getCount() {
         return this.users.size();
