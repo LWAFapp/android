@@ -23,6 +23,7 @@ import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.vk.api.sdk.VK;
 
 import org.json.JSONObject;
 
@@ -98,6 +99,9 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                         SharedPreferences.Editor ed = sPref.edit();
                         ed.putString("access_token", "");
                         ed.apply();
+                        if (VK.isLoggedIn()) {
+                            VK.logout();
+                        }
                         newActivity(WelcomeActivity.class, true, null);
                         break;
                     case "rj": // room join

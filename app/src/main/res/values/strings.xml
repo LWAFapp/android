@@ -87,4 +87,5 @@
     <string name="replace">поменял</string>
     <string name="delete">удалил</string>
     <string name="current_track">текущий трек</string>
+    <integer name="com_vk_sdk_AppId">6121396</integer>
 </resources>

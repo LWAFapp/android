@@ -66,5 +66,20 @@
             android:textColor="#FFFFFF"
             android:textSize="24sp" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonLogInVK"
+            android:layout_width="250sp"
+            android:layout_height="50sp"
+            android:background="@drawable/rounded"
+            android:fontFamily="sans-serif"
+            android:text="VK"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
     </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
