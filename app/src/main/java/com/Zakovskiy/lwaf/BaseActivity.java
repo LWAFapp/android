@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.dashboard.DashboardFragment;
+import com.Zakovskiy.lwaf.models.ServerConfig;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
@@ -41,17 +42,9 @@ public class BaseActivity extends ABCActivity implements SocketHelper.SocketList
 
     @Override
     public void onConnected() {
-        String access_token = getSharedPreferences("lwaf_user", 0).getString("access_token", "");
-        if (access_token.isEmpty()) {
-            newActivity(WelcomeActivity.class, true, null);
-        } else {
-            HashMap<String, Object> data = new HashMap<>();
-            data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ACCOUNT_SIGNIN);
-            data.put(PacketDataKeys.TYPE_SIGNIN, PacketDataKeys.ACCESS_TOKEN);
-            data.put(PacketDataKeys.ACCESS_TOKEN, access_token);
-            data.put(PacketDataKeys.DEVICE, Config.getDeviceID(this));
-            this.socketHelper.sendData(new JSONObject(data));
-        }
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.CONFIG);
+        this.socketHelper.sendData(new JSONObject(data));
     }
 
     @Override
@@ -65,9 +58,25 @@ public class BaseActivity extends ABCActivity implements SocketHelper.SocketList
             if (json.has(PacketDataKeys.ERROR)) {
                 new DialogTextBox(BaseActivity.this, Config.ERRORS.get(json.get(PacketDataKeys.ERROR).asInt())).show();
                 newActivity(WelcomeActivity.class, true, null);
-            } else if (json.get(PacketDataKeys.TYPE_EVENT).asText().equals(PacketDataKeys.ACCOUNT_SIGNIN)) {
-                Application.lwafCurrentUser = (User) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ACCOUNT), User.class);
-                newActivity(DashboardFragment.class, true, null);
+            } else if (json.has(PacketDataKeys.TYPE_EVENT)){
+                String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
+                if (typeEvent.equals(PacketDataKeys.ACCOUNT_SIGNIN)) {
+                    Application.lwafCurrentUser = (User) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ACCOUNT), User.class);
+                    newActivity(DashboardFragment.class, true, null);
+                } else if (typeEvent.equals(PacketDataKeys.CONFIG)) {
+                    Application.lwafServerConfig = (ServerConfig) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONFIG), ServerConfig.class);
+                    String access_token = getSharedPreferences("lwaf_user", 0).getString("access_token", "");
+                    if (access_token.isEmpty()) {
+                        newActivity(WelcomeActivity.class, true, null);
+                    } else {
+                        HashMap<String, Object> data = new HashMap<>();
+                        data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ACCOUNT_SIGNIN);
+                        data.put(PacketDataKeys.TYPE_SIGNIN, PacketDataKeys.ACCESS_TOKEN);
+                        data.put(PacketDataKeys.ACCESS_TOKEN, access_token);
+                        data.put(PacketDataKeys.DEVICE, Config.getDeviceID(this));
+                        this.socketHelper.sendData(new JSONObject(data));
+                    }
+                }
             }
         });
     }

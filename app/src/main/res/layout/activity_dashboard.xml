@@ -49,17 +49,78 @@
             android:layout_weight="0"
             android:background="@drawable/ic_exit" />
     </LinearLayout>
-
-    <ListView
-        android:theme="@style/AppTheme.ListViewStyle"
-        android:id="@+id/menu__rooms_list"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="535sp"
         android:layout_above="@id/menu__buttons"
         android:layout_below="@+id/linearLayout"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/rounded_rectangle"
-        android:dividerHeight="0sp" />
+        android:background="@drawable/rounded_rectangle">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/roomsShimmer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/shimmer_item_room_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/shimmer_item_room_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/shimmer_item_room_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/shimmer_item_room_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/shimmer_item_room_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/shimmer_item_room_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/shimmer_item_room_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/shimmer_item_room_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/shimmer_item_room_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+        <ListView
+            android:id="@+id/menu__rooms_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="0sp"
+            android:theme="@style/AppTheme.ListViewStyle"
+            android:visibility="invisible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/menu__buttons"
@@ -67,6 +128,7 @@
         android:layout_height="60sp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/rounded_rectangle"
         android:foregroundGravity="clip_horizontal|center_horizontal"

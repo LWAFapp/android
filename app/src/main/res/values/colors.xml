@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="hint">#AAA9A9</color>
     <color name="transparent">#00AA8785</color>
+    <color name="shimmer_color">#dddddd</color>
+    <color name="light_transparent">#16000000</color>
+    <color name="dark_transparent">#24000000</color>
 </resources>

@@ -67,4 +67,6 @@ public class Config {
 
     public static final String ADDRESS = "185.188.183.144";
     public static final int PORT = 5555;
+
+    public static final String VK_API = "https://api.vk.com/method/";
 }

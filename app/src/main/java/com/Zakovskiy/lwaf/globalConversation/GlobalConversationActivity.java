@@ -1,7 +1,11 @@
 package com.Zakovskiy.lwaf.globalConversation;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
@@ -14,6 +18,7 @@ import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -21,6 +26,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class GlobalConversationActivity extends ABCActivity implements SocketHelper.SocketListener {
@@ -28,7 +34,9 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private TextInputLayout inputNewMessage;
     private ListView listUsers;
-    private ListView listMessages;
+    private RecyclerView listMessages;
+    private ShimmerFrameLayout messagesShimmer;
+    private ShimmerFrameLayout usersShimmer;
     private List<Message> messagesInConversation;
     private List<ShortUser> usersInConversation;
     private MessagesAdapter messagesAdapter;
@@ -40,16 +48,15 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.socketHelper.subscribe(this);
-        HashMap<String, Object> data = new HashMap<>();
-        data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_JOIN);
-        this.socketHelper.sendData(new JSONObject(data));
         setContentView(R.layout.activity_global_conversation);
-        this.listUsers = (ListView) findViewById(R.id.listViewUsers);
-        this.listMessages = (ListView) findViewById(R.id.listViewMessages);
-        this.inputNewMessage = (TextInputLayout)findViewById(R.id.inputLayoutSendMessage);
+        this.listUsers = findViewById(R.id.listViewUsers);
+        this.listMessages = findViewById(R.id.listViewMessages);
+        this.messagesShimmer = findViewById(R.id.shimmerMessages);
+        this.usersShimmer = findViewById(R.id.shimmerViewUsers);
+        this.inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
         messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages);
         this.listMessages.setAdapter(messagesAdapter);
+        this.listMessages.setLayoutManager(new LinearLayoutManager(this));
         usersAdapter = new UsersAdapter(this, getSupportFragmentManager(), globalUsers);
         this.listUsers.setAdapter(usersAdapter);
         this.inputNewMessage.setEndIconOnClickListener(v -> {
@@ -62,6 +69,39 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
             dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, "");
             this.socketHelper.sendData(new JSONObject(dataMessage));
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.socketHelper.subscribe(this);
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_JOIN);
+        this.socketHelper.sendData(new JSONObject(data));
+        changeShimmerMessages(true);
+        changeShimmerUsers(true);
+    }
+
+    private void changeShimmerMessages(boolean type) {
+        if(type) {
+            this.messagesShimmer.startShimmer();
+            this.inputNewMessage.setEnabled(false);
+        } else {
+            this.messagesShimmer.stopShimmer();
+            this.inputNewMessage.setEnabled(true);
+        }
+        this.messagesShimmer.setVisibility(type ? View.VISIBLE : View.INVISIBLE);
+        this.listMessages.setVisibility(type ? View.INVISIBLE : View.VISIBLE);
+    }
+
+    private void changeShimmerUsers(boolean type) {
+        if(type) {
+            this.usersShimmer.startShimmer();
+        } else {
+            this.usersShimmer.stopShimmer();
+        }
+        this.usersShimmer.setVisibility(type ? View.VISIBLE : View.INVISIBLE);
+        this.listUsers.setVisibility(type ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override
@@ -109,6 +149,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                          */
                         usersInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), ShortUser.class);
                         changesUsers(usersInConversation);
+                        changeShimmerUsers(false);
                         break;
                     case "gcgm":
                         /*
@@ -118,7 +159,8 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
                         changesMessages(messagesInConversation);
                         this.listMessages.post(()->{
-                            this.listMessages.setSelection(messagesAdapter.getCount() - 1);
+                            this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
+                            changeShimmerMessages(false);
                         });
                         break;
                     case "gcnm":
@@ -135,9 +177,11 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие об удаление сообщения. Тоже самое что и выше.
                          */
                         String messageId = json.get(PacketDataKeys.MESSAGE_ID).asText();
-                        for (Message message: messagesInConversation) {
+                        Iterator<Message> iterator = messagesInConversation.iterator();
+                        while (iterator.hasNext()) {
+                            Message message = iterator.next();
                             if (message.messageId.equals(messageId)) {
-                               messagesInConversation.remove(messagesInConversation.indexOf(message));
+                                iterator.remove();
                             }
                         }
                         changesMessages(messagesInConversation);
@@ -146,13 +190,16 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         /*
                         Событие если кто-то выйдет из чата. Тоже самое что и выше.
                          */
+                        List<ShortUser> newUsersOfLeft = new ArrayList<>(usersInConversation);
                         String userIdLeft = json.get(PacketDataKeys.USER_ID).asText();
-                        for (ShortUser user: usersInConversation) {
-                            if (user.userId.equals(userIdLeft)) {
-                                usersInConversation.remove(usersInConversation.indexOf(user));
+                        Iterator<ShortUser> it = newUsersOfLeft.iterator();
+                        while (it.hasNext()) {
+                            if (it.next().userId.equals(userIdLeft)) {
+                                Logs.debug("user left from GC");
+                                it.remove();
                             }
                         }
-                        changesUsers(usersInConversation);
+                        changesUsers(newUsersOfLeft);
                         break;
                     case "gcpj":
                         /*

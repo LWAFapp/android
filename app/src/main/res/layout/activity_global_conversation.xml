@@ -24,35 +24,123 @@
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             android:textStyle="bold" />
-
-        <ListView
-            android:theme="@style/AppTheme.ListViewStyle"
-            android:padding="5sp"
-            android:id="@+id/listViewUsers"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="170sp"
             android:background="@drawable/rounded_rectangle"
-            android:gravity="center"
-            android:orientation="vertical">
-
-        </ListView>
+            android:padding="5sp">
+            <ListView
+                android:theme="@style/AppTheme.ListViewStyle"
+                android:id="@+id/listViewUsers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="invisible"/>
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerViewUsers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <include
+                        layout="@layout/shimmer_item_user_in_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_in_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_in_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_in_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_in_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_in_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="5sp"></Space>
 
-        <ListView
-            android:theme="@style/AppTheme.ListViewStyle"
-            android:id="@+id/listViewMessages"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/rounded_rectangle"
-            android:gravity="center"
-            android:orientation="vertical"
             android:padding="10sp">
+            <androidx.recyclerview.widget.RecyclerView
+                android:theme="@style/AppTheme.ListViewStyle"
+                android:id="@+id/listViewMessages"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="invisible"/>
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerMessages"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <include
+                        layout="@layout/shimmer_item_user_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <include
+                        layout="@layout/shimmer_item_user_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
-        </ListView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"

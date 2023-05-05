@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="5sp"
+    android:visibility="visible">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/playerTrackIcon"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="2dp"
+        android:src="@drawable/without_preview" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70sp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/playerTrackTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5sp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/trackReactionSuperlike"
+                android:layout_width="25sp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="25sp"
+                    android:layout_height="25sp"
+                    android:src="@drawable/rock" />
+
+                <TextView
+                    android:id="@+id/trackReactionRockText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="#E8B61C" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/trackReactionLike"
+                android:layout_width="25sp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2sp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="25sp"
+                    android:layout_height="25sp"
+                    android:src="@drawable/like" />
+
+                <TextView
+                    android:id="@+id/trackReactionLikeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textColor="#30BF21" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/trackReactionDislike"
+                android:layout_width="25sp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2sp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="25sp"
+                    android:layout_height="25sp"
+                    android:rotation="180"
+                    android:src="@drawable/like" />
+
+                <TextView
+                    android:id="@+id/trackReactionDislikeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSetTrack"
+                android:layout_marginLeft="6sp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/into_quen"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                app:strokeColor="@color/white"
+                app:strokeWidth="2sp"
+                android:visibility="invisible"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

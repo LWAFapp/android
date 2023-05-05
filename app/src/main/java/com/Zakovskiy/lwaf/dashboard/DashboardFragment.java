@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.Zakovskiy.lwaf.ABCActivity;
+import com.Zakovskiy.lwaf.BaseActivity;
 import com.Zakovskiy.lwaf.DialogCreateRoom;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
@@ -22,8 +23,8 @@ import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.vk.api.sdk.VK;
 
 import org.json.JSONObject;
 
@@ -38,32 +39,48 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     public List<RoomInLobby> rooms = new ArrayList<>();
     public RoomsAdapter roomsAdapter;
+    private ShimmerFrameLayout roomsShimmer;
+    private ListView roomsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        ListView roomsListView = findViewById(R.id.menu__rooms_list);
+        this.roomsListView = findViewById(R.id.menu__rooms_list);
         roomsAdapter = new RoomsAdapter(this, rooms);
-        roomsListView.setAdapter(roomsAdapter);
+        this.roomsShimmer = findViewById(R.id.roomsShimmer);
+        changeShimmer(true);
+        this.roomsListView.setAdapter(roomsAdapter);
         findViewById(R.id.menu__button_create_room).setOnClickListener(this);
         findViewById(R.id.menu__logout).setOnClickListener(this);
         findViewById(R.id.menu__button_global_chat).setOnClickListener(this);
-        this.socketHelper.subscribe(this);
+    }
+
+    private void changeShimmer(boolean type) {
+        if(type) {
+            this.roomsShimmer.startShimmer();
+        } else {
+            this.roomsShimmer.stopShimmer();
+        }
+        this.roomsShimmer.setVisibility(type ? View.VISIBLE : View.INVISIBLE);
+        this.roomsListView.setVisibility(type ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        this.socketHelper.subscribe(this);
         HashMap<String, Object> data = new HashMap<>();
         data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.DASHBOARD);
         data.put(PacketDataKeys.VERSION, Config.VERSION);
         this.socketHelper.sendData(new JSONObject(data));
+        changeShimmer(true);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        this.socketHelper.unsubscribe(this);
     }
 
     @Override
@@ -73,7 +90,12 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
 
     @Override
     public void onDisconnected() {
+        newActivity(BaseActivity.class, true, new Bundle());
+    }
 
+    @Override
+    public void onReceiveError(String str) {
+        newActivity(BaseActivity.class, true, new Bundle());
     }
 
     @Override
@@ -93,15 +115,13 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                     case "rli": // room list
                         List<RoomInLobby> roomsInLobby = JsonUtils.convertJsonNodeToList(json.get("rr"), RoomInLobby.class);
                         changesRooms(roomsInLobby);
+                        changeShimmer(false);
                         break;
                     case "lo": // logout
                         SharedPreferences sPref = getSharedPreferences("lwaf_user", 0);
                         SharedPreferences.Editor ed = sPref.edit();
                         ed.putString("access_token", "");
                         ed.apply();
-                        if (VK.isLoggedIn()) {
-                            VK.logout();
-                        }
                         newActivity(WelcomeActivity.class, true, null);
                         break;
                     case "rj": // room join
@@ -120,14 +140,15 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                         newList.add(newRoom);
                         changesRooms(newList);
                         break;
-                    case "pcs": // players count size
+                    case "pc": // players count size
                         String roomId = json.get(PacketDataKeys.ROOM_IDENTIFICATOR).asText();
-                        for (RoomInLobby roomInLobby : rooms) {
+                        List<RoomInLobby> newListPCS = new ArrayList<>(rooms);
+                        for (RoomInLobby roomInLobby : newListPCS) {
                             if (roomInLobby.roomId.equals(roomId)) {
                                 roomInLobby.players = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), ShortUser.class);
                             }
                         }
-                        changesRooms(rooms);
+                        changesRooms(newListPCS);
                         break;
                     case "dr": // delete room
                         List<RoomInLobby> newRooms = new ArrayList<>(rooms);
@@ -149,11 +170,6 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         rooms.clear();
         rooms.addAll(list);
         roomsAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onReceiveError(String str) {
-
     }
 
     @Override

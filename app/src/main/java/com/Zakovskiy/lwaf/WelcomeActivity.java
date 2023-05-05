@@ -1,6 +1,8 @@
 package com.Zakovskiy.lwaf;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,26 +13,12 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.authorization.LoginActivity;
 import com.Zakovskiy.lwaf.dashboard.DashboardFragment;
-import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
-import com.Zakovskiy.lwaf.models.Message;
-import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
-import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.vk.api.sdk.VK;
-import com.vk.api.sdk.VKApiConfig;
-import com.vk.api.sdk.auth.VKAuthenticationResult;
-import com.vk.api.sdk.auth.VKScope;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class WelcomeActivity extends ABCActivity implements SocketHelper.SocketListener, View.OnClickListener {
 
@@ -43,23 +31,11 @@ public class WelcomeActivity extends ABCActivity implements SocketHelper.SocketL
         setContentView(R.layout.activity_welcome);
         ((AppCompatButton)findViewById(R.id.buttonLogInVK)).setOnClickListener(this);
         this.socketHelper.subscribe(this);
-        this.authLauncher = VK.login(this, new ActivityResultCallback<VKAuthenticationResult>() {
-            @Override
-            public void onActivityResult(VKAuthenticationResult result) {
-                if (result instanceof VKAuthenticationResult.Success) {
-                    String vkAccessToken = ((VKAuthenticationResult.Success) result).getToken().getAccessToken();
-                    Logs.debug(vkAccessToken);
-                    HashMap<String, Object> data = new HashMap<>();
-                    data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ACCOUNT_SIGN_VK);
-                    data.put(PacketDataKeys.VK_TOKEN, vkAccessToken);
-                    data.put(PacketDataKeys.DEVICE, Config.getDeviceID(WelcomeActivity.this));
-                    socketHelper.sendData(new JSONObject(data));
-                }
-                if (result instanceof VKAuthenticationResult.Failed) {
-                    Logs.debug(((VKAuthenticationResult.Failed) result).getException().getMessage());
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(".READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{".READ_EXTERNAL_STORAGE"}, 101);
             }
-        });
+        }
 
     }
 
@@ -80,11 +56,7 @@ public class WelcomeActivity extends ABCActivity implements SocketHelper.SocketL
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.buttonLogInVK) {
-            List<VKScope> scopes = new ArrayList<VKScope>();
-            scopes.add(VKScope.AUDIO);
-            scopes.add(VKScope.OFFLINE);
-            scopes.add(VKScope.STATS);
-            this.authLauncher.launch(scopes);
+            new DialogVKLogIn(this).show();
         }
     }
 
@@ -95,7 +67,12 @@ public class WelcomeActivity extends ABCActivity implements SocketHelper.SocketL
 
     @Override
     public void onDisconnected() {
+        newActivity(BaseActivity.class, true, new Bundle());
+    }
 
+    @Override
+    public void onReceiveError(String str) {
+        newActivity(BaseActivity.class, true, new Bundle());
     }
 
     @Override
@@ -115,10 +92,5 @@ public class WelcomeActivity extends ABCActivity implements SocketHelper.SocketL
                 }
             }
         });
-    }
-
-    @Override
-    public void onReceiveError(String str) {
-
     }
 }

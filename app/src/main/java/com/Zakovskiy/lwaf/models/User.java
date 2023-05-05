@@ -1,10 +1,6 @@
 package com.Zakovskiy.lwaf.models;
 
-import org.json.*;
-
 import com.Zakovskiy.lwaf.models.enums.Sex;
-import com.Zakovskiy.lwaf.utils.PacketDataKeys;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,7 +14,7 @@ public class User
 {
 
     @JsonProperty("uid")
-    public String user_id = "";
+    public String userId = "";
     @JsonProperty("n")
     public String nickname = "";
     @JsonProperty("s")
@@ -61,6 +57,8 @@ public class User
     public String accessToken = "";
     @JsonProperty("vt")
     public String vkontakteToken = "";
+    @JsonProperty("vs")
+    public String vkontakteSecret = "";
     @JsonProperty("did")
     public String deviceId = "";
     @JsonProperty("vid")
