@@ -8,8 +8,8 @@
     <string name="global_conversation_label">GlobalConversationActivity</string>
     <string name="room_label">RoomActivity</string>
     <string name="welcome_activity_label">WelcomeActivity</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="next">Дальше</string>
+    <string name="previous">Назад</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -95,4 +95,17 @@
     <string name="demo_track_duration">0:00</string>
     <string name="into_quen">В очередь</string>
     <integer name="com_vk_sdk_AppId">6328039</integer>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="input_data">Введите данные</string>
+    <string name="select_sex">Выберите пол</string>
+    <string name="sex">Пол</string>
+    <string name="set_avatar">Установите аватарку</string>
+    <string name="pick_avatar">Выберите аватарку</string>
+    <string name="error_upload_photo">Произошла ошибка при загрузки аватарки.</string>
+    <string-array name="sexes">
+        <item>Не указан</item>
+        <item>Мужской</item>
+        <item>Женский</item>
+    </string-array>
 </resources>

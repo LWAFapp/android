@@ -14,7 +14,11 @@ public class PacketDataKeys {
     public static final String ROOM_TYPE_EVENT = "rte";
     public static final String ERROR = "e";
     public static final String GET_USER = "gu";
-    public static final String USER_SEX = "s";
+    public static final String SEX = "s";
+    public static final String BUBBLE = "b";
+    public static final String BUBBLE_TYPE = "bt";
+    public static final String SOURCE_SEND = "ss";
+    public static final String SOURCE_RECEIVE = "sr";
     public static final String USER_TYPE = "ut";
     public static final String USER_ID = "uid";
     public static final String CONTENT = "c";
@@ -87,4 +91,6 @@ public class PacketDataKeys {
     public static final String VERSION = "v";
     public static final String TYPE = "t";
     public static final String CONFIG = "cfg";
+    public static final String SEX_CHANGE = "sc";
+    public static final String SEX_TYPE = "s";
 }

@@ -1,12 +1,12 @@
 package com.Zakovskiy.lwaf.models.enums;
 
-public enum Sex {
-    UNDEFINED(0),
-    MALE(1),
-    FEMALE(2);
+public enum BubbleType {
+    DEFAULT(0),
+    SOLID(1);
 
     private Integer type;
-    private Sex(Integer type) {
+
+    BubbleType (Integer type) {
         this.type = type;
     }
 }

@@ -5,6 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavHostController;
+import androidx.navigation.Navigation;
+
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
@@ -26,36 +31,14 @@ import java.util.HashMap;
 public class RegisterActivity extends ABCActivity implements SocketHelper.SocketListener {
 
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
-    private EditText loginEdit;
-    private EditText passwordEdit;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        this.loginEdit = findViewById(R.id.editTextLogin);
-        this.passwordEdit = findViewById(R.id.editTextPassword);
         this.socketHelper.subscribe(this);
-    }
-
-    public void onRegistration(View v) {
-        String login = this.loginEdit.getText().toString();
-        String password = this.passwordEdit.getText().toString();
-        Logs.info(login+password);
-        if (login.isEmpty() || password.isEmpty()) {
-            new DialogTextBox(this, getString(R.string.without_parametrs)).show();
-            return;
-        }
-        HashMap<String, Object> data = new HashMap<>();
-        data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ACCOUNT_SIGNUP);
-        data.put(PacketDataKeys.NICKNAME, login);
-        data.put(PacketDataKeys.PASSWORD, MD5Hash.md5Salt(password));
-        data.put(PacketDataKeys.DEVICE, Config.getDeviceID(this));
-        this.socketHelper.sendData(new JSONObject(data));
-    }
-
-    public void onHavedAccount(View v) {
-        newActivity(LoginActivity.class);
+        this.navController = Navigation.findNavController(findViewById(R.id.fragmentContainerView));
     }
 
     @Override
@@ -69,6 +52,28 @@ public class RegisterActivity extends ABCActivity implements SocketHelper.Socket
     }
 
     @Override
+    public void onDestroy() {
+        Logs.debug("RA DR");
+        this.socketHelper.unsubscribe(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Logs.debug("RA BP");
+        this.socketHelper.unsubscribe(this);
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (navController == null) {
+            navController = Navigation.findNavController(findViewById(R.id.fragmentContainerView));
+        }
+    }
+
+    @Override
     public void onReceive(JsonNode json) {
         this.runOnUiThread(() -> {
             if (json.has(PacketDataKeys.ERROR)) {
@@ -77,15 +82,17 @@ public class RegisterActivity extends ABCActivity implements SocketHelper.Socket
             } else if (json.has(PacketDataKeys.TYPE_EVENT)){
                 String event = json.get(PacketDataKeys.TYPE_EVENT).asText();
                 if (event.equals(PacketDataKeys.ACCOUNT_SIGNUP)) {
+                    runOnUiThread(() -> {
+                        this.navController.navigate(R.id.action_reg_nickname_password_to_registerSexFragment);
+                    });
                     Application.lwafCurrentUser = (User) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ACCOUNT), User.class);
                     SharedPreferences sPref = getSharedPreferences("lwaf_user", 0);
                     SharedPreferences.Editor ed = sPref.edit();
                     ed.putString("access_token", Application.lwafCurrentUser.accessToken);
                     ed.apply();
-                    newActivity(DashboardFragment.class, true, null);
                 }
             }
-            Logs.info("RECV: " + json.toString());
+            Logs.info("RECV RA " + json.toString());
         });
     }
 

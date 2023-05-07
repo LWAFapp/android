@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.authorization.LoginActivity;
+import com.Zakovskiy.lwaf.authorization.RegisterActivity;
 import com.Zakovskiy.lwaf.dashboard.DashboardFragment;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.network.SocketHelper;
@@ -50,7 +51,7 @@ public class WelcomeActivity extends ABCActivity implements SocketHelper.SocketL
     }
 
     public void onRegistration(View v) {
-        newActivity(LoginActivity.class);
+        newActivity(RegisterActivity.class);
     }
 
     @Override

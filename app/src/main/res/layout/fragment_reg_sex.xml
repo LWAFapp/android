@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".authorization.RegisterSexFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/select_sex"
+            android:textSize="22sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="200sp"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="@string/sex"
+            android:textColorHint="@color/white"
+            app:boxBackgroundColor="@color/transparent"
+            app:hintTextColor="@color/white"
+            app:placeholderTextColor="@color/white">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteSex"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:inputType="none"
+                android:shadowColor="@color/transparent"
+                android:textColor="#FFFFFF"
+                app:simpleItemSelectedColor="@color/transparent"
+                app:simpleItemSelectedRippleColor="@color/transparent" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonNext"
+            android:layout_width="130sp"
+            android:layout_height="35sp"
+            android:layout_marginTop="7sp"
+            android:background="@drawable/rounded"
+            android:text="@string/next"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+</FrameLayout>

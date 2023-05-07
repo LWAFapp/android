@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_registration"
+    app:startDestination="@id/reg_nickname_password">
+
+    <fragment
+        android:id="@+id/reg_nickname_password"
+        android:name="com.Zakovskiy.lwaf.authorization.RegisterNicknamePasswordFragment"
+        android:label="fragment_reg_nickname_password"
+        tools:layout="@layout/fragment_reg_nickname_password" >
+        <action
+            android:id="@+id/action_reg_nickname_password_to_registerSexFragment"
+            app:destination="@id/registerSexFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerSexFragment"
+        android:name="com.Zakovskiy.lwaf.authorization.RegisterSexFragment"
+        android:label="fragment_reg_sex"
+        tools:layout="@layout/fragment_reg_sex" >
+        <action
+            android:id="@+id/action_registerSexFragment_to_registerAvatarFragment"
+            app:destination="@id/registerAvatarFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerAvatarFragment"
+        android:name="com.Zakovskiy.lwaf.authorization.RegisterAvatarFragment"
+        android:label="fragment_reg_avatar"
+        tools:layout="@layout/fragment_reg_avatar" />
+</navigation>

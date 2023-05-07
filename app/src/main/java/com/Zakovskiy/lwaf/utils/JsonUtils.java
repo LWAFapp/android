@@ -58,6 +58,12 @@ public class JsonUtils {
     public static <T> List<T> convertJsonNodeToList(JsonNode jsonNode, Class<T> cls) {
         List<T> list;
         try {
+            ObjectMapper mapperPJ = new ObjectMapper();
+            mapperPJ.enable(SerializationFeature.INDENT_OUTPUT);
+
+            String prettyPrintedJson = mapperPJ.writeValueAsString(jsonNode);
+
+            //Logs.info(prettyPrintedJson);
             ObjectMapper objectMapper = mapper;
             list = (List) objectMapper.readerFor((JavaType) objectMapper.getTypeFactory().constructCollectionType((Class<? extends Collection>) List.class, (Class<?>) cls)).readValue(jsonNode);
         } catch (IOException e) {

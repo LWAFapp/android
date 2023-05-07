@@ -21,6 +21,8 @@ public class ServerConfig {
     public Colors colors = new Colors();
     @JsonProperty("imgs_path")
     public String imgsPath = "";
+    @JsonProperty("rest_host")
+    public String restHost = "";
     @JsonProperty("news_user_id")
     public String newsUserId = "";
     @JsonProperty("root_user_id")
@@ -42,10 +44,10 @@ public class ServerConfig {
         @JsonProperty("posts")
         public  Boolean posts = true;
     }
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class Colors {
+
         @JsonProperty("left_chat")
         public String leftChat = "";
         @JsonProperty("set_like_on_track")

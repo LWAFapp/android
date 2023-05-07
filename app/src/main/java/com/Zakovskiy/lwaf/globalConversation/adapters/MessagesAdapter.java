@@ -1,29 +1,37 @@
 package com.Zakovskiy.lwaf.globalConversation.adapters;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.application.Application;
+import com.Zakovskiy.lwaf.models.Bubble;
 import com.Zakovskiy.lwaf.models.Message;
+import com.Zakovskiy.lwaf.models.enums.BubbleType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
-import com.Zakovskiy.lwaf.utils.Logs;
+import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 
-import java.net.HttpCookie;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 //color gold D28726
 
@@ -35,6 +43,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private List<Message> messages;
     private FragmentManager fragmentManager;
+    private boolean theReceiver = false;
 
     public MessagesAdapter(Context context,
                            FragmentManager fragmentManager, List<Message> messages) {
@@ -51,6 +60,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public int getItemViewType(int position) {
         Message messageGlobal = messages.get(position);
         if (messageGlobal.type == MessageType.TEXT) {
+            this.theReceiver = messageGlobal.user.userId.equals(Application.lwafCurrentUser.userId);
             return TEXT_VIEW_TYPE;
         } else {
             return SYSTEM_VIEW_TYPE;
@@ -67,7 +77,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LayoutInflater inflater = LayoutInflater.from(context);
         View view;
         if (viewType == TEXT_VIEW_TYPE) {
-            view = inflater.inflate(R.layout.item_user_message, parent, false);
+            if (this.theReceiver) {
+                view = inflater.inflate(R.layout.item_user_message_receiver, parent, false);
+            } else {
+                view = inflater.inflate(R.layout.item_user_message_sender, parent, false);
+            }
             return new TextMessageViewHolder(view);
         } else {
             view = inflater.inflate(R.layout.item_system_message, parent, false);
@@ -86,8 +100,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Message messageGlobal = getItem(position);
         if (messageGlobal.type == MessageType.TEXT) {
             TextMessageViewHolder textHolder = (TextMessageViewHolder) holder;
-            textHolder.replyLayout.setVisibility(View.GONE);
-            textHolder.bind(messageGlobal);
+            try {
+                textHolder.bind(messageGlobal);
+            } catch (IOException | XmlPullParserException e) {
+                throw new RuntimeException(e);
+            }
         } else if (messageGlobal.type == MessageType.JOIN) {
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
             systemHolder.message.setTextColor(0xFF5FBD43);
@@ -144,16 +161,22 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private class TextMessageViewHolder extends RecyclerView.ViewHolder {
-        private TextView username;
+        private TextView username = null;
         private TextView message;
         private TextView date;
         private TextView replyUsername;
         private TextView replyMessage;
         private LinearLayout replyLayout;
+        private LinearLayout messageBubble;
+        private CircleImageView avatar;
+
 
         public TextMessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            username = itemView.findViewById(R.id.username_view);
+            messageBubble = itemView.findViewById(R.id.messageBubble);
+            if (!theReceiver)
+                username = itemView.findViewById(R.id.username_view);
+            avatar = itemView.findViewById(R.id.circleImageView);
             message = itemView.findViewById(R.id.plain_message_view);
             date = itemView.findViewById(R.id.message_datetime);
             replyUsername = itemView.findViewById(R.id.replyUsernameMessage);
@@ -161,10 +184,40 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             replyLayout = itemView.findViewById(R.id.replyLayout);
         }
 
-        public void bind(Message message) {
-            username.setText(message.user.nickname);
+        public void bind(Message message) throws IOException, XmlPullParserException {
+            Bubble bubble = message.bubble;
+            if (message.user.userId.equals(Application.lwafCurrentUser.userId)) {
+                messageBubble.setBackgroundResource(R.drawable.message_bg_receiver);
+                String[] resourceReceive = bubble.getSourceReceive();
+                if (bubble.bubbleType == BubbleType.SOLID) {
+                    messageBubble.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(resourceReceive[1])));
+                }
+            } else {
+                String[] resourceSend = bubble.getSourceSend();
+                username.setTextColor(Color.parseColor(resourceSend[0]));
+                username.setText(message.user.nickname);
+                if (bubble.bubbleType == BubbleType.SOLID) {
+                    messageBubble.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(resourceSend[1])));
+                }
+            }
+            if (message.user.avatar != null) {
+                ImageUtils.loadImage(context, message.user.avatar, avatar, true, true);
+            } else {
+                char firstChar = message.user.nickname.charAt(0);
+                ColorGenerator generator = ColorGenerator.MATERIAL; // выберите любой генератор цвета
+                int color = generator.getColor(message.user.nickname); // получаем цвет на основе имени пользователя
+                TextDrawable drawable = TextDrawable.builder()
+                        .beginConfig()
+                        .textColor(Color.WHITE)
+                        .fontSize(50)
+                        .height(100)
+                        .width(100)
+                        .endConfig()
+                        .buildRound(String.valueOf(firstChar), color);
+                avatar.setImageDrawable(drawable);
+            }
             this.message.setText(message.message);
-            date.setText(TimeUtils.getDateAndTime(message.timeSend * 1000));
+            date.setText(TimeUtils.getTime(message.timeSend * 1000));
             if (message.replyMessage != null) {
                 replyUsername.setText(message.replyMessage.user.nickname);
                 replyMessage.setText(message.replyMessage.message);

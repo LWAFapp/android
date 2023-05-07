@@ -78,6 +78,20 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
     }
 
     @Override
+    public void onDestroy() {
+        this.socketHelper.unsubscribe(this);
+        Logs.info("DESTROY");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.socketHelper.unsubscribe(this);
+        Logs.info("BACK");
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         this.socketHelper.unsubscribe(this);

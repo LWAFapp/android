@@ -57,6 +57,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages);
         this.listMessages.setAdapter(messagesAdapter);
         this.listMessages.setLayoutManager(new LinearLayoutManager(this));
+        this.listMessages.getRecycledViewPool().setMaxRecycledViews(0, 0);
         usersAdapter = new UsersAdapter(this, getSupportFragmentManager(), globalUsers);
         this.listUsers.setAdapter(usersAdapter);
         this.inputNewMessage.setEndIconOnClickListener(v -> {
