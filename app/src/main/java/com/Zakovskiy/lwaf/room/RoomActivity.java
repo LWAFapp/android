@@ -290,7 +290,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
             startActivityForResult(chooseFile, 1);
             return;
         }
-        new DialogPickTrack(this).show();
+        new DialogPickTrack(this, 0).show();
     }
 
     public void onClick(View v) {

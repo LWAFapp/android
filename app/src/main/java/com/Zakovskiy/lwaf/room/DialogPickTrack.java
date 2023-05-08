@@ -13,18 +13,22 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.api.VKApi;
 import com.Zakovskiy.lwaf.api.models.ModelTrackResponse;
 import com.Zakovskiy.lwaf.application.Application;
+import com.Zakovskiy.lwaf.models.FavoriteTrack;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.room.adapters.TracksResponseAdapter;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.MD5Hash;
+import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -42,10 +46,12 @@ public class DialogPickTrack extends Dialog {
     private ShimmerFrameLayout shimmerTracks;
     private ListView viewTracks;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
+    private Integer type = 0;
 
-    public DialogPickTrack(@NonNull Context context) {
+    public DialogPickTrack(@NonNull Context context, Integer type) {
         super(context);
         this.context = context;
+        this.type = type;
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Config.VK_API).build();
         this.vkApi = retrofit.create(VKApi.class);
     }
@@ -104,6 +110,16 @@ public class DialogPickTrack extends Dialog {
         this.viewTracks = findViewById(R.id.listTracks);
         this.shimmerTracks = findViewById(R.id.shimmerListTracks);
         TextInputLayout searchTextLayout = findViewById(R.id.searchTrackLayout);
+        if(type == 2) {
+            MaterialButton btnRemoveFavoriteTrack = findViewById(R.id.btnRemoveFavoriteTrack);
+            btnRemoveFavoriteTrack.setVisibility(View.VISIBLE);
+            btnRemoveFavoriteTrack.setOnClickListener((v)->{
+                HashMap<String, Object> data = new HashMap<>();
+                data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.REMOVE_FAVORITE_TRACK);
+                this.socketHelper.sendData(JsonUtils.convertObjectToJsonString(data));
+                dismiss();
+            });
+        }
         searchTextLayout.getEditText().setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_NEXT) {
                 String searchText = v.getText().toString();
@@ -140,7 +156,7 @@ public class DialogPickTrack extends Dialog {
             }
             return false;
         });
-        tracksResponseAdapter = new TracksResponseAdapter(this, this.socketHelper, this.tracks);
+        tracksResponseAdapter = new TracksResponseAdapter(this, this.socketHelper, this.tracks, this.type);
         this.viewTracks.setAdapter(tracksResponseAdapter);
         setSelfTracks();
     }

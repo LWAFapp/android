@@ -36,7 +36,7 @@
                     android:id="@+id/plain_message_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="adsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsads"
+                    android:text="@string/plain_message"
                     android:textAlignment="viewStart" />
 
             </LinearLayout>
@@ -52,7 +52,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingStart="10sp"
                     android:visibility="gone">
 
                     <View
@@ -109,7 +108,9 @@
             android:id="@+id/circleImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="bottom" />
+            android:layout_gravity="bottom"
+            app:civ_border_color="@color/blue"
+            app:civ_border_width="2dp" />
 
     </LinearLayout>
 

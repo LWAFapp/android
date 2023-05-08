@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,7 +19,6 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.globalConversation.adapters.*;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.ShortUser;
-import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
@@ -50,7 +50,9 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private List<Message> globalMessages = new ArrayList<>();
     private List<ShortUser> globalUsers = new ArrayList<>();
     private View currentView;
-    private String reply_id = "";
+    private String replyId = "";
+    private LinearLayout replyToLayout;
+
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -64,9 +66,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
 
         @Override
         public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            if (messagesAdapter.isSwipeable(viewHolder.getAdapterPosition()))
-                return super.getSwipeDirs(recyclerView, viewHolder);
-            return 0;
+            return messagesAdapter.isSwipeable(viewHolder.getAdapterPosition()) ? super.getSwipeDirs(recyclerView, viewHolder) : 0;
         }
 
         @Override
@@ -77,19 +77,16 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
             messagesInConversation.remove(position);
             messagesInConversation.add(position, swappedMessage);
             messagesAdapter.notifyDataSetChanged();
-            currentView.findViewById(R.id.replyTo).setVisibility(View.VISIBLE);
-            TextView replyToUser = (TextView) currentView.findViewById(R.id.replyTo_username);
+            replyToLayout.setVisibility(View.VISIBLE);
+            TextView replyToUser = (TextView) replyToLayout.findViewById(R.id.replyTo_username);
             replyToUser.setText(swappedMessage.user.nickname);
-            TextView replyToMessage = (TextView) currentView.findViewById(R.id.replyTo_message);
+            TextView replyToMessage = (TextView) replyToLayout.findViewById(R.id.replyTo_message);
             replyToMessage.setText(swappedMessage.message);
-            reply_id = swappedMessage.messageId;
-            ImageButton cancel_button = (ImageButton) currentView.findViewById(R.id.cancelReply);
-            cancel_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    reply_id = "";
-                    currentView.findViewById(R.id.replyTo).setVisibility(View.GONE);
-                }
+            replyId = swappedMessage.messageId;
+            ImageButton cancelButton = (ImageButton) replyToLayout.findViewById(R.id.cancelReply);
+            cancelButton.setOnClickListener(v -> {
+                replyId = "";
+                replyToLayout.setVisibility(View.GONE);
             });
         }
     };
@@ -99,7 +96,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_global_conversation);
-        currentView = this.findViewById(R.id.activity_global_conversation);
+        this.replyToLayout = findViewById(R.id.replyTo);
         this.listUsers = findViewById(R.id.listViewUsers);
         this.listMessages = findViewById(R.id.listViewMessages);
         this.messagesShimmer = findViewById(R.id.shimmerMessages);
@@ -116,13 +113,13 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         this.inputNewMessage.setEndIconOnClickListener(v -> {
             String messageString = this.inputNewMessage.getEditText().getText().toString();
             if (messageString.isEmpty()) return;
-            currentView.findViewById(R.id.replyTo).setVisibility(View.GONE);
+            replyToLayout.findViewById(R.id.replyTo).setVisibility(View.GONE);
             HashMap<String, Object> dataMessage = new HashMap<>();
             dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_SEND_MESSAGE);
             dataMessage.put(PacketDataKeys.MESSAGE, messageString);
+            dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, replyId);
             this.inputNewMessage.getEditText().setText("");
-            dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, reply_id);
-            reply_id = "";
+            replyId = "";
             this.socketHelper.sendData(new JSONObject(dataMessage));
         });
     }
@@ -141,11 +138,10 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private void changeShimmerMessages(boolean type) {
         if(type) {
             this.messagesShimmer.startShimmer();
-            this.inputNewMessage.setEnabled(false);
         } else {
             this.messagesShimmer.stopShimmer();
-            this.inputNewMessage.setEnabled(true);
         }
+        this.inputNewMessage.setEnabled(!type);
         this.messagesShimmer.setVisibility(type ? View.VISIBLE : View.INVISIBLE);
         this.listMessages.setVisibility(type ? View.INVISIBLE : View.VISIBLE);
     }
@@ -211,13 +207,12 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         /*
                         Событие о сообщениях чата. Тоже самое что и выше.
                          */
-                        Logs.info("GCGM RUNNING");
                         messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
                         changesMessages(messagesInConversation);
-                        this.listMessages.post(()->{
-                            this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
+                        this.listMessages.postDelayed(()->{
+                            this.listMessages.scrollToPosition(messagesAdapter.getCount() - 1);
                             changeShimmerMessages(false);
-                        });
+                        }, 200);
                         break;
                     case "gcnm":
                         /*
@@ -226,7 +221,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
                         messagesInConversation.add(newMessage);
                         changesMessages(messagesInConversation);
-                        this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
+                        this.listMessages.scrollToPosition(messagesAdapter.getCount() - 1);
                         break;
                     case "gcdm":
                         /*
@@ -272,9 +267,14 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
 
     public void changesMessages(List<Message> list) {
         Logs.debug("messages"+list.toString());
-        globalMessages.clear();
-        globalMessages.addAll(list);
-        messagesAdapter.notifyDataSetChanged();
+        if(list.size() > 1) {
+            globalMessages.clear();
+            globalMessages.addAll(list);
+            messagesAdapter.notifyDataSetChanged();
+            return;
+        }
+        globalMessages.add(list.get(0));
+        messagesAdapter.notifyItemInserted(globalMessages.size()-1);
     }
 
     public void changesUsers(List<ShortUser> list) {
@@ -284,7 +284,5 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     }
 
     @Override
-    public void onReceiveError(String str) {
-
-    }
+    public void onReceiveError(String str) {}
 }

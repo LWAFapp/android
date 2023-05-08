@@ -25,6 +25,7 @@ import com.Zakovskiy.lwaf.api.VKApi;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.dashboard.DashboardFragment;
 import com.Zakovskiy.lwaf.utils.Config;
+import com.Zakovskiy.lwaf.utils.FileUtils;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -85,39 +86,6 @@ public class RegisterAvatarFragment extends Fragment {
         return view;
     }
 
-    private byte[] getBytes(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        int bufferSize = 1024;
-        byte[] buffer = new byte[bufferSize];
-        int len;
-        while ((len = inputStream.read(buffer)) != -1) {
-            byteBuffer.write(buffer, 0, len);
-        }
-        return byteBuffer.toByteArray();
-    }
-
-    public String getFileName(Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -137,13 +105,13 @@ public class RegisterAvatarFragment extends Fragment {
             }
             RequestBody requestBody = null;
             try {
-                requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), getBytes(inputStream));
+                requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), FileUtils.getBytes(inputStream));
             } catch (IOException e) {
                 new DialogTextBox(getContext(), getString(R.string.error_upload_photo)).show();
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
-            MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", getFileName(uri), requestBody);
+            MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", FileUtils.getFileName(getContext(), uri), requestBody);
             lwafApi.uploadPhoto(Application.lwafCurrentUser.accessToken, filePart).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

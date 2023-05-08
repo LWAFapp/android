@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout4"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rectangle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:background="@drawable/background"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatarProfile"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/without_preview"
+                        app:civ_border_color="@color/blue"
+                        app:civ_border_width="2dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/profileUsername"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/username"
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toBottomOf="@+id/avatarProfile" />
+
+                    <TextView
+                        android:id="@+id/profileLastSeen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/online"
+                        android:textAlignment="center"
+                        android:textSize="14sp"
+                        app:layout_constraintTop_toBottomOf="@+id/profileUsername" />
+
+                    <LinearLayout
+                        android:id="@+id/layoutStatisticks"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/profileLastSeen">
+
+                        <LinearLayout
+                            android:id="@+id/layoutTracks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tracks" />
+
+                            <TextView
+                                android:id="@+id/textTracks"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="0"
+                                android:textAlignment="center" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutSuperlikes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="20dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/super_likes" />
+
+                            <TextView
+                                android:id="@+id/textSuperlikes"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="0"
+                                android:textAlignment="center" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutLikes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="20dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/likes" />
+
+                            <TextView
+                                android:id="@+id/textLikes"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="0"
+                                android:textAlignment="center" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutDislikes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="20dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dislikes" />
+
+                            <TextView
+                                android:id="@+id/textDislikes"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="0"
+                                android:textAlignment="center" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardViewAbout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:minHeight="100dp"
+                        app:cardCornerRadius="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/layoutStatisticks">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableRight="@drawable/ic_info"
+                                android:text="@string/about"
+                                android:textColor="@color/black_primary"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                app:drawableTint="@color/black_primary" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_below="@id/replyContentMessage"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="#FF8C8B8B"
+                                android:visibility="visible" />
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <EditText
+                                    android:id="@+id/textAbout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/white"
+                                    android:enabled="true"
+                                    android:imeOptions="actionDone"
+                                    android:padding="0dp"
+                                    android:singleLine="false"
+                                    android:inputType="textMultiLine"
+                                    android:text="@string/user_not_have_about"
+                                    android:textAlignment="center"
+                                    android:textColor="#8C8B8B" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardViewLoveTrack"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:minHeight="100dp"
+                        app:cardCornerRadius="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cardViewAbout">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:id="@+id/textView8"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableRight="@drawable/ic_favorite"
+                                android:text="@string/love_track"
+                                android:textColor="@color/black_primary"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                app:drawableTint="@color/black_primary" />
+
+                            <View
+                                android:id="@+id/replyLine2"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_below="@id/replyContentMessage"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@color/hint"
+                                android:visibility="visible" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnAddFavoriteTrack"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="52dp"
+                                android:text="@string/add"
+                                android:textColor="@color/black_primary"
+                                android:textSize="14sp"
+                                android:visibility="gone"
+                                app:layout_constraintBottom_toBottomOf="@+id/playerLayout"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/playerLayout"
+                                app:layout_constraintTop_toTopOf="@+id/playerLayout"
+                                app:strokeColor="@color/black_primary"
+                                app:strokeWidth="3sp" />
+
+                            <TextView
+                                android:id="@+id/textNotHaveFavoriteTrack"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="@string/user_not_have_favorite_track"
+                                android:textAlignment="center"
+                                android:textColor="#8C8B8B"
+                                android:visibility="gone" />
+
+                            <LinearLayout
+                                android:id="@+id/layoutFavoriteTrack"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:id="@+id/iconFavoriteTrack"
+                                    android:layout_width="70dp"
+                                    android:layout_height="70dp"
+                                    android:src="@drawable/without_preview" />
+
+                                <TextView
+                                    android:id="@+id/textFavoriteTrack"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:textColor="@color/black_primary" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

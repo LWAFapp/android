@@ -93,4 +93,9 @@ public class PacketDataKeys {
     public static final String CONFIG = "cfg";
     public static final String SEX_CHANGE = "sc";
     public static final String SEX_TYPE = "s";
+    public static final String SET_FAVORITE_TRACK = "sftr";
+    public static final String FAVORITE_TRACK = "ftr";
+    public static final String REMOVE_FAVORITE_TRACK = "rftr";
+    public static final String CHANGE_ABOUT = "ca";
+    public static final String ABOUT = "a";
 }

@@ -103,6 +103,17 @@
     <string name="set_avatar">Установите аватарку</string>
     <string name="pick_avatar">Выберите аватарку</string>
     <string name="error_upload_photo">Произошла ошибка при загрузки аватарки.</string>
+    <string name="online">Онлайн</string>
+    <string name="dislikes">Дизлайки</string>
+    <string name="likes">Лайки</string>
+    <string name="super_likes">Супер</string>
+    <string name="tracks">Треки</string>
+    <string name="about">О себе</string>
+    <string name="user_not_have_about">Пользователю нечего рассказать</string>
+    <string name="love_track">Любимый трек</string>
+    <string name="add">Добавить</string>
+    <string name="user_not_have_favorite_track">Пользователь не добавил любимый трек</string>
+    <string name="remove_favorite_track">Удалить любимый трек</string>
     <string-array name="sexes">
         <item>Не указан</item>
         <item>Мужской</item>

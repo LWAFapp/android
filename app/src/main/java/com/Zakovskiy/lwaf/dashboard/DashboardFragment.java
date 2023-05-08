@@ -18,6 +18,7 @@ import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.network.SocketHelper;
+import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.room.RoomActivity;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
@@ -54,6 +55,7 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         findViewById(R.id.menu__button_create_room).setOnClickListener(this);
         findViewById(R.id.menu__logout).setOnClickListener(this);
         findViewById(R.id.menu__button_global_chat).setOnClickListener(this);
+        findViewById(R.id.menu__button_profile).setOnClickListener(this);
     }
 
     private void changeShimmer(boolean type) {
@@ -197,6 +199,10 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.LOGOUT);
             this.socketHelper.sendData(new JSONObject(data));
+        } else if (id == R.id.menu__button_profile) {
+            Logs.info(Application.lwafCurrentUser.userId);
+            ProfileDialogFragment profileDialogFragment = ProfileDialogFragment.newInstance(this, Application.lwafCurrentUser.userId);
+            profileDialogFragment.show(getSupportFragmentManager(), "ProfileDialog");
         }
     }
 }

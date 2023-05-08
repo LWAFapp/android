@@ -13,9 +13,11 @@ import androidx.annotation.Nullable;
 
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.api.models.ModelTrackResponse;
+import com.Zakovskiy.lwaf.models.FavoriteTrack;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.room.DialogPickTrack;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
+import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 
 import org.json.JSONObject;
@@ -31,11 +33,13 @@ public class TracksResponseAdapter extends ArrayAdapter<ModelTrackResponse> {
     private DialogPickTrack dialogPickTrack;
     public List<ModelTrackResponse> tracks;
     private SocketHelper socketHelper;
+    private Integer type = 0;
 
-    public TracksResponseAdapter(DialogPickTrack dialog, SocketHelper socketHelper, List<ModelTrackResponse> tracks) {
+    public TracksResponseAdapter(DialogPickTrack dialog, SocketHelper socketHelper, List<ModelTrackResponse> tracks, Integer type) {
         super(dialog.getContext(), R.layout.item_track_in_list, tracks);
         this.context = dialog.getContext();
         this.dialogPickTrack = dialog;
+        this.type = type;
         this.tracks = tracks;
         this.socketHelper = socketHelper;
     }
@@ -73,9 +77,20 @@ public class TracksResponseAdapter extends ArrayAdapter<ModelTrackResponse> {
         String title = String.format("<b>%s</b> - %s", track.artist, track.title);
         convertView.setOnClickListener((v)->{
             HashMap<String, Object> data = new HashMap<>();
-            data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_TRACK_ADD);
-            data.put(PacketDataKeys.KEY, String.format("%s\n%s\n%s\n%s\n%s", track.id, track.ownerId, title, track.duration, track.album.thumb.photo_1200));
-            this.socketHelper.sendData(new JSONObject(data));
+            if(type == 0) {
+                data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_TRACK_ADD);
+                data.put(PacketDataKeys.KEY, String.format("%s\n%s\n%s\n%s\n%s", track.id, track.ownerId, title, track.duration, track.album.thumb.photo_1200));
+            } else if(type == 1 || type == 2) {
+                data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.SET_FAVORITE_TRACK);
+                FavoriteTrack favoriteTrack = new FavoriteTrack();
+                favoriteTrack.trackId = track.id;
+                favoriteTrack.ownerId = track.ownerId;
+                favoriteTrack.title = title;
+                favoriteTrack.duration = track.duration;
+                favoriteTrack.icon = track.album.thumb.photo_1200;
+                data.put(PacketDataKeys.FAVORITE_TRACK, favoriteTrack);
+            }
+            this.socketHelper.sendData(JsonUtils.convertObjectToJsonString(data));
             this.dialogPickTrack.dismiss();
         });
         holder.title.setText(Html.fromHtml(title));
