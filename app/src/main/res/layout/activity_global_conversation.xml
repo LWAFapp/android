@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_global_conversation"
     android:layout_width="match_parent"
-    android:background="@drawable/background"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context="com.Zakovskiy.lwaf.authorization.LoginActivity">
 
     <LinearLayout
@@ -24,48 +25,58 @@
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             android:textStyle="bold" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="170sp"
             android:background="@drawable/rounded_rectangle"
             android:padding="5sp">
+
             <ListView
-                android:theme="@style/AppTheme.ListViewStyle"
                 android:id="@+id/listViewUsers"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="invisible"/>
+                android:theme="@style/AppTheme.ListViewStyle"
+                android:visibility="invisible" />
+
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmerViewUsers"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="invisible">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                     <include
                         layout="@layout/shimmer_item_user_in_listview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_in_listview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_in_listview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_in_listview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_in_listview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_in_listview"
                         android:layout_width="match_parent"
@@ -84,55 +95,67 @@
             android:layout_weight="1"
             android:background="@drawable/rounded_rectangle"
             android:padding="10sp">
+
             <androidx.recyclerview.widget.RecyclerView
-                android:theme="@style/AppTheme.ListViewStyle"
                 android:id="@+id/listViewMessages"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="invisible"/>
+                android:theme="@style/AppTheme.ListViewStyle"
+                android:visibility="invisible" />
+
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmerMessages"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="invisible">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                     <include
                         layout="@layout/shimmer_item_user_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
                     <include
                         layout="@layout/shimmer_item_user_message"
                         android:layout_width="match_parent"
@@ -140,19 +163,59 @@
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5sp"></Space>
+
+        <LinearLayout
+            android:id="@+id/replyTo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_rectangle"
+            android:padding="10sp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/replyTo_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/username"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/replyTo_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/plain_message" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/cancelReply"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF"
+                app:srcCompat="@android:drawable/ic_delete" />
+
+        </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:id="@+id/inputLayoutSendMessage"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/message"
             android:textColorHint="#D8D7D7"
             app:boxStrokeColor="#222222"
             app:boxStrokeWidth="4sp"
-            app:endIconMode="custom"
-            app:endIconDrawable="@drawable/ic_send">
+            app:endIconDrawable="@drawable/ic_send"
+            app:endIconMode="custom">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextText"
@@ -162,7 +225,9 @@
                 android:inputType="text"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

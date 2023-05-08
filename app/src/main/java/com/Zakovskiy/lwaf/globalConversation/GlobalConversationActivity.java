@@ -2,8 +2,12 @@ package com.Zakovskiy.lwaf.globalConversation;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +17,7 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.globalConversation.adapters.*;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.ShortUser;
+import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
@@ -43,12 +48,15 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private UsersAdapter usersAdapter;
     private List<Message> globalMessages = new ArrayList<>();
     private List<ShortUser> globalUsers = new ArrayList<>();
+    private View currentView;
+    private String reply_id = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_global_conversation);
+        currentView = this.findViewById(R.id.activity_global_conversation);
         this.listUsers = findViewById(R.id.listViewUsers);
         this.listMessages = findViewById(R.id.listViewMessages);
         this.messagesShimmer = findViewById(R.id.shimmerMessages);
@@ -60,6 +68,8 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         this.listMessages.getRecycledViewPool().setMaxRecycledViews(0, 0);
         usersAdapter = new UsersAdapter(this, getSupportFragmentManager(), globalUsers);
         this.listUsers.setAdapter(usersAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(listMessages);
         this.inputNewMessage.setEndIconOnClickListener(v -> {
             String messageString = this.inputNewMessage.getEditText().getText().toString();
             if (messageString.isEmpty()) return;
@@ -67,10 +77,42 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
             dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_SEND_MESSAGE);
             dataMessage.put(PacketDataKeys.MESSAGE, messageString);
             this.inputNewMessage.getEditText().setText("");
-            dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, "");
+            dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, reply_id);
             this.socketHelper.sendData(new JSONObject(dataMessage));
         });
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            //Работает только для LEFT, если хочешь еще вправо свапать то switch делай
+            int position = viewHolder.getAdapterPosition();
+            Message swappedMessage = messagesInConversation.get(position);
+            messagesInConversation.remove(position);
+            messagesInConversation.add(position, swappedMessage);
+            messagesAdapter.notifyDataSetChanged();
+            if (messagesInConversation.get(position).type != MessageType.TEXT) return;
+            currentView.findViewById(R.id.replyTo).setVisibility(View.VISIBLE);
+            TextView replyToUser = (TextView) currentView.findViewById(R.id.replyTo_username);
+            replyToUser.setText(swappedMessage.user.nickname);
+            TextView replyToMessage = (TextView) currentView.findViewById(R.id.replyTo_message);
+            replyToMessage.setText(swappedMessage.message);
+            reply_id = swappedMessage.messageId;
+            ImageButton cancel_button = (ImageButton) currentView.findViewById(R.id.cancelReply);
+            cancel_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    reply_id = "";
+                    currentView.findViewById(R.id.replyTo).setVisibility(View.GONE);
+                }
+            });
+        }
+    };
 
     @Override
     public void onStart() {
