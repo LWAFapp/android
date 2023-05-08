@@ -109,8 +109,7 @@
             android:id="@+id/circleImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="bottom"
-            android:src="@drawable/testimage" />
+            android:layout_gravity="bottom" />
 
     </LinearLayout>
 

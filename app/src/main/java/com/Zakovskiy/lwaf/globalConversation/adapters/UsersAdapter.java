@@ -1,6 +1,8 @@
 package com.Zakovskiy.lwaf.globalConversation.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +17,14 @@ import androidx.fragment.app.FragmentManager;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.enums.Sex;
+import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsersAdapter extends ArrayAdapter<ShortUser> {
 
@@ -54,10 +61,28 @@ public class UsersAdapter extends ArrayAdapter<ShortUser> {
         View view = new View(this.context);
         view = inflater.inflate(R.layout.item_user_in_listview, parent, false);
         TextView username = (TextView) view.findViewById(R.id.username);
-        ImageView sexView = (ImageView) view.findViewById(R.id.sexShape);
+        CircleImageView avatarImage = (CircleImageView) view.findViewById(R.id.circleImageView2);
         username.setText(shortUser.nickname);
         if (shortUser.sex == Sex.FEMALE) {
-            sexView.setImageDrawable(this.context.getResources().getDrawable(R.drawable.sex_white));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                avatarImage.setBorderColor(context.getColor(R.color.red));
+            }
+        }
+        if (shortUser.avatar != null) {
+            ImageUtils.loadImage(context, shortUser.avatar, avatarImage, true, true);
+        } else {
+            char firstChar = shortUser.nickname.charAt(0);
+            ColorGenerator generator = ColorGenerator.MATERIAL; // выберите любой генератор цвета
+            int color = generator.getColor(shortUser.nickname); // получаем цвет на основе имени пользователя
+            TextDrawable drawable = TextDrawable.builder()
+                    .beginConfig()
+                    .textColor(Color.WHITE)
+                    .fontSize(50)
+                    .height(100)
+                    .width(100)
+                    .endConfig()
+                    .buildRound(String.valueOf(firstChar), color);
+            avatarImage.setImageDrawable(drawable);
         }
         return view;
     }

@@ -3,6 +3,7 @@ package com.Zakovskiy.lwaf.globalConversation.adapters;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.Zakovskiy.lwaf.models.Bubble;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.BubbleType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
+import com.Zakovskiy.lwaf.models.enums.Sex;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -160,6 +162,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    public boolean isSwipeable(int position) {
+        Message message = getItem(position);
+        return message.type == MessageType.TEXT;
+    }
+
     private class TextMessageViewHolder extends RecyclerView.ViewHolder {
         private TextView username = null;
         private TextView message;
@@ -200,17 +207,23 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     messageBubble.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(resourceSend[1])));
                 }
             }
+            if (message.user.sex == Sex.FEMALE) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    avatar.setBorderColor(context.getColor(R.color.red));
+                }
+            }
             if (message.user.avatar != null) {
                 ImageUtils.loadImage(context, message.user.avatar, avatar, true, true);
             } else {
                 char firstChar = message.user.nickname.charAt(0);
-                ColorGenerator generator = ColorGenerator.MATERIAL; // выберите любой генератор цвета
+                ColorGenerator generator = ColorGenerator.DEFAULT; // выберите любой генератор цвета
                 int color = generator.getColor(message.user.nickname); // получаем цвет на основе имени пользователя
                 TextDrawable drawable = TextDrawable.builder()
                         .beginConfig()
                         .textColor(Color.WHITE)
                         .fontSize(50)
                         .height(100)
+                        .bold()
                         .width(100)
                         .endConfig()
                         .buildRound(String.valueOf(firstChar), color);

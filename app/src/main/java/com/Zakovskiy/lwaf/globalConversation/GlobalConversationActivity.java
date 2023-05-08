@@ -1,5 +1,6 @@
 package com.Zakovskiy.lwaf.globalConversation;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -73,6 +74,8 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         this.inputNewMessage.setEndIconOnClickListener(v -> {
             String messageString = this.inputNewMessage.getEditText().getText().toString();
             if (messageString.isEmpty()) return;
+            reply_id = "";
+            currentView.findViewById(R.id.replyTo).setVisibility(View.GONE);
             HashMap<String, Object> dataMessage = new HashMap<>();
             dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_SEND_MESSAGE);
             dataMessage.put(PacketDataKeys.MESSAGE, messageString);
@@ -89,6 +92,18 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         }
 
         @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            super.onChildDraw(c, recyclerView, viewHolder, dX / 4, dY, actionState, isCurrentlyActive);
+        }
+
+        @Override
+        public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            if (messagesAdapter.isSwipeable(viewHolder.getAdapterPosition()))
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            return 0;
+        }
+
+        @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             //Работает только для LEFT, если хочешь еще вправо свапать то switch делай
             int position = viewHolder.getAdapterPosition();
@@ -96,7 +111,6 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
             messagesInConversation.remove(position);
             messagesInConversation.add(position, swappedMessage);
             messagesAdapter.notifyDataSetChanged();
-            if (messagesInConversation.get(position).type != MessageType.TEXT) return;
             currentView.findViewById(R.id.replyTo).setVisibility(View.VISIBLE);
             TextView replyToUser = (TextView) currentView.findViewById(R.id.replyTo_username);
             replyToUser.setText(swappedMessage.user.nickname);

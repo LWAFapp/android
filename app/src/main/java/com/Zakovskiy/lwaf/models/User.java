@@ -10,21 +10,8 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User
-{
+public class User extends ShortUser {
 
-    @JsonProperty("uid")
-    public String userId = "";
-    @JsonProperty("n")
-    public String nickname = "";
-    @JsonProperty("s")
-    public Sex sex = Sex.MALE;
-    @JsonProperty("r")
-    public Integer role = 0;
-    @JsonProperty("ls")
-    public Long lastSeen = 0L;
-    @JsonProperty("ava")
-    public String avatar = "";
     @JsonProperty("wc")
     public Integer wheelCount = 0;
     @JsonProperty("wts")
