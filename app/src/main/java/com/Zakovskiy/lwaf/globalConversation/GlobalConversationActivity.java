@@ -51,40 +51,6 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private List<ShortUser> globalUsers = new ArrayList<>();
     private View currentView;
     private String reply_id = "";
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_global_conversation);
-        currentView = this.findViewById(R.id.activity_global_conversation);
-        this.listUsers = findViewById(R.id.listViewUsers);
-        this.listMessages = findViewById(R.id.listViewMessages);
-        this.messagesShimmer = findViewById(R.id.shimmerMessages);
-        this.usersShimmer = findViewById(R.id.shimmerViewUsers);
-        this.inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
-        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages);
-        this.listMessages.setAdapter(messagesAdapter);
-        this.listMessages.setLayoutManager(new LinearLayoutManager(this));
-        this.listMessages.getRecycledViewPool().setMaxRecycledViews(0, 0);
-        usersAdapter = new UsersAdapter(this, getSupportFragmentManager(), globalUsers);
-        this.listUsers.setAdapter(usersAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(listMessages);
-        this.inputNewMessage.setEndIconOnClickListener(v -> {
-            String messageString = this.inputNewMessage.getEditText().getText().toString();
-            if (messageString.isEmpty()) return;
-            reply_id = "";
-            currentView.findViewById(R.id.replyTo).setVisibility(View.GONE);
-            HashMap<String, Object> dataMessage = new HashMap<>();
-            dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_SEND_MESSAGE);
-            dataMessage.put(PacketDataKeys.MESSAGE, messageString);
-            this.inputNewMessage.getEditText().setText("");
-            dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, reply_id);
-            this.socketHelper.sendData(new JSONObject(dataMessage));
-        });
-    }
-
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -127,6 +93,39 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
             });
         }
     };
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_global_conversation);
+        currentView = this.findViewById(R.id.activity_global_conversation);
+        this.listUsers = findViewById(R.id.listViewUsers);
+        this.listMessages = findViewById(R.id.listViewMessages);
+        this.messagesShimmer = findViewById(R.id.shimmerMessages);
+        this.usersShimmer = findViewById(R.id.shimmerViewUsers);
+        this.inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
+        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages);
+        this.listMessages.setAdapter(messagesAdapter);
+        this.listMessages.setLayoutManager(new LinearLayoutManager(this));
+        this.listMessages.getRecycledViewPool().setMaxRecycledViews(0, 0);
+        usersAdapter = new UsersAdapter(this, getSupportFragmentManager(), globalUsers);
+        this.listUsers.setAdapter(usersAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(listMessages);
+        this.inputNewMessage.setEndIconOnClickListener(v -> {
+            String messageString = this.inputNewMessage.getEditText().getText().toString();
+            if (messageString.isEmpty()) return;
+            currentView.findViewById(R.id.replyTo).setVisibility(View.GONE);
+            HashMap<String, Object> dataMessage = new HashMap<>();
+            dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_SEND_MESSAGE);
+            dataMessage.put(PacketDataKeys.MESSAGE, messageString);
+            this.inputNewMessage.getEditText().setText("");
+            dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, reply_id);
+            reply_id = "";
+            this.socketHelper.sendData(new JSONObject(dataMessage));
+        });
+    }
 
     @Override
     public void onStart() {
