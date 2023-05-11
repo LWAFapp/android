@@ -60,7 +60,6 @@ public class LastTracksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public LastTrackViewHolder(@NonNull View itemView) {
             super(itemView);
-            Logs.info("lta");
             imageView = itemView.findViewById(R.id.lastTrackIcon);
             materialTextView = itemView.findViewById(R.id.lastTrackTitle);
         }

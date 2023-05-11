@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.enums.Sex;
+import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -57,11 +58,12 @@ public class UsersAdapter extends ArrayAdapter<ShortUser> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ShortUser shortUser = getItem(position);
-        Logs.info("MessagesAdapter RUNNING");
-        View view = new View(this.context);
-        view = inflater.inflate(R.layout.item_user_in_listview, parent, false);
-        TextView username = (TextView) view.findViewById(R.id.username);
-        CircleImageView avatarImage = (CircleImageView) view.findViewById(R.id.circleImageView2);
+        View view = inflater.inflate(R.layout.item_user_in_listview, parent, false);
+        view.setOnClickListener((v)->{
+            ProfileDialogFragment.newInstance(context, shortUser.userId).show(fragmentManager, "ProfileDialogFragment");
+        });
+        TextView username = view.findViewById(R.id.username);
+        CircleImageView avatarImage = view.findViewById(R.id.circleImageView2);
         username.setText(shortUser.nickname);
         if (shortUser.sex == Sex.FEMALE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -72,7 +74,7 @@ public class UsersAdapter extends ArrayAdapter<ShortUser> {
             ImageUtils.loadImage(context, shortUser.avatar, avatarImage, true, true);
         } else {
             char firstChar = shortUser.nickname.charAt(0);
-            ColorGenerator generator = ColorGenerator.MATERIAL; // выберите любой генератор цвета
+            ColorGenerator generator = ColorGenerator.MATERIAL;
             int color = generator.getColor(shortUser.nickname); // получаем цвет на основе имени пользователя
             TextDrawable drawable = TextDrawable.builder()
                     .beginConfig()
