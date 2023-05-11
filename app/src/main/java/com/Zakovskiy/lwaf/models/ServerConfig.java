@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServerConfig {
@@ -27,6 +29,19 @@ public class ServerConfig {
     public String newsUserId = "";
     @JsonProperty("root_user_id")
     public String rootUserId;
+    @JsonProperty("wheel_items")
+    public List<WheelItem> wheelItems;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public class WheelItem {
+        @JsonProperty("label")
+        public String label = "";
+        @JsonProperty("amount")
+        public Integer amount = 0;
+        @JsonProperty("chance")
+        public Double change = 0.0;
+    }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
