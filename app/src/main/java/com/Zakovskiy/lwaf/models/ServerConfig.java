@@ -1,5 +1,6 @@
 package com.Zakovskiy.lwaf.models;
 
+import com.Zakovskiy.lwaf.application.Application;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,7 +41,7 @@ public class ServerConfig {
         @JsonProperty("amount")
         public Integer amount = 0;
         @JsonProperty("chance")
-        public Double change = 0.0;
+        public Double chance = 0.0;
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
