@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="5sp"
+    android:padding="5dp"
     android:visibility="visible">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -18,7 +18,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70sp"
+        android:layout_height="70dp"
         android:orientation="vertical">
 
         <TextView
@@ -31,18 +31,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5sp"
+            android:layout_marginLeft="5dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/trackReactionSuperlike"
-                android:layout_width="25sp"
+                android:layout_width="20dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="25sp"
-                    android:layout_height="25sp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/rock" />
 
                 <TextView
@@ -55,14 +55,14 @@
 
             <LinearLayout
                 android:id="@+id/trackReactionLike"
-                android:layout_width="25sp"
+                android:layout_width="20dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="2sp"
+                android:layout_marginLeft="2dp"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="25sp"
-                    android:layout_height="25sp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/like" />
 
                 <TextView
@@ -75,14 +75,14 @@
 
             <LinearLayout
                 android:id="@+id/trackReactionDislike"
-                android:layout_width="25sp"
+                android:layout_width="20dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="2sp"
+                android:layout_marginLeft="2dp"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="25sp"
-                    android:layout_height="25sp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:rotation="180"
                     android:src="@drawable/like" />
 
@@ -95,7 +95,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSetTrack"
-                android:layout_marginLeft="6sp"
+                android:layout_marginLeft="6dp"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 app:strokeColor="@color/white"
-                app:strokeWidth="2sp"
+                app:strokeWidth="2dp"
                 android:visibility="invisible"/>
         </LinearLayout>
     </LinearLayout>

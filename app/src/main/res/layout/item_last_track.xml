@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="80dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginStart="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/lastTrackIcon"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/without_preview" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/lastTrackTitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/track_title"
+            android:textAlignment="center"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+</LinearLayout>

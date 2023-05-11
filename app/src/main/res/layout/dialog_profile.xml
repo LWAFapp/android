@@ -22,9 +22,12 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/constraintLayout2"
@@ -166,10 +169,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:minHeight="100dp"
+                        android:outlineSpotShadowColor="@color/white"
+                        app:cardBackgroundColor="@color/black_primary"
                         app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/layoutStatisticks">
@@ -185,10 +191,10 @@
                                 android:layout_height="wrap_content"
                                 android:drawableRight="@drawable/ic_info"
                                 android:text="@string/about"
-                                android:textColor="@color/black_primary"
+                                android:textColor="@color/white"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
-                                app:drawableTint="@color/black_primary" />
+                                app:drawableTint="@color/white" />
 
                             <View
                                 android:layout_width="match_parent"
@@ -198,6 +204,7 @@
                                 android:layout_marginBottom="5dp"
                                 android:background="#FF8C8B8B"
                                 android:visibility="visible" />
+
                             <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
@@ -207,14 +214,16 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@color/white"
+                                    android:backgroundTint="@color/black_primary"
                                     android:enabled="true"
+                                    android:gravity="top"
                                     android:imeOptions="actionDone"
+                                    android:inputType="textMultiLine"
                                     android:padding="0dp"
                                     android:singleLine="false"
-                                    android:inputType="textMultiLine"
                                     android:text="@string/user_not_have_about"
                                     android:textAlignment="center"
-                                    android:textColor="#8C8B8B" />
+                                    android:textColor="@color/white" />
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -227,7 +236,10 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginEnd="10dp"
                         android:minHeight="100dp"
+                        android:outlineSpotShadowColor="@color/white"
+                        app:cardBackgroundColor="@color/black_primary"
                         app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/cardViewAbout">
@@ -244,13 +256,12 @@
                                 android:layout_height="wrap_content"
                                 android:drawableRight="@drawable/ic_favorite"
                                 android:text="@string/love_track"
-                                android:textColor="@color/black_primary"
+                                android:textColor="@color/white"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
-                                app:drawableTint="@color/black_primary" />
+                                app:drawableTint="@color/white" />
 
                             <View
-                                android:id="@+id/replyLine2"
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
                                 android:layout_below="@id/replyContentMessage"
@@ -281,7 +292,7 @@
                                 android:layout_height="match_parent"
                                 android:text="@string/user_not_have_favorite_track"
                                 android:textAlignment="center"
-                                android:textColor="#8C8B8B"
+                                android:textColor="@color/white"
                                 android:visibility="gone" />
 
                             <LinearLayout
@@ -301,10 +312,60 @@
                                     android:id="@+id/textFavoriteTrack"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
                                     android:layout_weight="1"
-                                    android:textColor="@color/black_primary" />
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp" />
 
                             </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardViewLastTracks"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:outlineSpotShadowColor="@color/white"
+                        app:cardBackgroundColor="@color/black_primary"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cardViewLoveTrack">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableRight="@drawable/ic_rows"
+                                android:text="@string/last_tracks"
+                                android:textColor="@color/white"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                app:drawableTint="@color/white" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_below="@id/replyContentMessage"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@color/hint"
+                                android:visibility="visible" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvLastTracks"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
 
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>

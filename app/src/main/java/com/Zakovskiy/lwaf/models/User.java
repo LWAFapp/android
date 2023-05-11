@@ -20,7 +20,7 @@ public class User {
     @JsonProperty("r")
     public Integer role = 0;
     @JsonProperty("ls")
-    public Long lastSeen = 0L;
+    public Long lastSeenTime = 0L;
     @JsonProperty("ava")
     public String avatar = "";
     @JsonProperty("wc")
@@ -28,29 +28,24 @@ public class User {
     @JsonProperty("wts")
     public Integer wheelTimestamp = 0;
     @JsonProperty("tb")
-    public Long timeBan = 0L;
+    public Long banTime = 0L;
     @JsonProperty("ftr")
     public FavoriteTrack favoriteTrack = null;
     @JsonProperty("ltr")
-    public List<String> lastTracks = new ArrayList<>();
+    public List<LastTrack> lastTracks = new ArrayList<>();
     @JsonProperty("a")
     public String about = "";
-    @JsonProperty("li")
-    public Integer likes = 0;
-    @JsonProperty("sli")
-    public Integer superLikes = 0;
-    @JsonProperty("di")
-    public Integer dislikes = 0;
     @JsonProperty("tr")
     public Integer tracks = 0;
-    @JsonProperty("b")
+    @JsonProperty("li")
+    public Integer likes = 0;
+    @JsonProperty("di")
+    public Integer dislikes = 0;
+    @JsonProperty("sli")
+    public Integer superLikes = 0;
+    @JsonProperty("balance")
     public Integer balance = 0;
-    @JsonProperty("hb")
-    public Boolean hidedBalance = false;
-    @JsonProperty("hlt")
-    public Boolean hidedLastTracks = false;
-    @JsonProperty("hf")
-    public Boolean hidedFavorites = false;
+
     @JsonProperty("at")
     public String accessToken = "";
     @JsonProperty("vt")
@@ -61,6 +56,4 @@ public class User {
     public String deviceId = "";
     @JsonProperty("vid")
     public Integer vkontakteId = 0;
-    @JsonProperty("ma")
-    public String mail = "";
 }

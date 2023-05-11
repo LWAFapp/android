@@ -114,6 +114,7 @@
     <string name="add">Добавить</string>
     <string name="user_not_have_favorite_track">Пользователь не добавил любимый трек</string>
     <string name="remove_favorite_track">Удалить любимый трек</string>
+    <string name="last_tracks">Последние треки</string>
     <string-array name="sexes">
         <item>Не указан</item>
         <item>Мужской</item>

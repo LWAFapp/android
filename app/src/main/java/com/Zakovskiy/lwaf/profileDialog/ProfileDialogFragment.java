@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
@@ -31,9 +33,11 @@ import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.menuDialog.MenuButton;
 import com.Zakovskiy.lwaf.menuDialog.adapters.MenuButtonAdapter;
 import com.Zakovskiy.lwaf.models.FavoriteTrack;
+import com.Zakovskiy.lwaf.models.LastTrack;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.models.enums.Sex;
 import com.Zakovskiy.lwaf.network.SocketHelper;
+import com.Zakovskiy.lwaf.profileDialog.adapters.LastTracksAdapter;
 import com.Zakovskiy.lwaf.room.DialogPickTrack;
 import com.Zakovskiy.lwaf.utils.FileUtils;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
@@ -49,6 +53,7 @@ import org.json.JSONObject;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,6 +78,9 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     private EditText tvAbout;
     private TextView tvNotHaveFavoriteTrack;
     private TextView tvFavoriteTrack;
+
+    private RecyclerView rvLastTracks;
+
     private User user;
 
     private LinearLayout llStatistics;
@@ -80,7 +88,8 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     private Button btnAddFavoriteTrack;
     private CircleImageView civAvatar;
     private CircleImageView civFavoriteTrack;
-
+    private List<LastTrack> lastTracks = new ArrayList<>();
+    private LastTracksAdapter lastTracksAdapter;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
 
     public ProfileDialogFragment() {}
@@ -102,8 +111,10 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         data.put(PacketDataKeys.CONTENT, this.userId);
         this.socketHelper.sendData(new JSONObject(data));
         Dialog dialog = getDialog();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        if(dialog != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        }
     }
 
     @Override
@@ -134,6 +145,12 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         this.btnAddFavoriteTrack = dialog.findViewById(R.id.btnAddFavoriteTrack);
         this.tvFavoriteTrack = dialog.findViewById(R.id.textFavoriteTrack);
         this.civFavoriteTrack = dialog.findViewById(R.id.iconFavoriteTrack);
+        this.rvLastTracks = dialog.findViewById(R.id.rvLastTracks);
+        lastTracksAdapter = new LastTracksAdapter(context, lastTracks);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvLastTracks.setLayoutManager(linearLayoutManager);
+        rvLastTracks.setAdapter(lastTracksAdapter);
         return dialog;
     }
 
@@ -233,6 +250,12 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         return this.user.userId.equals(Application.lwafCurrentUser.userId);
     }
 
+    private void changeLastTracks(List<LastTrack> list) {
+        lastTracks.clear();
+        lastTracks.addAll(list);
+        lastTracksAdapter.notifyDataSetChanged();
+    }
+
     private void bind(User user) {
         this.user = user;
         this.btnAddFavoriteTrack.setOnClickListener(onClickAddFavoriteTrack);
@@ -241,6 +264,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         ((TextView)this.llStatistics.findViewById(R.id.textDislikes)).setText(String.valueOf(user.dislikes));
         ((TextView)this.llStatistics.findViewById(R.id.textSuperlikes)).setText(String.valueOf(user.superLikes));
         ((TextView)this.llStatistics.findViewById(R.id.textLikes)).setText(String.valueOf(user.likes));
+        changeLastTracks(user.lastTracks);
         changeFavoriteTracks(user.favoriteTrack);
         if(!isSelf()){
             this.tvAbout.setEnabled(false);
