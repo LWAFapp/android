@@ -23,8 +23,10 @@ import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.BubbleType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.models.enums.Sex;
+import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
+import com.Zakovskiy.lwaf.widgets.UserAvatar;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
@@ -175,7 +177,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView replyMessage;
         private LinearLayout replyLayout;
         private LinearLayout messageBubble;
-        private CircleImageView avatar;
+        private UserAvatar avatar;
 
 
         public TextMessageViewHolder(@NonNull View itemView) {
@@ -207,28 +209,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     messageBubble.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(resourceSend[1])));
                 }
             }
-            if (message.user.sex == Sex.FEMALE) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    avatar.setBorderColor(context.getColor(R.color.red));
-                }
-            }
-            if (message.user.avatar != null) {
-                ImageUtils.loadImage(context, message.user.avatar, avatar, true, true);
-            } else {
-                char firstChar = message.user.nickname.charAt(0);
-                ColorGenerator generator = ColorGenerator.DEFAULT; // выберите любой генератор цвета
-                int color = generator.getColor(message.user.nickname); // получаем цвет на основе имени пользователя
-                TextDrawable drawable = TextDrawable.builder()
-                        .beginConfig()
-                        .textColor(Color.WHITE)
-                        .fontSize(50)
-                        .height(100)
-                        .bold()
-                        .width(100)
-                        .endConfig()
-                        .buildRound(String.valueOf(firstChar), color);
-                avatar.setImageDrawable(drawable);
-            }
+            avatar.setUser(message.user);
+            avatar.setOnClickListener((v)->{
+                ProfileDialogFragment.newInstance(context, message.user.userId).show(fragmentManager, "ProfileDialogFragment");
+            });
             this.message.setText(message.message);
             date.setText(TimeUtils.getTime(message.timeSend * 1000));
             if (message.replyMessage != null) {

@@ -15,6 +15,8 @@ public class LastTrack implements Serializable {
     public String icon = "";
     @JsonProperty("du")
     public Integer duration = 0;
-    @JsonProperty("k")
-    public String key = "";
+    @JsonProperty("tid")
+    public Integer trackId = 0;
+    @JsonProperty("oid")
+    public Integer ownerId = 0;
 }

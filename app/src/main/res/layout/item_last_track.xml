@@ -23,6 +23,7 @@
             android:id="@+id/lastTrackTitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:maxLength="50"
             android:text="@string/track_title"
             android:textAlignment="center"
             android:textSize="11sp" />

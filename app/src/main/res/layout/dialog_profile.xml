@@ -6,36 +6,10 @@
     android:layout_height="match_parent"
     android:background="@drawable/rectangle">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@drawable/background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:background="@color/dark_transparent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            app:menu="@menu/top_app_bar"
-            />
-    </com.google.android.material.appbar.AppBarLayout>
-
     <ScrollView
+        android:id="@+id/profileScrollContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
@@ -58,13 +32,23 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background"
+                        android:minHeight="300dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <com.Zakovskiy.lwaf.widgets.UserAvatar
                         android:id="@+id/avatarProfile"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/without_preview"
-                        app:civ_border_color="@color/blue"
+                        android:layout_marginTop="60dp"
                         app:civ_border_width="2dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +58,6 @@
                         android:id="@+id/profileUsername"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/username"
                         android:textAlignment="center"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -89,6 +72,18 @@
                         android:textSize="14sp"
                         app:layout_constraintTop_toBottomOf="@+id/profileUsername" />
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvRanks"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:visibility="gone"
+                        android:gravity="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/profileLastSeen" />
+
                     <LinearLayout
                         android:id="@+id/layoutStatisticks"
                         android:layout_width="match_parent"
@@ -99,7 +94,7 @@
                         android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/profileLastSeen">
+                        app:layout_constraintTop_toBottomOf="@+id/rvRanks">
 
                         <LinearLayout
                             android:id="@+id/layoutTracks"
@@ -393,4 +388,20 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@color/dark_transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            app:menu="@menu/top_app_bar" />
+    </com.google.android.material.appbar.AppBarLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -233,8 +233,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     public void setCurrentTrack() {
         Track currentTrack = roomTracks.get(0);
         this.llPlayerTrack.setTitle(currentTrack.title);
-        if (!currentTrack.icon.isEmpty())
-            this.llPlayerTrack.setIcon(currentTrack.icon);
+        this.llPlayerTrack.setIcon(currentTrack.icon.isEmpty() ? R.drawable.without_preview : currentTrack.icon);
         llPlayerTrack.resetReactions(currentTrack);
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Config.VK_API).build();
         VKApi vkApi = retrofit.create(VKApi.class);

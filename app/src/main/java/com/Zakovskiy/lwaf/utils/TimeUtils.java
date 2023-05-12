@@ -11,7 +11,11 @@ import java.util.TimeZone;
 public class TimeUtils {
 
     public static String getTime(long timestamp) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return getTime(timestamp, "HH:mm");
+    }
+
+    public static String getTime(long timestamp, String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.getDefault());
         GregorianCalendar gregorianCalendar = new GregorianCalendar(TimeZone.getDefault());
         gregorianCalendar.setTimeInMillis(timestamp);
         return simpleDateFormat.format(gregorianCalendar.getTime());

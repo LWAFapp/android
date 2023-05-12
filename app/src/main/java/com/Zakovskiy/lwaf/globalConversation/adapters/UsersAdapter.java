@@ -20,6 +20,7 @@ import com.Zakovskiy.lwaf.models.enums.Sex;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
+import com.Zakovskiy.lwaf.widgets.UserAvatar;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
@@ -63,29 +64,9 @@ public class UsersAdapter extends ArrayAdapter<ShortUser> {
             ProfileDialogFragment.newInstance(context, shortUser.userId).show(fragmentManager, "ProfileDialogFragment");
         });
         TextView username = view.findViewById(R.id.username);
-        CircleImageView avatarImage = view.findViewById(R.id.circleImageView2);
+        UserAvatar avatarImage = view.findViewById(R.id.circleImageView2);
         username.setText(shortUser.nickname);
-        if (shortUser.sex == Sex.FEMALE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                avatarImage.setBorderColor(context.getColor(R.color.red));
-            }
-        }
-        if (shortUser.avatar != null) {
-            ImageUtils.loadImage(context, shortUser.avatar, avatarImage, true, true);
-        } else {
-            char firstChar = shortUser.nickname.charAt(0);
-            ColorGenerator generator = ColorGenerator.MATERIAL;
-            int color = generator.getColor(shortUser.nickname); // получаем цвет на основе имени пользователя
-            TextDrawable drawable = TextDrawable.builder()
-                    .beginConfig()
-                    .textColor(Color.WHITE)
-                    .fontSize(50)
-                    .height(100)
-                    .width(100)
-                    .endConfig()
-                    .buildRound(String.valueOf(firstChar), color);
-            avatarImage.setImageDrawable(drawable);
-        }
+        avatarImage.setUser(shortUser);
         return view;
     }
 }

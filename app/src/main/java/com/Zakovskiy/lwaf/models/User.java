@@ -10,19 +10,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
-    @JsonProperty("uid")
-    public String userId = "";
-    @JsonProperty("n")
-    public String nickname = "";
-    @JsonProperty("s")
-    public Sex sex = Sex.MALE;
-    @JsonProperty("r")
-    public Integer role = 0;
-    @JsonProperty("ls")
-    public Long lastSeenTime = 0L;
-    @JsonProperty("ava")
-    public String avatar = "";
+public class User extends ShortUser{
     @JsonProperty("wc")
     public Integer wheelCount = 0;
     @JsonProperty("wts")
@@ -56,4 +44,6 @@ public class User {
     public String deviceId = "";
     @JsonProperty("vid")
     public Integer vkontakteId = 0;
+    @JsonProperty("rs")
+    public List<Rank> ranks = new ArrayList<Rank>();
 }

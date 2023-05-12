@@ -61,7 +61,7 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
         this.title.setText(Html.fromHtml(title));
     }
 
-    public void setIcon(String url) {
+    public void setIcon(Object url) {
         ImageUtils.loadImage(this.getContext(), url, this.icon);
     }
 

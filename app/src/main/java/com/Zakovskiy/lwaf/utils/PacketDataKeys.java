@@ -12,6 +12,8 @@ public class PacketDataKeys {
     public static final String DASHBOARD = "db";
     public static final String TYPE_EVENT = "te";
     public static final String ROOM_TYPE_EVENT = "rte";
+    public static final String TRACK_ID = "tid";
+
     public static final String ERROR = "e";
     public static final String GET_USER = "gu";
     public static final String SEX = "s";

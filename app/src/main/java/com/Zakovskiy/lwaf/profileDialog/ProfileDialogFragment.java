@@ -10,18 +10,22 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,16 +38,21 @@ import com.Zakovskiy.lwaf.menuDialog.MenuButton;
 import com.Zakovskiy.lwaf.menuDialog.adapters.MenuButtonAdapter;
 import com.Zakovskiy.lwaf.models.FavoriteTrack;
 import com.Zakovskiy.lwaf.models.LastTrack;
+import com.Zakovskiy.lwaf.models.Rank;
+import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.models.enums.Sex;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.profileDialog.adapters.LastTracksAdapter;
+import com.Zakovskiy.lwaf.profileDialog.adapters.RanksAdapter;
 import com.Zakovskiy.lwaf.room.DialogPickTrack;
 import com.Zakovskiy.lwaf.utils.FileUtils;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
+import com.Zakovskiy.lwaf.utils.TimeUtils;
+import com.Zakovskiy.lwaf.widgets.UserAvatar;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -80,17 +89,35 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     private TextView tvFavoriteTrack;
 
     private RecyclerView rvLastTracks;
+    private RecyclerView rvRanks;
+
+    private float newScale;
 
     private User user;
 
     private LinearLayout llStatistics;
     private LinearLayout llFavoriteTrack;
+
+    private ScrollView svContent;
+
     private Button btnAddFavoriteTrack;
-    private CircleImageView civAvatar;
+    private UserAvatar civAvatar;
     private CircleImageView civFavoriteTrack;
     private List<LastTrack> lastTracks = new ArrayList<>();
+    private List<Rank> rankList = new ArrayList<>();
     private LastTracksAdapter lastTracksAdapter;
+    private RanksAdapter ranksAdapter;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
+    private CardView cvLastTracks;
+
+    private Handler handler = new Handler();
+    private Runnable runnableAvatarScroll = new Runnable() {
+        @Override
+        public void run() {
+            civAvatar.setScaleX(newScale);
+            civAvatar.setScaleY(newScale);
+        }
+    };
 
     public ProfileDialogFragment() {}
 
@@ -146,11 +173,31 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         this.tvFavoriteTrack = dialog.findViewById(R.id.textFavoriteTrack);
         this.civFavoriteTrack = dialog.findViewById(R.id.iconFavoriteTrack);
         this.rvLastTracks = dialog.findViewById(R.id.rvLastTracks);
-        lastTracksAdapter = new LastTracksAdapter(context, lastTracks);
+        this.rvRanks = dialog.findViewById(R.id.rvRanks);
+        this.cvLastTracks = dialog.findViewById(R.id.cardViewLastTracks);
+        this.svContent = dialog.findViewById(R.id.profileScrollContent);
+        ranksAdapter = new RanksAdapter(context, rankList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rvLastTracks.setLayoutManager(linearLayoutManager);
-        rvLastTracks.setAdapter(lastTracksAdapter);
+        rvRanks.setLayoutManager(linearLayoutManager);
+        rvRanks.setAdapter(ranksAdapter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            this.svContent.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                if (scrollY > oldScrollY) {  // скролл вниз
+                    newScale = Math.max(civAvatar.getScaleX() - 0.01f, 0.5f);  // уменьшаем масштаб на 0.01, но не меньше 0.5
+                } else if (scrollY < oldScrollY) {  // скролл вверх
+                    newScale = Math.min(civAvatar.getScaleX() + 0.01f, 1.0f);  // увеличиваем масштаб на 0.01, но не больше 1
+                    if (scrollY == 0) {  // достигнут верх экрана
+                        newScale = 1.0f;  // возвращаем масштаб к начальному значению
+                    }
+                } else {
+                    return;
+                }
+
+                handler.removeCallbacks(runnableAvatarScroll);
+                handler.postDelayed(runnableAvatarScroll, 8);
+            });
+        }
         return dialog;
     }
 
@@ -238,9 +285,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
             if(isSelf()) {
                 this.llFavoriteTrack.setOnClickListener(onClickFavorite);
             }
-            if(!favoriteTrack.icon.isEmpty()) {
-                ImageUtils.loadImage(context, favoriteTrack.icon, this.civFavoriteTrack, true, true);
-            }
+            ImageUtils.loadImage(context, favoriteTrack.icon.isEmpty() ? R.drawable.without_preview : favoriteTrack.icon, this.civFavoriteTrack, true, true);
             tvFavoriteTrack.setText(Html.fromHtml(favoriteTrack.title));
             this.llFavoriteTrack.setVisibility(View.VISIBLE);
         }
@@ -256,47 +301,49 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         lastTracksAdapter.notifyDataSetChanged();
     }
 
+    private void changeRanks(List<Rank> list) {
+        rankList.clear();
+        rankList.addAll(list);
+        ranksAdapter.notifyDataSetChanged();
+    }
+
     private void bind(User user) {
         this.user = user;
+        lastTracksAdapter = new LastTracksAdapter(context, lastTracks, isSelf());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvLastTracks.setLayoutManager(linearLayoutManager);
+        rvLastTracks.setAdapter(lastTracksAdapter);
         this.btnAddFavoriteTrack.setOnClickListener(onClickAddFavoriteTrack);
         this.tvUsername.setText(user.nickname);
         ((TextView)this.llStatistics.findViewById(R.id.textTracks)).setText(String.valueOf(user.tracks));
         ((TextView)this.llStatistics.findViewById(R.id.textDislikes)).setText(String.valueOf(user.dislikes));
         ((TextView)this.llStatistics.findViewById(R.id.textSuperlikes)).setText(String.valueOf(user.superLikes));
         ((TextView)this.llStatistics.findViewById(R.id.textLikes)).setText(String.valueOf(user.likes));
-        changeLastTracks(user.lastTracks);
+        Long currentTimeStamp = System.currentTimeMillis() / 1000;
+        if((currentTimeStamp - user.lastSeen) > Application.lwafServerConfig.onlineTime) {
+            this.tvLastSeen.setText(TimeUtils.getTime(user.lastSeen*1000, "dd.MM.yyyy HH:mm"));
+        }
+        if(user.lastTracks.size() > 0 || isSelf()) {
+            changeLastTracks(user.lastTracks);
+        } else {
+            cvLastTracks.setVisibility(View.GONE);
+        }
+        if(user.ranks.size() > 0) {
+            rvRanks.setVisibility(View.VISIBLE);
+            changeRanks(user.ranks);
+        }
         changeFavoriteTracks(user.favoriteTrack);
         if(!isSelf()){
             this.tvAbout.setEnabled(false);
         } else {
             this.civAvatar.setOnClickListener(changeAvatar);
         }
-        if(user.about != null || !user.about.isEmpty()) {
+        if(user.about != null && !user.about.isEmpty()) {
             this.tvAbout.setText(user.about);
         }
 
-        if (user.sex == Sex.FEMALE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                civAvatar.setBorderColor(context.getColor(R.color.red));
-            }
-        }
-        if (user.avatar != null) {
-            ImageUtils.loadImage(context, user.avatar, civAvatar, true, true);
-        } else {
-            char firstChar = user.nickname.charAt(0);
-            ColorGenerator generator = ColorGenerator.DEFAULT; // выберите любой генератор цвета
-            int color = generator.getColor(user.nickname); // получаем цвет на основе имени пользователя
-            TextDrawable drawable = TextDrawable.builder()
-                    .beginConfig()
-                    .textColor(Color.WHITE)
-                    .fontSize(50)
-                    .height(100)
-                    .bold()
-                    .width(100)
-                    .endConfig()
-                    .buildRound(String.valueOf(firstChar), color);
-            civAvatar.setImageDrawable(drawable);
-        }
+        this.civAvatar.setUser(user);
     }
 
     @Override

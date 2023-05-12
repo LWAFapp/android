@@ -93,7 +93,7 @@ public class Config {
     public static final int LOADING_DIALOG_SHOWING_TIMEOUT_MILLIS = 10000;
 
     public static final String ADDRESS = "185.188.183.144";
-    public static final int PORT = 5555;
+    public static final int PORT = 5055;
 
     public static final String VK_API = "https://api.vk.com/method/";
 }

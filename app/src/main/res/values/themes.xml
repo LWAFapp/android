@@ -18,6 +18,10 @@
         <item name="android:colorBackground">@android:color/transparent</item>
         <item name="android:listViewStyle">@style/AppTheme.ListViewStyle</item>
         <item name="colorSurface">@color/black_primary</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+    </style>
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@color/black_primary</item>
     </style>
     <style name="AppTheme.ListViewStyle" parent="@android:style/Widget.ListView">
         <item name="android:divider">@android:color/transparent</item>
