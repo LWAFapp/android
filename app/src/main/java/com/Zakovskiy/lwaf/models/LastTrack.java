@@ -9,14 +9,12 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LastTrack implements Serializable {
-    @JsonProperty("title")
+    @JsonProperty("tt")
     public String title = "";
-    @JsonProperty("icon")
+    @JsonProperty("i")
     public String icon = "";
-    @JsonProperty("duration")
+    @JsonProperty("du")
     public Integer duration = 0;
-    @JsonProperty("track_id")
-    public Integer trackId = 0;
-    @JsonProperty("owner_id")
-    public Integer ownerId = 0;
+    @JsonProperty("k")
+    public String key = "";
 }
