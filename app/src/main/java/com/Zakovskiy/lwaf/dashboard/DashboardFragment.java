@@ -202,7 +202,7 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         } else if (id == R.id.menu__button_profile) {
             Logs.info(Application.lwafCurrentUser.userId);
             ProfileDialogFragment profileDialogFragment = ProfileDialogFragment.newInstance(this, Application.lwafCurrentUser.userId);
-            profileDialogFragment.show(getSupportFragmentManager(), "ProfileDialog");
+            profileDialogFragment.show(getSupportFragmentManager(), "ProfileDialogFragment");
         }
     }
 }

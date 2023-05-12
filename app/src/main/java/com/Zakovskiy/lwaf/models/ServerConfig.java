@@ -35,7 +35,7 @@ public class ServerConfig {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class WheelItem {
+    public static class WheelItem {
         @JsonProperty("label")
         public String label = "";
         @JsonProperty("amount")

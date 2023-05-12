@@ -90,6 +90,7 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
         this.reactionDislike.setOnClickListener(this);
         this.buttonSetTrack = findViewById(R.id.btnSetTrack);
         this.buttonSetTrack.setOnClickListener(this);
+        Logs.debug(Application.lwafServerConfig.toString());
         Logs.debug(Application.lwafServerConfig.colors.setSuperLikeOnTrack);
         ((TextView) this.reactionSuperlike.findViewById(R.id.trackReactionRockText)).setTextColor(Color.parseColor(Application.lwafServerConfig.colors.setSuperLikeOnTrack));
     }
