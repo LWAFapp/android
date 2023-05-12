@@ -1,9 +1,12 @@
 package com.Zakovskiy.lwaf.dashboard;
 
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.BaseActivity;
@@ -13,6 +16,7 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.WelcomeActivity;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.dashboard.adapters.RoomsAdapter;
+import com.Zakovskiy.lwaf.dashboard.dialogs.DialogWheel;
 import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.ShortUser;
@@ -56,6 +60,10 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         findViewById(R.id.menu__logout).setOnClickListener(this);
         findViewById(R.id.menu__button_global_chat).setOnClickListener(this);
         findViewById(R.id.menu__button_profile).setOnClickListener(this);
+        //new DialogTextBox(DashboardFragment.this, "Popup test").show();
+
+            new DialogWheel(DashboardFragment.this).show();
+
     }
 
     private void changeShimmer(boolean type) {

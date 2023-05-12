@@ -58,7 +58,7 @@ public class ServerConfig {
         @JsonProperty("friends")
         public Boolean friends = true;
         @JsonProperty("posts")
-        public  Boolean posts = true;
+        public Boolean posts = true;
     }
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)

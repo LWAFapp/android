@@ -3,6 +3,7 @@ pluginManagement {
         google()
         jcenter()
         maven { url 'https://maven.google.com' } // Добавить эту строку
+        maven { url '' }
     }
 }
 dependencyResolutionManagement {
@@ -11,6 +12,7 @@ dependencyResolutionManagement {
         google()
         jcenter()
         maven { url 'https://maven.google.com' }
+        maven { url 'https://dl.bintray.com/adef145/maven/' }
     }
 }
 rootProject.name = "LWAF"

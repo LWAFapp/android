@@ -120,4 +120,6 @@
         <item>Мужской</item>
         <item>Женский</item>
     </string-array>
+    <string name="whell_title">Колесо фортуны</string>
+    <string name="spin">Крутить</string>
 </resources>
