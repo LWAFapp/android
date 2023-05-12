@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.Zakovskiy.lwaf.R;
-import com.adefruandta.spinningwheel.SpinningWheelView;
+import com.Zakovskiy.lwaf.wheelspin.SpinningWheelView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,13 @@ public class DialogWheel extends Dialog {
     }
     @Override
     public void onCreate(Bundle bundle) {
+        // -- создание лояута --
+        super.onCreate(bundle);
+        requestWindowFeature(1);
+        getWindow().setBackgroundDrawableResource(R.color.transparent);
+        setContentView(R.layout.dialog_wheel);
+        setCancelable(true);
+        // --  --
         SpinningWheelView wheelView = (SpinningWheelView) findViewById(R.id.wheel);
         items.add("Test1");items.add("Test2");items.add("Test3");
         wheelView.setItems(items);

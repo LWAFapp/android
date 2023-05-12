@@ -122,4 +122,6 @@
     </string-array>
     <string name="whell_title">Колесо фортуны</string>
     <string name="spin">Крутить</string>
+    <string name="more">Ещё</string>
+    <string name="page_title">LWAF</string>
 </resources>

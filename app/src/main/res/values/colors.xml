@@ -15,4 +15,15 @@
     <color name="dark_transparent">#24000000</color>
     <color name="blue">#160FE1</color>
     <color name="red">#E10F4A</color>
+
+    <string-array name="rainbow_dash">
+        <item>#c20000</item>
+        <item>#ff7400</item>
+        <item>#009191</item>
+        <item>#00e800</item>
+        <item>#ff2020</item>
+        <item>#ff8520</item>
+        <item>#005858</item>
+        <item>#00c100</item>
+    </string-array>
 </resources>
