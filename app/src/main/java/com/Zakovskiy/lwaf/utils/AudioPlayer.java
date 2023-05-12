@@ -40,8 +40,10 @@ public class AudioPlayer {
 
     public void stopSong() {
         if (mMediaPlayer != null) {
+            mMediaPlayer.setPlayWhenReady(false);
             mMediaPlayer.stop();
             mMediaPlayer.release();
+            mMediaPlayer = null;
         }
     }
 
