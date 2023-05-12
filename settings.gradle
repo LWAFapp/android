@@ -3,7 +3,6 @@ pluginManagement {
         google()
         jcenter()
         maven { url 'https://maven.google.com' } // Добавить эту строку
-        maven { url '' }
     }
 }
 dependencyResolutionManagement {
