@@ -87,6 +87,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         ((TextView)findViewById(R.id.textTitle)).setText(this.room.title);
         this.listMessages = findViewById(R.id.listViewMessages);
         this.listUsers = findViewById(R.id.listViewUsers);
+
         this.listTracksQueue = findViewById(R.id.tracksQueue);
         this.llPlayerTrack = findViewById(R.id.playerLayout);
         this.llPlayerTrack.setOnClickListener(this);
@@ -261,18 +262,19 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
 
     public void refreshAudioPlayer() {
         Logs.info("Refresh Audio Player");
-        if(Application.lwafCurrentUser.vkontakteToken.isEmpty()) {
+        if(Application.lwafCurrentUser.vkontakteToken.isEmpty()) { // если мэн не привязал вк
             findViewById(R.id.errorUnsettingVK).setVisibility(View.VISIBLE);
             return;
         }
-        if (this.roomTracks.size() > 0) {
+        if (this.roomTracks.size() > 0) { // если очередь из треков не пуста
             this.btnSetTrack.setVisibility(View.INVISIBLE);
             this.llPlayerTrack.setVisibility(View.VISIBLE);
-            if (audioPlayer.mMediaPlayer == null || !audioPlayer.mMediaPlayer.isPlaying()) {
+            if (audioPlayer.mMediaPlayer == null
+                    || !audioPlayer.mMediaPlayer.isPlaying()) { // проверяем не играет ли трек
                 setCurrentTrack();
             }
             queueTracks.clear();
-            if (this.roomTracks.size() > 1) {
+            if (this.roomTracks.size() > 1) { // если очередь треков больше 1 (то есть не только основной трек играет) то добавляем в очередь оставшиеся
                 queueTracks.addAll(new ArrayList<>(this.roomTracks.subList(1, this.roomTracks.size())));
             }
             tracksQueueAdapter.notifyDataSetChanged();

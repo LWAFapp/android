@@ -98,4 +98,7 @@ public class PacketDataKeys {
     public static final String REMOVE_FAVORITE_TRACK = "rftr";
     public static final String CHANGE_ABOUT = "ca";
     public static final String ABOUT = "a";
+    public static final String WHEEL_SPIN = "ws";
+    public static final String WHEEL_COUNT = "wc";
+    public static final String WHEEL_ID = "wid";
 }

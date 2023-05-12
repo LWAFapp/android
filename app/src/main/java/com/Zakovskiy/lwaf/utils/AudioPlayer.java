@@ -39,7 +39,7 @@ public class AudioPlayer {
     }
 
     public void stopSong() {
-        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+        if (mMediaPlayer != null) {
             mMediaPlayer.stop();
             mMediaPlayer.release();
         }
