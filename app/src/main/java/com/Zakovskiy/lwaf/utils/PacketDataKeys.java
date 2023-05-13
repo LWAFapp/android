@@ -103,4 +103,7 @@ public class PacketDataKeys {
     public static final String WHEEL_SPIN = "ws";
     public static final String WHEEL_COUNT = "wc";
     public static final String WHEEL_ID = "wid";
+    public static final String LOTO_SEND_NUMBERS = "sln";
+    public static final String LOTO_NUMBERS = "ln";
+    public static final String LOTO_RESULT = "lr";
 }

@@ -10,6 +10,7 @@
     <string name="welcome_activity_label">WelcomeActivity</string>
     <string name="next">Дальше</string>
     <string name="previous">Назад</string>
+    <string name="cancel">Закрыть</string>
     <string name="report">Пожаловаться</string>
     <string name="add_friend">Добавить в друзья</string>
     <string name="accept_friend_request">Принять зяавку</string>
@@ -125,10 +126,17 @@
         <item>Мужской</item>
         <item>Женский</item>
     </string-array>
-    <string name="whell_title">Колесо фортуны</string>
+    <string name="whell_title">Ежедневный бонус</string>
     <string name="spin">Крутить</string>
     <string name="more">Ещё</string>
     <string name="page_title">LWAF</string>
     <string name="make_favorite">Сделать любимым</string>
     <string name="open">Открыть</string>
+    <string name="loto">Лото</string>
+    <string name="bets_can_be_placed">Ставки можно делать ещё</string>
+    <string name="seconds">секунд</string>
+    <string name="enough_coins">Недостаточно монет</string>
+    <string name="stavki">Ставки</string>
+    <string name="you_have">У вас</string>
+    <string name="spins">Вращений</string>
 </resources>

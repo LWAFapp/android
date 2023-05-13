@@ -61,8 +61,8 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         findViewById(R.id.menu__button_global_chat).setOnClickListener(this);
         findViewById(R.id.menu__button_profile).setOnClickListener(this);
         //new DialogTextBox(DashboardFragment.this, "Popup test").show();
-
-        new DialogWheel( this).show();
+        if(Application.lwafCurrentUser.wheelCount > 0)
+            new DialogWheel( DashboardFragment.this).show();
 
     }
 

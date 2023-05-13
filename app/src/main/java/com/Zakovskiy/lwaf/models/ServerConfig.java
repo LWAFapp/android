@@ -1,5 +1,6 @@
 package com.Zakovskiy.lwaf.models;
 
+import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.application.Application;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -42,6 +43,18 @@ public class ServerConfig {
         public Integer amount = 0;
         @JsonProperty("chance")
         public Double chance = 0.0;
+
+        public int getDrawable() {
+            return this.label.equals("1") ? R.drawable.coin_icon : R.drawable.icon_spin_active;
+        }
+
+        public String getString() {
+            return this.label.equals("1") ? "Монет" : "Вращений";
+        }
+
+        public int getColor() {
+            return this.label.equals("1") ? R.color.red : pub.devrel.easypermissions.R.color.colorAccent;
+        }
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

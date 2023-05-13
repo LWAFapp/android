@@ -198,6 +198,9 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         }
                         llPlayerTrack.resetReactions(roomTracks.get(0));
                         break;
+                    case "sl": // start_loto
+                        new DialogLoto(this).show();
+                        break;
                 }
             }
         });

@@ -32,7 +32,7 @@ public class User extends ShortUser{
     public Integer dislikes = 0;
     @JsonProperty("sli")
     public Integer superLikes = 0;
-    @JsonProperty("balance")
+    @JsonProperty("b")
     public Integer balance = 0;
 
     @JsonProperty("at")

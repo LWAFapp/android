@@ -24,6 +24,8 @@ import androidx.core.content.ContextCompat;
 
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.dashboard.dialogs.DialogWheel;
+import com.Zakovskiy.lwaf.models.ServerConfig;
+import com.Zakovskiy.lwaf.utils.Logs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +85,7 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
 
     private float previousY;
 
-    private List items;
+    private List<ServerConfig.WheelItem> items;
 
     private Point[] points;
 
@@ -385,31 +387,16 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
         setColors(colors);
     }
 
-    public List getItems() {
+    public List<ServerConfig.WheelItem> getItems() {
         return items;
     }
 
-    public void setItems(List items) {
+    public void setItems(List<ServerConfig.WheelItem> items) {
         this.items = items;
 
         initPoints();
 
         invalidate();
-    }
-
-    public void setItems(@ArrayRes int itemsResId) {
-        if (itemsResId == 0) {
-            return;
-        }
-
-        String[] typedArray = getResources().getStringArray(itemsResId);
-        List items = new ArrayList();
-
-        for (int i = 0; i < typedArray.length; i++) {
-            items.add(typedArray[i]);
-        }
-
-        setItems(items);
     }
 
     public OnRotationListener getOnRotationListener() {
@@ -459,9 +446,6 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
 
             float wheelStrokeWidth = typedArray.getDimension(R.styleable.Wheel_wheel_stroke_width, 0f);
             setWheelStrokeWidth(wheelStrokeWidth);
-
-            int itemsResId = typedArray.getResourceId(R.styleable.Wheel_wheel_items, 0);
-            setItems(itemsResId);
 
             float wheelTextSize = typedArray.getDimension(R.styleable.Wheel_wheel_text_size, TEXT_SIZE);
             setWheelTextSize(wheelTextSize);
@@ -575,21 +559,16 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
         float textWidth = radius - (wheelStrokeRadius * 10);
         TextPaint textPaint = new TextPaint();
         textPaint.set(this.textPaint);
-
         float angle = getAnglePerItem() / 2;
 
         for (int i = 0; i < getItemSize(); i++) {
             CharSequence item = TextUtils
-                    .ellipsize(items.get(i).toString(), textPaint, textWidth, TextUtils.TruncateAt.END);
+                    .ellipsize(String.format("%s %s", items.get(i).amount, items.get(i).getString()), textPaint, textWidth, TextUtils.TruncateAt.END);
             canvas.save();
             canvas.rotate(angle + 180, cx, cy); // +180 for start from right
-            canvas.drawText(item.toString(), x+100, y, this.textPaint);
+            canvas.drawText(item.toString(), x+70, y, this.textPaint);
 
-            int id = 0;
-            if (items.get(i).toString().contains("монет"))
-                id = R.drawable.coin_icon;
-            else
-                id = R.drawable.icon_spin_active;
+            int id = items.get(i).getDrawable();
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
             if (id == R.drawable.icon_spin_active)
                 bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth()/2, bitmap.getHeight()/2, false);
@@ -642,7 +621,7 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
         return items == null ? 0 : items.size();
     }
 
-    private float getAnglePerItem() {
+    public float getAnglePerItem() {
         return ANGLE / (float) getItemSize();
     }
 
