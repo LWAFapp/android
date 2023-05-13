@@ -229,6 +229,7 @@
                                     android:background="@color/white"
                                     android:backgroundTint="@color/black_primary"
                                     android:enabled="true"
+                                    android:textSize="14sp"
                                     android:gravity="top"
                                     android:imeOptions="actionDone"
                                     android:inputType="textMultiLine"

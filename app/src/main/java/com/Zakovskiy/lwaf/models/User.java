@@ -1,5 +1,6 @@
 package com.Zakovskiy.lwaf.models;
 
+import com.Zakovskiy.lwaf.models.enums.FriendType;
 import com.Zakovskiy.lwaf.models.enums.Sex;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -46,4 +47,8 @@ public class User extends ShortUser{
     public Integer vkontakteId = 0;
     @JsonProperty("rs")
     public List<Rank> ranks = new ArrayList<Rank>();
+    @JsonProperty("ft")
+    public FriendType friendType = FriendType.REMOVE_FRIEND;
+    @JsonProperty("fid")
+    public String friendId = "";
 }

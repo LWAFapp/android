@@ -10,6 +10,11 @@
     <string name="welcome_activity_label">WelcomeActivity</string>
     <string name="next">Дальше</string>
     <string name="previous">Назад</string>
+    <string name="report">Пожаловаться</string>
+    <string name="add_friend">Добавить в друзья</string>
+    <string name="accept_friend_request">Принять зяавку</string>
+    <string name="cancel_friend_request">Отменить зяавку</string>
+    <string name="remove_from_friends">Удалить из друзей</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

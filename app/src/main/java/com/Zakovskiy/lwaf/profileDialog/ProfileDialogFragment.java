@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -25,6 +26,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,12 +37,14 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.api.LWAFApi;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.menuDialog.MenuButton;
+import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.menuDialog.adapters.MenuButtonAdapter;
 import com.Zakovskiy.lwaf.models.FavoriteTrack;
 import com.Zakovskiy.lwaf.models.LastTrack;
 import com.Zakovskiy.lwaf.models.Rank;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.User;
+import com.Zakovskiy.lwaf.models.enums.FriendType;
 import com.Zakovskiy.lwaf.models.enums.Sex;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.profileDialog.adapters.LastTracksAdapter;
@@ -99,6 +103,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     private LinearLayout llFavoriteTrack;
 
     private ScrollView svContent;
+    private ActionMenuItemView menuItemMore;
 
     private Button btnAddFavoriteTrack;
     private UserAvatar civAvatar;
@@ -176,6 +181,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         this.rvRanks = dialog.findViewById(R.id.rvRanks);
         this.cvLastTracks = dialog.findViewById(R.id.cardViewLastTracks);
         this.svContent = dialog.findViewById(R.id.profileScrollContent);
+        this.menuItemMore = dialog.findViewById(R.id.more);
         ranksAdapter = new RanksAdapter(context, rankList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -316,6 +322,26 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         rvLastTracks.setAdapter(lastTracksAdapter);
         this.btnAddFavoriteTrack.setOnClickListener(onClickAddFavoriteTrack);
         this.tvUsername.setText(user.nickname);
+        this.menuItemMore.setOnClickListener((v)->{
+            List<MenuButton> menuButtons = new ArrayList<>();
+            if (!isSelf()) {
+                menuButtons.add(new MenuButton(getString(R.string.report), "#E10F4A", (vb) -> {
+                    Logs.debug("Report success");
+                }));
+                menuButtons.add(new MenuButton(getString(user.friendType.title), "#FFFFFF", (vb) -> {
+                    HashMap<String, Object> data = new HashMap<>();
+                    data.put(PacketDataKeys.TYPE_EVENT, user.friendType.packetType);
+                    if(user.friendType == FriendType.ADD_FRIEND) {
+                        data.put(PacketDataKeys.USER_ID, user.userId);
+                    } else {
+                        data.put(PacketDataKeys.FRIEND_ID, user.friendId);
+                    }
+                    this.socketHelper.sendData(new JSONObject(data));
+                }));
+            }
+            MenuDialogFragment.newInstance(context, menuButtons).show(getFragmentManager(), "MenuButtons");
+            Logs.debug("press");
+        });
         ((TextView)this.llStatistics.findViewById(R.id.textTracks)).setText(String.valueOf(user.tracks));
         ((TextView)this.llStatistics.findViewById(R.id.textDislikes)).setText(String.valueOf(user.dislikes));
         ((TextView)this.llStatistics.findViewById(R.id.textSuperlikes)).setText(String.valueOf(user.superLikes));
@@ -368,6 +394,13 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
             } else if (typeEvent.equals(PacketDataKeys.SET_FAVORITE_TRACK)) {
                 FavoriteTrack favoriteTrack = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.FAVORITE_TRACK), FavoriteTrack.class);
                 getActivity().runOnUiThread(()->changeFavoriteTracks(favoriteTrack));
+            } else if(typeEvent.equals(PacketDataKeys.FRIEND_ADD_TO_FRIENDSHIP_LIST)) {
+                user.friendId = json.get(PacketDataKeys.FRIEND_ID).asText();
+                user.friendType = FriendType.CANCEL_REQUEST;
+            } else if(typeEvent.equals(PacketDataKeys.FRIEND_DELETE_FRIENDSHIP)) {
+                user.friendType = FriendType.ADD_FRIEND;
+            } else if(typeEvent.equals(PacketDataKeys.FRIEND_ACCEPT_FRIENDSHIP)) {
+                user.friendType = FriendType.REMOVE_FRIEND;
             }
         }
     }
