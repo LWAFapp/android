@@ -199,13 +199,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 messageBubble.setBackgroundResource(R.drawable.message_bg_receiver);
                 String[] resourceReceive = bubble.getSourceReceive();
                 if (bubble.bubbleType == BubbleType.SOLID) {
+                    username.setTextColor(Color.parseColor(resourceReceive[0]));
                     messageBubble.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(resourceReceive[1])));
                 }
             } else {
                 String[] resourceSend = bubble.getSourceSend();
-                username.setTextColor(Color.parseColor(resourceSend[0]));
                 username.setText(message.user.nickname);
                 if (bubble.bubbleType == BubbleType.SOLID) {
+                    username.setTextColor(Color.parseColor(resourceSend[0]));
                     messageBubble.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(resourceSend[1])));
                 }
             }

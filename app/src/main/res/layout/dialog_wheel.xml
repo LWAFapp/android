@@ -21,7 +21,14 @@
                 android:textColor="@color/white"
                 android:textSize="20sp" />
         </LinearLayout>
-        <LinearLayout android:gravity="center" android:orientation="vertical" android:background="@color/white" android:padding="24dp" android:layout_width="match_parent" android:layout_height="match_parent">
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:padding="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
             <com.Zakovskiy.lwaf.wheelspin.SpinningWheelView
                 android:id="@+id/wheel"
@@ -48,8 +55,7 @@
                 android:text="@string/spin"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="20sp"
-                android:visibility="visible" />
+                android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
