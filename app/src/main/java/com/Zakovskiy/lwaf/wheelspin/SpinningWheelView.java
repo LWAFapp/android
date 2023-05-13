@@ -21,6 +21,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.dashboard.dialogs.DialogWheel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
 
     private final static float ANGLE = 360f;
 
-    private final static int COLORS_RES = R.array.rainbow_dash;
+    private final static int COLORS_RES = R.array.wheel_colors;
 
     private final static float TOUCH_SCALE_FACTOR = (180.0f / 320) / 2;
 
@@ -74,7 +75,7 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
 
     private Circle circle;
 
-    private float angle = 0;
+    public float angle = 0;
 
     private float previousX;
 
@@ -88,10 +89,11 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
     private int[] colors;
 
     private OnRotationListener onRotationListener;
+    private DialogWheel.DialogListener dListener;
 
     private boolean onRotationListenerTicket;
 
-    private boolean onRotation;
+    public boolean onRotation = false;
 
     private Paint textPaint;
 
@@ -117,6 +119,11 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
     public SpinningWheelView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttrs(attrs);
+    }
+
+    public SpinningWheelView setListener(DialogWheel.DialogListener listener) {
+        this.dListener = listener;
+        return this;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -217,7 +224,7 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
     @Override
     public void onStop() {
         onRotation = false;
-
+        dListener.onStop(getSelectedItem());
         if (onRotationListener != null) {
             onRotationListener.onStopRotation(getSelectedItem());
         }
@@ -238,6 +245,10 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
             onRotationListener.onRotation();
             onRotationListenerTicket = false;
         }
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
     }
 
     /**
@@ -557,8 +568,8 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
         float cx = circle.getCx();
         float cy = circle.getCy();
         float radius = circle.getRadius();
-        float x = cx - radius + (wheelStrokeRadius * 5);
-        float y = cy;
+        float x = (cx - radius + (wheelStrokeRadius * 5)) + 20;
+        float y = cy + 20;
         float textWidth = radius - (wheelStrokeRadius * 10);
         TextPaint textPaint = new TextPaint();
         textPaint.set(this.textPaint);

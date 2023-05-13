@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="wheel_colors">
+        <item>0xFFff6262</item> <!-- red -->
+        <item>0xFFffb061</item> <!-- orange -->
+        <item>0xFFd7d700</item> <!-- yellow -->
+        <item>0xFF33cc00</item> <!-- green -->
+        <item>0xFF00c4c4</item> <!-- light-blue -->
+        <item>0xFF6666ff</item> <!-- blue -->
+        <item>0xFFb366ff</item> <!-- purple -->
+    </integer-array>
+</resources>

@@ -56,21 +56,21 @@ class WheelRotation extends CountDownTimer {
         }
 
         if (millisUntilFinished <= thresholdSlow) {
-            angle = maxAngle * ((float) millisUntilFinished / (float) duration);
+            angle = maxAngle;// * ((float) millisUntilFinished / (float) duration);
             rotationListener.onRotate(angle);
         }
-        else if (angle < maxAngle) {
-            rotationListener.onRotate(angle);
-
-            angle *= ROTATE_SCALE_FACTOR;
-
-            if (angle > maxAngle) {
-                angle = maxAngle;
-            }
-        }
-        else {
-            rotationListener.onRotate(angle);
-        }
+//        else if (angle < maxAngle) {
+//            rotationListener.onRotate(angle);
+//
+//            angle *= ROTATE_SCALE_FACTOR;
+//
+//            if (angle > maxAngle) {
+//                angle = maxAngle;
+//            }
+//        }
+//        else {
+//            rotationListener.onRotate(angle);
+//        }
     }
 
     @Override
