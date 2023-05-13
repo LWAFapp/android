@@ -2,6 +2,7 @@ package com.Zakovskiy.lwaf.dashboard.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
@@ -31,11 +32,12 @@ public class DialogWheel extends Dialog {
         SpinningWheelView wheelView = (SpinningWheelView) findViewById(R.id.wheel);
         items.add("Test1");items.add("Test2");items.add("Test3");
         wheelView.setItems(items);
+        wheelView.setWheelArrowColor(Color.rgb(255,255,255));
         wheelView.setEnabled(false);
         findViewById(R.id.button_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wheelView.rotate(360, 300, 50);
+                wheelView.rotate(360, 3000, 50);
             }
         });
     }
