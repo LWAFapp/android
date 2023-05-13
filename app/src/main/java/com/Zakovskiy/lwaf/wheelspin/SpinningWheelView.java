@@ -1,6 +1,8 @@
 package com.Zakovskiy.lwaf.wheelspin;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -42,7 +44,7 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
 
     private final static float TOUCH_SCALE_FACTOR = (180.0f / 320) / 2;
 
-    private final static int TEXT_SIZE = 55;
+    private final static int TEXT_SIZE = 40;
 
     private final static int TEXT_COLOR = Color.WHITE;
 
@@ -568,8 +570,8 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
         float cx = circle.getCx();
         float cy = circle.getCy();
         float radius = circle.getRadius();
-        float x = (cx - radius + (wheelStrokeRadius * 5)) + 20;
-        float y = cy + 20;
+        float x = (cx - radius + (wheelStrokeRadius * 5)) + 10;
+        float y = cy;
         float textWidth = radius - (wheelStrokeRadius * 10);
         TextPaint textPaint = new TextPaint();
         textPaint.set(this.textPaint);
@@ -581,9 +583,18 @@ public class SpinningWheelView extends View implements WheelRotation.RotationLis
                     .ellipsize(items.get(i).toString(), textPaint, textWidth, TextUtils.TruncateAt.END);
             canvas.save();
             canvas.rotate(angle + 180, cx, cy); // +180 for start from right
-            canvas.drawText(item.toString(), x, y, this.textPaint);
-            canvas.restore();
+            canvas.drawText(item.toString(), x+100, y, this.textPaint);
 
+            int id = 0;
+            if (items.get(i).toString().contains("монет"))
+                id = R.drawable.coin_icon;
+            else
+                id = R.drawable.icon_spin_active;
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
+            if (id == R.drawable.icon_spin_active)
+                bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth()/2, bitmap.getHeight()/2, false);
+            canvas.drawBitmap(bitmap, x, y-45, null);
+            canvas.restore();
             angle += getAnglePerItem();
         }
     }
