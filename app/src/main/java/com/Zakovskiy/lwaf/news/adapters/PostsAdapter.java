@@ -11,9 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.R;
-import com.Zakovskiy.lwaf.models.ShortPost;
-import com.Zakovskiy.lwaf.models.ShortUser;
-import com.Zakovskiy.lwaf.news.NewsActivity;
+import com.Zakovskiy.lwaf.models.PostInList;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 
@@ -25,8 +23,8 @@ import java.util.List;
 public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private FragmentManager fragmentManager;
-    private List<ShortPost> posts;
-    public PostsAdapter(Context context, FragmentManager fragmentManager, List<ShortPost> posts) {
+    private List<PostInList> posts;
+    public PostsAdapter(Context context, FragmentManager fragmentManager, List<PostInList> posts) {
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.posts = posts;
@@ -43,7 +41,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ShortPost post = getItem(position);
+        PostInList post = getItem(position);
         PostViewHolder postHolder = (PostViewHolder) holder;
         try {
             postHolder.bind(post);
@@ -52,7 +50,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    private ShortPost getItem(int position) {return this.posts.get(position);}
+    private PostInList getItem(int position) {return this.posts.get(position);}
 
     @Override
     public int getItemCount() {return this.posts.size();}
@@ -77,14 +75,14 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             dislikes = itemView.findViewById(R.id.dislikes);
         }
 
-        public void bind(ShortPost post) throws IOException, XmlPullParserException {
+        public void bind(PostInList post) throws IOException, XmlPullParserException {
             avatar.setUser(post.author);
             author.setText(post.author.nickname);
-            date.setText(TimeUtils.getTime(post.time * 1000));
+            date.setText(TimeUtils.getDateAndTime(post.time*1000));
             title.setText(post.title);
             content.setText(post.content);
-            likes.setText(post.likes);
-            dislikes.setText(post.dislikes);
+            likes.setText(String.valueOf(post.likes));
+            dislikes.setText(String.valueOf(post.dislikes));
         }
     }
 }

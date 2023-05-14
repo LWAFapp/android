@@ -29,6 +29,7 @@ public class BaseActivity extends ABCActivity implements SocketHelper.SocketList
     @Override
     protected void onStart() {
         super.onStart();
+        this.socketHelper.socketDisconnect(true);
         this.socketHelper.setEnableCheckerConnectionTimer(true);
         this.socketHelper.socketConnect();
         this.socketHelper.subscribe(this);
@@ -36,8 +37,9 @@ public class BaseActivity extends ABCActivity implements SocketHelper.SocketList
 
     @Override
     protected void onStop() {
-        super.onStop();
+        finish();
         this.socketHelper.unsubscribe(this);
+        super.onStop();
     }
 
     @Override

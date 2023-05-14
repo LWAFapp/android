@@ -145,4 +145,5 @@
     <string name="author">Автор</string>
     <string name="title">Заголовок</string>
     <string name="content">Содержание</string>
+    <string name="news">Новости</string>
 </resources>

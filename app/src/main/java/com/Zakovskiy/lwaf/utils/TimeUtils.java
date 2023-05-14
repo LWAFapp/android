@@ -23,11 +23,6 @@ public class TimeUtils {
         //return simpleDateFormat.format(new Date());
     }
     public static String getDateAndTime(long timestamp) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
-        GregorianCalendar gregorianCalendar = new GregorianCalendar(TimeZone.getDefault());
-        gregorianCalendar.setTimeInMillis(timestamp);
-        return simpleDateFormat.format(gregorianCalendar.getTime());
-        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", new Locale("ru"));
-        //return simpleDateFormat.format(new Date());
+        return getTime(timestamp, "dd.MM.yyyy HH:mm");
     }
 }

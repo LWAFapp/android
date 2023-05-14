@@ -6,19 +6,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ShortPost {
+public class PostInList {
     @JsonProperty("pid")
-    public String id;
+    public String id = "";
     @JsonProperty("pt")
-    public String title;
+    public String title = "";
     @JsonProperty("ptc")
-    public Long time;
+    public Long time = 0L;
     @JsonProperty("pc")
-    public String content;
+    public String content = "";
     @JsonProperty("pa")
-    public ShortUser author;
-    @JsonProperty("pl")
-    public Integer likes;
-    @JsonProperty("pd")
-    public Integer dislikes;
+    public ShortUser author = new ShortUser();
+    @JsonProperty("pli")
+    public Integer likes = 0;
+    @JsonProperty("pdi")
+    public Integer dislikes = 0;
 }

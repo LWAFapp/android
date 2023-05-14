@@ -110,6 +110,6 @@ public class PacketDataKeys {
     public static final String POSTS_GET_LIST = "pgl";
     public static final String POSTS_LIST = "pl";
     public static final String POST_AUTHOR = "pa";
-    public static final String POST_LIKES = "pl";
-    public static final String POST_DISLIKES = "pd";
+    public static final String POST_LIKES = "pli";
+    public static final String POST_DISLIKES = "pdi";
 }
