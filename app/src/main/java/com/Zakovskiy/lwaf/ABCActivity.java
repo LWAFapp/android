@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.Zakovskiy.lwaf.utils.Logs;
 
-public class ABCActivity extends AppCompatActivity {
+public abstract class ABCActivity extends AppCompatActivity {
 
     public void newActivity(Class activity, Bundle instance) {
         newActivity(activity, false, instance);
@@ -28,4 +28,5 @@ public class ABCActivity extends AppCompatActivity {
             intent.putExtras(instance);
         startActivity(intent);
     }
+
 }

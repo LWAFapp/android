@@ -91,4 +91,5 @@ public class LoginActivity extends ABCActivity implements SocketHelper.SocketLis
     public void onReceiveError(String str) {
 
     }
+
 }

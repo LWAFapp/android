@@ -103,7 +103,9 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 android:theme="@style/AppTheme.ListViewStyle"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                tools:layout_editor_absoluteX="10dp"
+                tools:layout_editor_absoluteY="10dp" />
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmerMessages"

@@ -285,4 +285,5 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
 
     @Override
     public void onReceiveError(String str) {}
+
 }

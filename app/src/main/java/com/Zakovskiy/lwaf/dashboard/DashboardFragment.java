@@ -22,6 +22,7 @@ import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.network.SocketHelper;
+import com.Zakovskiy.lwaf.news.NewsActivity;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.room.RoomActivity;
 import com.Zakovskiy.lwaf.utils.Config;
@@ -60,6 +61,7 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         findViewById(R.id.menu__logout).setOnClickListener(this);
         findViewById(R.id.menu__button_global_chat).setOnClickListener(this);
         findViewById(R.id.menu__button_profile).setOnClickListener(this);
+        findViewById(R.id.menu__news).setOnClickListener(this);
         //new DialogTextBox(DashboardFragment.this, "Popup test").show();
         if(Application.lwafCurrentUser.wheelCount > 0)
             new DialogWheel( DashboardFragment.this).show();
@@ -208,6 +210,9 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
             Logs.info(Application.lwafCurrentUser.userId);
             ProfileDialogFragment profileDialogFragment = ProfileDialogFragment.newInstance(this, Application.lwafCurrentUser.userId);
             profileDialogFragment.show(getSupportFragmentManager(), "ProfileDialogFragment");
+        } else if (id == R.id.menu__news) {
+            newActivity(NewsActivity.class);
+            Logs.info("NEW ACTIVITY");
         }
     }
 }

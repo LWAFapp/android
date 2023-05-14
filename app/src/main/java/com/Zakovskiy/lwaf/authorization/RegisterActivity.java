@@ -100,4 +100,5 @@ public class RegisterActivity extends ABCActivity implements SocketHelper.Socket
     public void onReceiveError(String str) {
 
     }
+
 }

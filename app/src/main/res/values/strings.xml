@@ -8,6 +8,7 @@
     <string name="global_conversation_label">GlobalConversationActivity</string>
     <string name="room_label">RoomActivity</string>
     <string name="welcome_activity_label">WelcomeActivity</string>
+    <string name="news_activity_label">NewsActivity</string>
     <string name="next">Дальше</string>
     <string name="previous">Назад</string>
     <string name="cancel">Закрыть</string>
@@ -141,4 +142,7 @@
     <string name="spins">Вращений</string>
     <string name="changes">Поменять</string>
     <string name="remove">Удалить</string>
+    <string name="author">Автор</string>
+    <string name="title">Заголовок</string>
+    <string name="content">Содержание</string>
 </resources>
