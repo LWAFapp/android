@@ -40,7 +40,6 @@ public class LoginActivity extends ABCActivity implements SocketHelper.SocketLis
     public void onLogin(View v) {
         String login = this.loginEdit.getText().toString();
         String password = this.passwordEdit.getText().toString();
-        Logs.info(login+password);
         if (login.isEmpty() || password.isEmpty()) {
             new DialogTextBox(this, getString(R.string.without_parametrs)).show();
             return;

@@ -107,4 +107,9 @@ public class PacketDataKeys {
     public static final String LOTO_NUMBERS = "ln";
     public static final String LOTO_RESULT = "lr";
     public static final String REMOVE_AVATAR = "ra";
+    public static final String POSTS_GET_LIST = "pgl";
+    public static final String POSTS_LIST = "pl";
+    public static final String POST_AUTHOR = "pa";
+    public static final String POST_LIKES = "pl";
+    public static final String POST_DISLIKES = "pd";
 }
