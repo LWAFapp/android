@@ -39,6 +39,9 @@ public class ImageUtils {
         }
         if (cache) {
             glide.diskCacheStrategy(DiskCacheStrategy.ALL);
+        } else {
+            glide.skipMemoryCache(true);
+            glide.diskCacheStrategy(DiskCacheStrategy.NONE);
         }
         glide.into(image);
     }

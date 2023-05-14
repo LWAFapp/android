@@ -139,4 +139,6 @@
     <string name="stavki">Ставки</string>
     <string name="you_have">У вас</string>
     <string name="spins">Вращений</string>
+    <string name="changes">Поменять</string>
+    <string name="remove">Удалить</string>
 </resources>

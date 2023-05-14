@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pm_openAvatar"
+        android:title="@string/open"/>
+    <item
+        android:id="@+id/pm_setAvatar"
+        android:title="@string/changes"/>
+    <item
+        android:id="@+id/pm_removeAvatar"
+        android:title="@string/remove"/>
+</menu>

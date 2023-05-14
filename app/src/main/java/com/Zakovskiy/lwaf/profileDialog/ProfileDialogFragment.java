@@ -22,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -114,7 +115,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     private RanksAdapter ranksAdapter;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private CardView cvLastTracks;
-
+    private Boolean changedAbout;
     private Handler handler = new Handler();
     private Runnable runnableAvatarScroll = new Runnable() {
         @Override
@@ -153,7 +154,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     public void onStop() {
         socketHelper.unsubscribe(this);
         Logs.info("STOP");
-        if(isSelf()) {
+        if(isSelf() && changedAbout) {
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.CHANGE_ABOUT);
             data.put(PacketDataKeys.ABOUT, tvAbout.getText().toString());
@@ -215,14 +216,14 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         new DialogPickTrack(context, 2).show();
     };
 
-    private View.OnClickListener changeAvatar = v -> {
+    public void changeAvatar () {
         Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
         chooseFile.setType("*/*");
         String[] mimeTypes = {"image/png", "image/jpg", "image/jpeg"};
         chooseFile.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         chooseFile = Intent.createChooser(chooseFile, getString(R.string.pick_avatar));
         startActivityForResult(chooseFile, 100);
-    };
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -322,6 +323,13 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         rvLastTracks.setAdapter(lastTracksAdapter);
         this.btnAddFavoriteTrack.setOnClickListener(onClickAddFavoriteTrack);
         this.tvUsername.setText(user.nickname);
+        this.tvAbout.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                changedAbout = true;
+            }
+        });
         this.menuItemMore.setOnClickListener((v)->{
             List<MenuButton> menuButtons = new ArrayList<>();
             if (!isSelf()) {
@@ -362,8 +370,38 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         changeFavoriteTracks(user.favoriteTrack);
         if(!isSelf()){
             this.tvAbout.setEnabled(false);
+            if(user.avatar != null && !user.avatar.isEmpty()) {
+                this.civAvatar.setOnClickListener((v) -> {
+                    new AvatarDialogFragment(context, user.avatar).show(getFragmentManager(), "AvatarDialogFragment");
+                });
+            }
         } else {
-            this.civAvatar.setOnClickListener(changeAvatar);
+            this.civAvatar.setOnClickListener((v) -> {
+                if(user.avatar == null || user.avatar.isEmpty()) {
+                    changeAvatar();
+                    return;
+                }
+                PopupMenu popupMenu = new PopupMenu(context, v);
+                popupMenu.getMenuInflater().inflate(R.menu.pm_avatar, popupMenu.getMenu());
+                MenuItem menuOpenAvatar = popupMenu.getMenu().findItem(R.id.pm_openAvatar);
+                MenuItem menuRemoveAvatar = popupMenu.getMenu().findItem(R.id.pm_removeAvatar);
+                MenuItem menuSetAvatar = popupMenu.getMenu().findItem(R.id.pm_setAvatar);
+                menuRemoveAvatar.setOnMenuItemClickListener((mv)->{
+                    HashMap<String, Object> data = new HashMap<>();
+                    data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.REMOVE_AVATAR);
+                    this.socketHelper.sendData(new JSONObject(data));
+                    return false;
+                });
+                menuOpenAvatar.setOnMenuItemClickListener((mv)->{
+                    new AvatarDialogFragment(context, user.avatar).show(getFragmentManager(), "AvatarDialogFragment");
+                    return false;
+                });
+                menuSetAvatar.setOnMenuItemClickListener((mv)->{
+                    changeAvatar();
+                    return false;
+                });
+                popupMenu.show();
+            });
         }
         if(user.about != null && !user.about.isEmpty()) {
             this.tvAbout.setText(user.about);
@@ -401,6 +439,11 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
                 user.friendType = FriendType.ADD_FRIEND;
             } else if(typeEvent.equals(PacketDataKeys.FRIEND_ACCEPT_FRIENDSHIP)) {
                 user.friendType = FriendType.REMOVE_FRIEND;
+            } else if(typeEvent.equals(PacketDataKeys.REMOVE_AVATAR)) {
+                user.avatar = "";
+                civAvatar.post(()-> {
+                    civAvatar.setUser(user);
+                });
             }
         }
     }

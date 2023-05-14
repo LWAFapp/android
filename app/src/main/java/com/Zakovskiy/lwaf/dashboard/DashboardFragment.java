@@ -63,7 +63,6 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         //new DialogTextBox(DashboardFragment.this, "Popup test").show();
         if(Application.lwafCurrentUser.wheelCount > 0)
             new DialogWheel( DashboardFragment.this).show();
-
     }
 
     private void changeShimmer(boolean type) {
@@ -90,14 +89,12 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
     @Override
     public void onDestroy() {
         this.socketHelper.unsubscribe(this);
-        Logs.info("DESTROY");
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
         this.socketHelper.unsubscribe(this);
-        Logs.info("BACK");
         super.onBackPressed();
     }
 

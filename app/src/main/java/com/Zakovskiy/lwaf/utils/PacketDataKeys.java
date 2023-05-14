@@ -106,4 +106,5 @@ public class PacketDataKeys {
     public static final String LOTO_SEND_NUMBERS = "sln";
     public static final String LOTO_NUMBERS = "ln";
     public static final String LOTO_RESULT = "lr";
+    public static final String REMOVE_AVATAR = "ra";
 }
