@@ -28,5 +28,4 @@ public abstract class ABCActivity extends AppCompatActivity {
             intent.putExtras(instance);
         startActivity(intent);
     }
-
 }

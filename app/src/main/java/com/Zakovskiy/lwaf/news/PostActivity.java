@@ -1,28 +1,27 @@
 package com.Zakovskiy.lwaf.news;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
-import com.Zakovskiy.lwaf.dashboard.DashboardFragment;
+import com.Zakovskiy.lwaf.models.enums.CommentReaction;
 import com.Zakovskiy.lwaf.models.post.Post;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
-import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
-public class PostActivity extends ABCActivity implements SocketHelper.SocketListener {
+public class PostActivity extends ABCActivity implements SocketHelper.SocketListener, View.OnClickListener {
 
     private final SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private String id;
@@ -96,5 +95,17 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
     @Override
     public void onReceiveError(String str) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.postLikes) {
+            HashMap<String, Object> data = new HashMap<>();
+            data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POST_SET_REACTION);
+            data.put(PacketDataKeys.POST_ID, this.id);
+            data.put(PacketDataKeys.TYPE, CommentReaction.LIKE);
+            this.socketHelper.sendData(new JSONObject(data));
+        }
     }
 }
