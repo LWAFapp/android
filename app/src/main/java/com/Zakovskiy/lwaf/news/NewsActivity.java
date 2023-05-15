@@ -9,7 +9,7 @@ import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.application.Application;
-import com.Zakovskiy.lwaf.models.PostInList;
+import com.Zakovskiy.lwaf.models.post.PostInList;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.news.adapters.PostsAdapter;
 import com.Zakovskiy.lwaf.utils.Config;

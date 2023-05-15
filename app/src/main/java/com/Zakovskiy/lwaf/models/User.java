@@ -51,4 +51,11 @@ public class User extends ShortUser{
     public FriendType friendType = FriendType.REMOVE_FRIEND;
     @JsonProperty("fid")
     public String friendId = "";
+    // confidentiality
+    @JsonProperty("hb")
+    public Boolean hidenBalance = false;
+    @JsonProperty("hlt")
+    public Boolean hidenLastTracks = false;
+    @JsonProperty("hf")
+    public Boolean hidenFriends = false;
 }

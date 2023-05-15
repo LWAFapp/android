@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.R;
-import com.Zakovskiy.lwaf.models.PostInList;
+import com.Zakovskiy.lwaf.models.post.PostInList;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 

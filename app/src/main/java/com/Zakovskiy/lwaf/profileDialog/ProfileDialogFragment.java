@@ -92,6 +92,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     private EditText tvAbout;
     private TextView tvNotHaveFavoriteTrack;
     private TextView tvFavoriteTrack;
+    private TextView tvBalance;
 
     private RecyclerView rvLastTracks;
     private RecyclerView rvRanks;
@@ -183,6 +184,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         this.cvLastTracks = dialog.findViewById(R.id.cardViewLastTracks);
         this.svContent = dialog.findViewById(R.id.profileScrollContent);
         this.menuItemMore = dialog.findViewById(R.id.more);
+        this.tvBalance = dialog.findViewById(R.id.tvBalance);
         ranksAdapter = new RanksAdapter(context, rankList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -323,6 +325,10 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         rvLastTracks.setAdapter(lastTracksAdapter);
         this.btnAddFavoriteTrack.setOnClickListener(onClickAddFavoriteTrack);
         this.tvUsername.setText(user.nickname);
+        if(!user.hidenBalance || isSelf()) {
+            tvBalance.setVisibility(View.VISIBLE);
+            tvBalance.setText(String.valueOf(user.balance));
+        }
         this.tvAbout.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {}
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
