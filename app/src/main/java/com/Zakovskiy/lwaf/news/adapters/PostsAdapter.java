@@ -1,6 +1,7 @@
 package com.Zakovskiy.lwaf.news.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,13 +91,12 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             content.setText(post.content);
             likes.setText(String.valueOf(post.likes));
             dislikes.setText(String.valueOf(post.dislikes));
-            this.item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle b = new Bundle();
-                    b.putSerializable("id", post.id);
-                    abc.newActivity(PostActivity.class, b);
-                }
+            this.item.setOnClickListener(v -> {
+                Bundle b = new Bundle();
+                b.putSerializable("id", post.id);
+                Intent intent = new Intent(itemView.getContext(), PostActivity.class);
+                intent.putExtras(b);
+                itemView.getContext().startActivity(intent);
             });
         }
     }

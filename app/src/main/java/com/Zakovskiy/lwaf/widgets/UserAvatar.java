@@ -37,8 +37,11 @@ public class UserAvatar extends CircleImageView {
     }
 
     public void setUser(ShortUser user) {
+        setUser(user, getContext());
+    }
+    public void setUser(ShortUser user, Context context) {
         if (user.avatar != null && !user.avatar.isEmpty()) {
-            ImageUtils.loadImage(getContext(), user.avatar, this, true, false);
+            ImageUtils.loadImage(context, user.avatar, this, true, true);
         } else {
             post(() -> {
                 char firstChar = user.nickname.charAt(0);

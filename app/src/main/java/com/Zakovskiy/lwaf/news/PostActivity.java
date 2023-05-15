@@ -32,6 +32,13 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
         this.id = (String) getIntent().getSerializableExtra("id");
 
     }
+
+    @Override
+    public void onStop() {
+        this.socketHelper.unsubscribe(this);
+        super.onStop();
+    }
+
     @Override
     protected void onStart() {
         this.socketHelper.subscribe(this);
@@ -55,7 +62,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                         if (post != null) {
                             //Avatar
                             UserAvatar ua = (UserAvatar) findViewById(R.id.userAvatar2);
-                            ua.setUser(post.author);
+                            ua.setUser(post.author, this);
                             //Author
                             TextView pv = (TextView) findViewById(R.id.postAuthor);
                             pv.setText(post.author.nickname);
@@ -70,10 +77,10 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                             pc.setText(post.content);
                             //Likes
                             TextView pl = (TextView) findViewById(R.id.postLikes);
-                            pl.setText(String.valueOf(post.postLikes.size()));
+                            pl.setText(String.valueOf(post.likes.size()));
                             //Dislikes
                             TextView pdl = (TextView) findViewById(R.id.postDislikes);
-                            pdl.setText(String.valueOf(post.postDislikes.size()));
+                            pdl.setText(String.valueOf(post.dislikes.size()));
                             break;
                         } else {
                             new DialogTextBox(PostActivity.this, Config.ERRORS.get(10101)).show();

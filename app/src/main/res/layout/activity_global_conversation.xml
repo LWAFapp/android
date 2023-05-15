@@ -94,7 +94,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/rounded_rectangle"
-            android:padding="10sp">
+            android:paddingLeft="10sp"
+            android:paddingTop="3dp"
+            android:paddingRight="10sp"
+            android:paddingBottom="1dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listViewMessages"

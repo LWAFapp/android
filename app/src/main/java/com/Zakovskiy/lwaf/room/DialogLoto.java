@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.models.enums.CommentReaction;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.room.adapters.LotoItemsAdapter;
 import com.Zakovskiy.lwaf.room.models.LotoItem;
@@ -60,6 +61,7 @@ public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 6);
         rvLotoItems.setAdapter(lotoItemsAdapter);
         rvLotoItems.setLayoutManager(gridLayoutManager);
+        rvLotoItems.getRecycledViewPool().setMaxRecycledViews(0, 0);
         this.tvLotoTime = findViewById(R.id.tvLotoTime);
         List<LotoItem> newLotoItems = new ArrayList<>();
         for(int i=1; i <= 30; i++) {
@@ -112,7 +114,7 @@ public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
         if(json.has(PacketDataKeys.ROOM_TYPE_EVENT)) {
             String roomTypeEvent = json.get(PacketDataKeys.ROOM_TYPE_EVENT).asText();
             if(roomTypeEvent.equals(PacketDataKeys.LOTO_RESULT)) {
-                List<Integer> lotoResultNumbers =JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.LOTO_NUMBERS), Integer.class);
+                List<Integer> lotoResultNumbers = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.LOTO_NUMBERS), Integer.class);
                 for(int i=0; i < lotoResultNumbers.size(); i++) {
                     Integer num = lotoResultNumbers.get(i);
                     List<LotoItem> newList = new ArrayList<>(lotoItems);
@@ -131,7 +133,12 @@ public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
                         throw new RuntimeException(e);
                     }
                 }
-                rvLotoItems.postDelayed(this::dismiss, 5000);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                rvLotoItems.post(this::dismiss);
             }
         }
     }

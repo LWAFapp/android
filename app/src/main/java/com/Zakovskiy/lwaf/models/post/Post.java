@@ -24,7 +24,7 @@ public class Post {
     @JsonProperty("pcm")
     public List<PostComment> comments = new ArrayList<>();
     @JsonProperty("pli")
-    public List<PostReaction> postLikes = new ArrayList<>();
+    public List<PostReaction> likes = new ArrayList<>();
     @JsonProperty("pdi")
-    public List<PostReaction> postDislikes = new ArrayList<>();
+    public List<PostReaction> dislikes = new ArrayList<>();
 }

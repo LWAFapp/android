@@ -36,15 +36,29 @@ public class NewsActivity extends ABCActivity implements SocketHelper.SocketList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
         this.postsView = findViewById(R.id.postsView);
-        this.adapter = new PostsAdapter(this, getSupportFragmentManager(), posts, this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        this.postsView.setLayoutManager(linearLayoutManager);
-        this.postsView.setAdapter(adapter);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        this.adapter = new PostsAdapter(this, getSupportFragmentManager(), posts, this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        this.postsView.setLayoutManager(linearLayoutManager);
+        this.postsView.setAdapter(adapter);
+        this.socketHelper.subscribe(this);
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POSTS_GET_LIST);
+        data.put(PacketDataKeys.POST_AUTHOR, Application.lwafServerConfig.rootUserId);
+        this.socketHelper.sendData(new JSONObject(data));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.adapter = new PostsAdapter(this, getSupportFragmentManager(), posts, this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        this.postsView.setLayoutManager(linearLayoutManager);
+        this.postsView.setAdapter(adapter);
         this.socketHelper.subscribe(this);
         HashMap<String, Object> data = new HashMap<>();
         data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POSTS_GET_LIST);

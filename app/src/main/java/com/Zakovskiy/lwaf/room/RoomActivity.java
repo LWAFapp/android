@@ -124,6 +124,12 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     }
 
     @Override
+    public void onStart() {
+        this.socketHelper.subscribe(this);
+        super.onStart();
+    }
+
+    @Override
     public void onStop() {
         this.socketHelper.unsubscribe(this);
         this.audioPlayer.stopSong();
