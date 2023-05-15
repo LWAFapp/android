@@ -14,7 +14,7 @@ public class PostInList {
     public String title = "";
     @JsonProperty("ptc")
     public Long time = 0L;
-    @JsonProperty("pc")
+    @JsonProperty("pcn")
     public String content = "";
     @JsonProperty("pa")
     public ShortUser author = new ShortUser();

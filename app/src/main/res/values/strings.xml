@@ -9,6 +9,7 @@
     <string name="room_label">RoomActivity</string>
     <string name="welcome_activity_label">WelcomeActivity</string>
     <string name="news_activity_label">NewsActivity</string>
+    <string name="post_activity_label">PostActivity</string>
     <string name="next">Дальше</string>
     <string name="previous">Назад</string>
     <string name="cancel">Закрыть</string>

@@ -104,6 +104,15 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity android:name=".news.PostActivity"
+            android:exported="true"
+            android:label="@string/post_activity_label"
+            android:theme="@style/Base.Theme.LWAF">
+            <intent-filter>
+                <action android:name="com.Zakovskiy.lwaf.news.PostActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
