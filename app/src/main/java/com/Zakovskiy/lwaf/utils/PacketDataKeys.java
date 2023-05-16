@@ -117,4 +117,7 @@ public class PacketDataKeys {
     public static final String POST_INFO = "pi";
     public static final String POST_DATE = "ptc";
     public static final String POST_SET_REACTION = "psr";
+    public static final String POST_CREATE_COMMENT = "pcc";
+    public static final String REPLY_COMMENT_ID = "rcid";
+    public static final String POST_COMMENTS = "pcm";
 }
