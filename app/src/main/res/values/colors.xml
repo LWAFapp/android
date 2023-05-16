@@ -26,4 +26,6 @@
         <item>#005858</item>
         <item>#00c100</item>
     </string-array>
+
+    <color name="date">#838383</color>
 </resources>
