@@ -2,16 +2,20 @@ package com.Zakovskiy.lwaf.news;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.models.enums.CommentReaction;
 import com.Zakovskiy.lwaf.models.post.Post;
+import com.Zakovskiy.lwaf.models.post.PostReaction;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
+import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
@@ -25,12 +29,18 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
 
     private final SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private String id;
+    private int likes_count = 0;
+    private int dislikes_count = 0;
+    private boolean like_pressed = false;
+    private boolean dis_pressed = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         this.id = (String) getIntent().getSerializableExtra("id");
-
+        findViewById(R.id.likesButton).setOnClickListener(this);
+        findViewById(R.id.dislikesButton).setOnClickListener(this);
     }
 
     @Override
@@ -78,9 +88,13 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                             //Likes
                             TextView pl = (TextView) findViewById(R.id.postLikes);
                             pl.setText(String.valueOf(post.likes.size()));
+                            likes_count = post.likes.size();
                             //Dislikes
                             TextView pdl = (TextView) findViewById(R.id.postDislikes);
                             pdl.setText(String.valueOf(post.dislikes.size()));
+                            dislikes_count = post.dislikes.size();
+                            for (PostReaction r : post.likes) {if (r.user.userId.equals(Application.lwafCurrentUser.userId)) {like_pressed = true;changeReaction(CommentReaction.LIKE);}}
+                            for (PostReaction r : post.dislikes) {if (r.user.userId.equals(Application.lwafCurrentUser.userId)) {dis_pressed = true;changeReaction(CommentReaction.DISLIKE);}}
                             break;
                         } else {
                             new DialogTextBox(PostActivity.this, Config.ERRORS.get(10101)).show();
@@ -101,18 +115,83 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
 
     @Override
     public void onReceiveError(String str) {
+        Logs.info("SOCKET ERROR");
+    }
 
+    protected void changeReaction(CommentReaction type) {
+        if (type == CommentReaction.LIKE) {
+            ImageView btnl = (ImageView) findViewById(R.id.likesButton);
+            btnl.setImageDrawable(getResources().getDrawable(R.drawable.ic_filled_like));
+            ImageView btnd = (ImageView) findViewById(R.id.dislikesButton);
+            btnd.setImageDrawable(getResources().getDrawable(R.drawable.like));
+            dis_pressed = false;
+            like_pressed = true;
+        } else {
+            ImageView btnl = (ImageView) findViewById(R.id.likesButton);
+            btnl.setImageDrawable(getResources().getDrawable(R.drawable.like));
+            ImageView btnd = (ImageView) findViewById(R.id.dislikesButton);
+            btnd.setImageDrawable(getResources().getDrawable(R.drawable.ic_filled_like));
+            dis_pressed = true;
+            like_pressed = false;
+        }
+    }
+
+    protected void clearReaction(CommentReaction type) {
+        if (type == CommentReaction.LIKE) {
+            ImageView btnl = (ImageView) findViewById(R.id.likesButton);
+            btnl.setImageDrawable(getResources().getDrawable(R.drawable.like));
+        } else {
+            ImageView btnd = (ImageView) findViewById(R.id.dislikesButton);
+            btnd.setImageDrawable(getResources().getDrawable(R.drawable.like));
+        }
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.postLikes) {
+        Logs.info("PRESSED");
+        if (id == R.id.likesButton) {
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POST_SET_REACTION);
             data.put(PacketDataKeys.POST_ID, this.id);
-            data.put(PacketDataKeys.TYPE, CommentReaction.LIKE);
+            data.put(PacketDataKeys.TYPE, 1);
             this.socketHelper.sendData(new JSONObject(data));
+            TextView ltext = (TextView) findViewById(R.id.postLikes);
+            if (like_pressed) {
+                likes_count--;
+                ltext.setText(String.valueOf(likes_count));
+                clearReaction(CommentReaction.LIKE);
+                like_pressed=false;
+            } else {
+                likes_count++;
+                ltext.setText(String.valueOf(likes_count));
+                if (dis_pressed) {
+                    TextView dtext = (TextView) findViewById(R.id.postDislikes);
+                    dtext.setText(String.valueOf(dislikes_count));
+                }
+                changeReaction(CommentReaction.LIKE);
+            }
+
+        } else if (id == R.id.dislikesButton) {
+            HashMap<String, Object> data = new HashMap<>();
+            data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POST_SET_REACTION);
+            data.put(PacketDataKeys.POST_ID, this.id);
+            data.put(PacketDataKeys.TYPE, 0);
+            this.socketHelper.sendData(new JSONObject(data));
+            TextView dtext = (TextView) findViewById(R.id.postDislikes);
+            if (dis_pressed) {
+                dislikes_count--;
+                clearReaction(CommentReaction.DISLIKE);
+                dis_pressed=false;
+            } else {
+                dislikes_count++;
+                dtext.setText(String.valueOf(dislikes_count));
+                if (like_pressed) {
+                    TextView ltext = (TextView) findViewById(R.id.postLikes);
+                    ltext.setText(String.valueOf(likes_count));
+                }
+                changeReaction(CommentReaction.DISLIKE);
+            }
         }
     }
 }
