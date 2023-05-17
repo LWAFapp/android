@@ -180,7 +180,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_rectangle"
             android:padding="10sp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="30dp"
