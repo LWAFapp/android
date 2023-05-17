@@ -339,9 +339,6 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         this.menuItemMore.setOnClickListener((v)->{
             List<MenuButton> menuButtons = new ArrayList<>();
             if (!isSelf()) {
-                menuButtons.add(new MenuButton(getString(R.string.report), "#E10F4A", (vb) -> {
-                    Logs.debug("Report success");
-                }));
                 menuButtons.add(new MenuButton(getString(user.friendType.title), "#FFFFFF", (vb) -> {
                     HashMap<String, Object> data = new HashMap<>();
                     data.put(PacketDataKeys.TYPE_EVENT, user.friendType.packetType);
@@ -351,6 +348,9 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
                         data.put(PacketDataKeys.FRIEND_ID, user.friendId);
                     }
                     this.socketHelper.sendData(new JSONObject(data));
+                }));
+                menuButtons.add(new MenuButton(getString(R.string.report), "#E10F4A", (vb) -> {
+                    Logs.debug("Report success");
                 }));
             }
             MenuDialogFragment.newInstance(context, menuButtons).show(getFragmentManager(), "MenuButtons");
