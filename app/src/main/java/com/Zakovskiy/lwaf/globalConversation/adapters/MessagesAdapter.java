@@ -3,9 +3,7 @@ package com.Zakovskiy.lwaf.globalConversation.adapters;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Build;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,20 +20,14 @@ import com.Zakovskiy.lwaf.models.Bubble;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.BubbleType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
-import com.Zakovskiy.lwaf.models.enums.Sex;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
-import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 //color gold D28726
 
@@ -184,10 +176,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
             messageBubble = itemView.findViewById(R.id.messageBubble);
             if (!theReceiver)
-                username = itemView.findViewById(R.id.username_view);
-            avatar = itemView.findViewById(R.id.circleImageView);
-            message = itemView.findViewById(R.id.plain_message_view);
-            date = itemView.findViewById(R.id.message_datetime);
+                username = itemView.findViewById(R.id.commentUsername);
+            avatar = itemView.findViewById(R.id.commentAvatar);
+            message = itemView.findViewById(R.id.commentContent);
+            date = itemView.findViewById(R.id.commentDate);
             replyUsername = itemView.findViewById(R.id.replyUsernameMessage);
             replyMessage = itemView.findViewById(R.id.replyTextMessage);
             replyLayout = itemView.findViewById(R.id.replyLayout);

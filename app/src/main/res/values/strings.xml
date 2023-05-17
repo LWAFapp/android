@@ -148,4 +148,5 @@
     <string name="content">Содержание</string>
     <string name="news">Новости</string>
     <string name="reply">Ответить</string>
+    <string name="leave_comment">Комментировать</string>
 </resources>
