@@ -3,6 +3,7 @@ package com.Zakovskiy.lwaf.news;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -91,6 +92,14 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                 data.put(PacketDataKeys.REPLY_COMMENT_ID, replyComment == null ? "" : replyComment.commentId);
                 socketHelper.sendData(new JSONObject(data));
                 til.getEditText().setText("");
+            }
+        });
+        ImageButton crc = (ImageButton) findViewById(R.id.cancelReplyComment);
+        crc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replyComment = null;
+                findViewById(R.id.replyComment).setVisibility(View.GONE);
             }
         });
 
