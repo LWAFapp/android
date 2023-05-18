@@ -25,17 +25,20 @@ import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PostActivity extends ABCActivity implements SocketHelper.SocketListener, View.OnClickListener {
 
     private final SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private String id;
+    public  PostComment replyComment;
     private UserAvatar userAvatar;
     private TextView tvPostAuthor;
     private TextView tvPostDate;
@@ -50,6 +53,8 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
     private TextView tvPostDislikes;
     private ImageView btnLikes;
     private ImageView btnDislikes;
+    public List<PostComment> needAdapter = new ArrayList<PostComment>();
+    public HashMap<String, List<String>> repliesForAdapter = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +64,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
         findViewById(R.id.likesButton).setOnClickListener(this);
         findViewById(R.id.dislikesButton).setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        this.commentsAdapter = new CommentsAdapter(this, getSupportFragmentManager(), comments);
+        this.commentsAdapter = new CommentsAdapter(this, getSupportFragmentManager(), comments, this);
         this.commentsView = (RecyclerView) findViewById(R.id.commentsView);
         this.commentsView.setAdapter(this.commentsAdapter);
         this.commentsView.setLayoutManager(linearLayoutManager);
@@ -74,6 +79,29 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
         this.tvPostContent = (TextView) findViewById(R.id.postContent);
         this.drawableLike = getResources().getDrawable(R.drawable.like);
         this.drawableFilled = getResources().getDrawable(R.drawable.ic_filled_like);
+
+        TextInputLayout til = (TextInputLayout) findViewById(R.id.commentInput);
+        til.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HashMap<String, Object> data = new HashMap<>();
+                data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POST_CREATE_COMMENT);
+                data.put(PacketDataKeys.POST_ID, id);
+                data.put(PacketDataKeys.CONTENT, til.getEditText().getText().toString());
+                data.put(PacketDataKeys.REPLY_COMMENT_ID, replyComment == null ? "" : replyComment.commentId);
+                socketHelper.sendData(new JSONObject(data));
+                til.getEditText().setText("");
+            }
+        });
+
+    }
+
+    public void setReply(PostComment comment) {
+        findViewById(R.id.replyComment).setVisibility(View.VISIBLE);
+        TextView rca = (TextView) findViewById(R.id.replyCommentUsername);
+        TextView rcc = (TextView) findViewById(R.id.replyCommentContent);
+        rca.setText(comment.user.nickname);
+        rcc.setText(comment.content);
     }
 
     @Override
@@ -115,7 +143,8 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                             this.tvPostDate.setText(TimeUtils.getDateAndTime(post.time * 1000));
                             this.tvPostTitle.setText(post.title);
                             this.tvPostContent.setText(post.content);
-                            changeComments(post.comments);
+                            List<PostComment> resp_comms = post.comments;
+                            changeComments(resp_comms);
                             changeReactions(post.likes, post.dislikes);
                             break;
                         } else {
@@ -127,10 +156,15 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                         List<PostReaction> newDislikes = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.POST_DISLIKES), PostReaction.class);
                         changeReactions(newLikes, newDislikes);
                         break;
+                    case "pcc":
+                        PostComment response = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.POST_COMMENTS), PostComment.class);
+                        this.comments.add(response);
+                        changeComments(comments);
                 }
             }
         });
     }
+
     @Override
     public void onConnected() {}
 
