@@ -68,6 +68,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
         this.commentsAdapter = new CommentsAdapter(this, getSupportFragmentManager(), comments, this);
         this.commentsView = (RecyclerView) findViewById(R.id.commentsView);
         this.commentsView.setAdapter(this.commentsAdapter);
+        this.commentsView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         this.commentsView.setLayoutManager(linearLayoutManager);
         this.tvPostDislikes = findViewById(R.id.postDislikes);
         this.tvPostLikes = findViewById(R.id.postLikes);
@@ -82,30 +83,25 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
         this.drawableFilled = getResources().getDrawable(R.drawable.ic_filled_like);
 
         TextInputLayout til = (TextInputLayout) findViewById(R.id.commentInput);
-        til.setEndIconOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HashMap<String, Object> data = new HashMap<>();
-                data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POST_CREATE_COMMENT);
-                data.put(PacketDataKeys.POST_ID, id);
-                data.put(PacketDataKeys.CONTENT, til.getEditText().getText().toString());
-                data.put(PacketDataKeys.REPLY_COMMENT_ID, replyComment == null ? "" : replyComment.commentId);
-                socketHelper.sendData(new JSONObject(data));
-                til.getEditText().setText("");
-            }
+        til.setEndIconOnClickListener(v -> {
+            HashMap<String, Object> data = new HashMap<>();
+            data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POST_CREATE_COMMENT);
+            data.put(PacketDataKeys.POST_ID, id);
+            data.put(PacketDataKeys.CONTENT, til.getEditText().getText().toString());
+            data.put(PacketDataKeys.REPLY_COMMENT_ID, replyComment == null ? "" : replyComment.commentId);
+            socketHelper.sendData(new JSONObject(data));
+            til.getEditText().setText("");
         });
         ImageButton crc = (ImageButton) findViewById(R.id.cancelReplyComment);
-        crc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                replyComment = null;
-                findViewById(R.id.replyComment).setVisibility(View.GONE);
-            }
+        crc.setOnClickListener(v -> {
+            replyComment = null;
+            findViewById(R.id.replyComment).setVisibility(View.GONE);
         });
 
     }
 
     public void setReply(PostComment comment) {
+        this.replyComment = comment;
         findViewById(R.id.replyComment).setVisibility(View.VISIBLE);
         TextView rca = (TextView) findViewById(R.id.replyCommentUsername);
         TextView rcc = (TextView) findViewById(R.id.replyCommentContent);

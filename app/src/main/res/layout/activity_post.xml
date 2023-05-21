@@ -28,7 +28,6 @@
                 android:id="@+id/postAuthor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/author"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -36,7 +35,6 @@
                 android:id="@+id/postDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="01.01.77"
                 android:textColor="@color/date" />
         </LinearLayout>
 
@@ -47,15 +45,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/title"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/postContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/content" />
+        android:textSize="16sp" />
 
     <Space
         android:layout_width="match_parent"
@@ -75,8 +72,8 @@
 
             <ImageButton
                 android:id="@+id/likesButton"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_weight="1"
                 android:background="#00FFFFFF"
                 android:scaleType="fitCenter"
@@ -87,7 +84,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
-                android:text="00"
                 android:textSize="22sp" />
 
         </LinearLayout>
@@ -102,8 +98,8 @@
 
             <ImageButton
                 android:id="@+id/dislikesButton"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_weight="1"
                 android:background="#00FFFFFF"
                 android:rotationX="180"
@@ -115,7 +111,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
-                android:text="00"
                 android:textSize="22sp" />
         </LinearLayout>
 
@@ -202,5 +197,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commentsView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp" />
 </LinearLayout>
