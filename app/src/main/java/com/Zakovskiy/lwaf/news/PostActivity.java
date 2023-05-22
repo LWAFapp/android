@@ -23,14 +23,17 @@ import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
+import com.Zakovskiy.lwaf.utils.StringUtils;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +59,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
     private ImageView btnDislikes;
     public List<PostComment> needAdapter = new ArrayList<PostComment>();
     public HashMap<String, List<String>> repliesForAdapter = new HashMap<>();
+    private boolean replyPressedBefore = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +100,11 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
         crc.setOnClickListener(v -> {
             replyComment = null;
             findViewById(R.id.replyComment).setVisibility(View.GONE);
+            TextInputEditText tiet = (TextInputEditText) findViewById(R.id.CommentTIEText);
+            String[] splitted = tiet.getText().toString().split(",");
+            splitted = Arrays.copyOfRange(splitted, 1, splitted.length);
+            String textToLayout = StringUtils.join(splitted, ",");
+            tiet.setText(textToLayout);
         });
 
     }
@@ -107,6 +116,17 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
         TextView rcc = (TextView) findViewById(R.id.replyCommentContent);
         rca.setText(comment.user.nickname);
         rcc.setText(comment.content);
+        TextInputEditText til = (TextInputEditText) findViewById(R.id.CommentTIEText);
+        if (replyPressedBefore) {
+            String[] splitted = til.getText().toString().split(",");
+            splitted = Arrays.copyOfRange(splitted, 1, splitted.length);
+            String textToLayout = StringUtils.join(splitted, ",");
+            til.setText(comment.user.nickname + ", " + textToLayout);
+        } else {
+            til.setText(comment.user.nickname + ", " + til.getText().toString());
+            replyPressedBefore = true;
+        }
+
     }
 
     @Override
