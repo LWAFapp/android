@@ -24,6 +24,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/clickableReply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -93,6 +94,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/clickableShowHide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/labelShowReplies"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/show_replies"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/decorativeArrow"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:rotationX="0"
+                        app:srcCompat="@drawable/ic_arrow_down" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/replyerComments"

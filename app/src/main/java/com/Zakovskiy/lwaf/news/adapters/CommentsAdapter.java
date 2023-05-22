@@ -4,7 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -74,6 +77,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView commentAuthor;
         private TextView commentContent;
         private TextView commentDate;
+        private LinearLayout clickableReply;
+        private LinearLayout clickableShowHide;
+        private TextView labelShowReplies;
+        private ImageView decorativeArrow;
         private View item;
         private RecyclerView lvReplyComments;
         private CommentsAdapter replyCommentsAdapter;
@@ -85,6 +92,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             this.commentAuthor = itemView.findViewById(R.id.commentUsername);
             this.commentContent = itemView.findViewById(R.id.commentContent);
             this.commentDate = itemView.findViewById(R.id.commentDate);
+            this.clickableReply = itemView.findViewById(R.id.clickableReply);
+            this.clickableShowHide = itemView.findViewById(R.id.clickableShowHide);
+            this.labelShowReplies = itemView.findViewById(R.id.labelShowReplies);
+            this.decorativeArrow = itemView.findViewById(R.id.decorativeArrow);
             this.item = itemView;
             this.lvReplyComments = itemView.findViewById(R.id.replyerComments);
             this.replyCommentsAdapter = new CommentsAdapter(context, fragmentManager, replyComments, ac);
@@ -93,7 +104,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         public void changeReplys(List<PostComment> list, int position) {
-            lvReplyComments.setVisibility(View.VISIBLE);
+            clickableShowHide.setVisibility(View.VISIBLE);
             replyComments.clear();
             replyComments.addAll(list);
             replyCommentsAdapter.notifyDataSetChanged();
@@ -105,12 +116,25 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             this.commentAuthor.setText(comment.user.nickname);
             this.commentContent.setText(comment.content);
             this.commentDate.setText(TimeUtils.getDateAndTime(comment.timestamp * 1000));
-            this.item.setOnClickListener(v -> {
+            this.clickableReply.setOnClickListener(v -> {
                 ac.setReply(comment);
+            });
+            this.clickableShowHide.setOnClickListener(v -> {
+                if (lvReplyComments.getVisibility() == View.VISIBLE) {
+                    lvReplyComments.setVisibility(View.GONE);
+                    labelShowReplies.setText(R.string.show_replies);
+                    decorativeArrow.setRotationX(0);
+                }
+                else {
+                    lvReplyComments.setVisibility(View.VISIBLE);
+                    labelShowReplies.setText(R.string.hide_replies);
+                    decorativeArrow.setRotationX(180);
+                }
             });
             if (!comment.replyComments.isEmpty()) {
                 Logs.info("zxc");
                 changeReplys(comment.replyComments, position);
+
             }
         }
     }

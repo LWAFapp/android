@@ -29,6 +29,7 @@ import com.Zakovskiy.lwaf.widgets.UserAvatar;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.common.collect.Lists;
 
 import org.json.JSONObject;
 
@@ -95,6 +96,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
             data.put(PacketDataKeys.REPLY_COMMENT_ID, replyComment == null ? "" : replyComment.commentId);
             socketHelper.sendData(new JSONObject(data));
             til.getEditText().setText("");
+            findViewById(R.id.replyComment).setVisibility(View.GONE);
         });
         ImageButton crc = (ImageButton) findViewById(R.id.cancelReplyComment);
         crc.setOnClickListener(v -> {
@@ -168,7 +170,8 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                             this.tvPostDate.setText(TimeUtils.getDateAndTime(post.time * 1000));
                             this.tvPostTitle.setText(post.title);
                             this.tvPostContent.setText(post.content);
-                            List<PostComment> resp_comms = post.comments;
+                            List<PostComment> resp_comms = Lists.reverse(post.comments);
+
                             changeComments(resp_comms);
                             changeReactions(post.likes, post.dislikes);
                             break;
