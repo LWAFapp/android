@@ -11,7 +11,8 @@ public enum MessageType {
     SET_REACTION_SUPER_LIKE(7),
     LOTO_WINNERS(8),
     REPLACE_TRACK(9),
-    DELETE_TRACK(10);
+    DELETE_TRACK(10),
+    MESSAGE_DATE(999);
 
     private Integer type;
 

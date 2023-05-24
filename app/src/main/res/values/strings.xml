@@ -151,4 +151,5 @@
     <string name="leave_comment">Комментировать</string>
     <string name="show_replies">Смотреть ответы</string>
     <string name="hide_replies">Скрыть ответы</string>
+    <string name="today">Сегодня</string>
 </resources>

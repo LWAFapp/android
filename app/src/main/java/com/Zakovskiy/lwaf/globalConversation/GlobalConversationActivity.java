@@ -19,11 +19,13 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.globalConversation.adapters.*;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.ShortUser;
+import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
+import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.android.material.textfield.TextInputLayout;
@@ -208,7 +210,28 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие о сообщениях чата. Тоже самое что и выше.
                          */
                         messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
+                        for (int i = 0; i < messagesInConversation.size()-1;i++) {
+                            String date1 = TimeUtils.getTime(messagesInConversation.get(i).timeSend*1000, "dd");
+                            String finalDay = TimeUtils.getTime(messagesInConversation.get(i+1).timeSend*1000, "dd");
+                            int month1 = Integer.parseInt(TimeUtils.getTime(messagesInConversation.get(i).timeSend*1000, "MM"));
+                            int finalMonth = Integer.parseInt(TimeUtils.getTime(messagesInConversation.get(i+1).timeSend*1000, "MM"));
+                            String year = TimeUtils.getTime(System.currentTimeMillis(), "yyyy").equals(TimeUtils.getTime(messagesInConversation.get(i + 1).timeSend * 1000, "yyyy")) ? "" : TimeUtils.getTime(messagesInConversation.get(i + 1).timeSend * 1000, "yyyy");
+                            //Logs.info(String.format("MESSAGE %s.%s %s.%s", date1, month1, finalDay, finalMonth));
+                            if (Integer.parseInt(date1) < Integer.parseInt(finalDay) || month1 < finalMonth) {
+                                Message msg = new Message();
+                                msg.type = MessageType.MESSAGE_DATE;
+                                msg.message = finalDay + " " + TimeUtils.convertToWords(finalMonth, true) + " " + year;
+                                //Logs.info(TimeUtils.getTime(System.currentTimeMillis(), "dd:MM:yyyy"));
+                                if (TimeUtils.getTime(System.currentTimeMillis(), "dd:MM:yyyy").equals(TimeUtils.getTime(messagesInConversation.get(i + 1).timeSend * 1000, "dd:MM:yyyy"))) {
+                                    msg.message = this.getString(R.string.today);
+                                }
+                                messagesInConversation.add(i+1, msg);
+                                i++;
+                            }
+
+                        }
                         changesMessages(messagesInConversation);
+
                         this.listMessages.postDelayed(()->{
                             this.listMessages.scrollToPosition(messagesAdapter.getCount() - 1);
                             changeShimmerMessages(false);
@@ -219,6 +242,17 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие о нью месседж. Тоже самое что и выше.
                          */
                         Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
+                        Message lastMessage = messagesInConversation.get(messagesInConversation.size()-1);
+                        String lastMessageDate = TimeUtils.getTime(lastMessage.timeSend*1000, "dd");
+                        String lastMessageMonth = TimeUtils.getTime(lastMessage.timeSend*1000, "MM");
+                        String newMessageDate = TimeUtils.getTime(newMessage.timeSend*1000, "dd");
+                        String newMessageMonth = TimeUtils.getTime(newMessage.timeSend*1000, "MM");
+                        if (Integer.parseInt(lastMessageDate) < Integer.parseInt(newMessageDate) || Integer.parseInt(lastMessageMonth) < Integer.parseInt(newMessageMonth)) {
+                            Message msg = new Message();
+                            msg.type = MessageType.MESSAGE_DATE;
+                            msg.message = newMessageDate + " " + TimeUtils.convertToWords(Integer.parseInt(newMessageMonth), true);
+                            messagesInConversation.add(msg);
+                        }
                         messagesInConversation.add(newMessage);
                         changesMessages(messagesInConversation);
                         this.listMessages.scrollToPosition(messagesAdapter.getCount() - 1);

@@ -153,6 +153,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     messageGlobal.user.nickname,
                     this.context.getString(R.string.delete),
                     this.context.getString(R.string.current_track))));
+        } else if (messageGlobal.type == MessageType.MESSAGE_DATE) {
+            SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
+            systemHolder.message.setText(messageGlobal.message);
+            systemHolder.message.setTextColor(Color.WHITE);
         }
     }
 
