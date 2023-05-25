@@ -210,7 +210,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие о сообщениях чата. Тоже самое что и выше.
                          */
                         messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
-                        for (int i = 0; i < messagesInConversation.size()-1;i++) {
+                        for (int i = 0; i < messagesInConversation.size()-1; i++) {
                             String date1 = TimeUtils.getTime(messagesInConversation.get(i).timeSend*1000, "dd");
                             String finalDay = TimeUtils.getTime(messagesInConversation.get(i+1).timeSend*1000, "dd");
                             int month1 = Integer.parseInt(TimeUtils.getTime(messagesInConversation.get(i).timeSend*1000, "MM"));
@@ -220,7 +220,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                             if (Integer.parseInt(date1) < Integer.parseInt(finalDay) || month1 < finalMonth) {
                                 Message msg = new Message();
                                 msg.type = MessageType.MESSAGE_DATE;
-                                msg.message = finalDay + " " + TimeUtils.convertToWords(finalMonth, true) + " " + year;
+                                msg.message = finalDay + " " + TimeUtils.convertToWords(this, finalMonth, true) + " " + year;
                                 //Logs.info(TimeUtils.getTime(System.currentTimeMillis(), "dd:MM:yyyy"));
                                 if (TimeUtils.getTime(System.currentTimeMillis(), "dd:MM:yyyy").equals(TimeUtils.getTime(messagesInConversation.get(i + 1).timeSend * 1000, "dd:MM:yyyy"))) {
                                     msg.message = this.getString(R.string.today);
@@ -250,7 +250,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         if (Integer.parseInt(lastMessageDate) < Integer.parseInt(newMessageDate) || Integer.parseInt(lastMessageMonth) < Integer.parseInt(newMessageMonth)) {
                             Message msg = new Message();
                             msg.type = MessageType.MESSAGE_DATE;
-                            msg.message = newMessageDate + " " + TimeUtils.convertToWords(Integer.parseInt(newMessageMonth), true);
+                            msg.message = newMessageDate + " " + TimeUtils.convertToWords(this, Integer.parseInt(newMessageMonth), true);
                             messagesInConversation.add(msg);
                         }
                         messagesInConversation.add(newMessage);
