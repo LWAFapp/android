@@ -42,10 +42,10 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private TextInputLayout inputNewMessage;
     private ListView listUsers;
-    private RecyclerView listMessages;
+    public RecyclerView listMessages;
     private ShimmerFrameLayout messagesShimmer;
     private ShimmerFrameLayout usersShimmer;
-    private List<Message> messagesInConversation;
+    public List<Message> messagesInConversation;
     private List<ShortUser> usersInConversation;
     private MessagesAdapter messagesAdapter;
     private UsersAdapter usersAdapter;
@@ -54,6 +54,8 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private View currentView;
     private String replyId = "";
     private LinearLayout replyToLayout;
+    public HashMap<Message, Integer> replyPositions = new HashMap<>();
+    public List<String> ids = new ArrayList<>();
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
@@ -79,19 +81,23 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
             messagesInConversation.remove(position);
             messagesInConversation.add(position, swappedMessage);
             messagesAdapter.notifyDataSetChanged();
-            replyToLayout.setVisibility(View.VISIBLE);
-            TextView replyToUser = (TextView) replyToLayout.findViewById(R.id.replyTo_username);
-            replyToUser.setText(swappedMessage.user.nickname);
-            TextView replyToMessage = (TextView) replyToLayout.findViewById(R.id.replyTo_message);
-            replyToMessage.setText(swappedMessage.message);
-            replyId = swappedMessage.messageId;
-            ImageButton cancelButton = (ImageButton) replyToLayout.findViewById(R.id.cancelReply);
-            cancelButton.setOnClickListener(v -> {
-                replyId = "";
-                replyToLayout.setVisibility(View.GONE);
-            });
+            setReply(swappedMessage);
         }
     };
+
+    public void setReply(Message message) {
+        replyToLayout.setVisibility(View.VISIBLE);
+        TextView replyToUser = (TextView) replyToLayout.findViewById(R.id.replyTo_username);
+        replyToUser.setText(message.user.nickname);
+        TextView replyToMessage = (TextView) replyToLayout.findViewById(R.id.replyTo_message);
+        replyToMessage.setText(message.message);
+        replyId = message.messageId;
+        ImageButton cancelButton = (ImageButton) replyToLayout.findViewById(R.id.cancelReply);
+        cancelButton.setOnClickListener(v -> {
+            replyId = "";
+            replyToLayout.setVisibility(View.GONE);
+        });
+    }
 
 
     @Override
@@ -104,7 +110,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         this.messagesShimmer = findViewById(R.id.shimmerMessages);
         this.usersShimmer = findViewById(R.id.shimmerViewUsers);
         this.inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
-        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages);
+        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages, this);
         this.listMessages.setAdapter(messagesAdapter);
         this.listMessages.setLayoutManager(new LinearLayoutManager(this));
         this.listMessages.getRecycledViewPool().setMaxRecycledViews(0, 0);
@@ -137,6 +143,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         changeShimmerUsers(true);
     }
 
+
     private void changeShimmerMessages(boolean type) {
         if(type) {
             this.messagesShimmer.startShimmer();
@@ -157,6 +164,8 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         this.usersShimmer.setVisibility(type ? View.VISIBLE : View.INVISIBLE);
         this.listUsers.setVisibility(type ? View.INVISIBLE : View.VISIBLE);
     }
+
+
 
     @Override
     public void onStop() {
@@ -211,6 +220,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                          */
                         messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
                         for (int i = 0; i < messagesInConversation.size()-1; i++) {
+                            ids.add(messagesInConversation.get(i).messageId);
                             String date1 = TimeUtils.getTime(messagesInConversation.get(i).timeSend*1000, "dd");
                             String finalDay = TimeUtils.getTime(messagesInConversation.get(i+1).timeSend*1000, "dd");
                             int month1 = Integer.parseInt(TimeUtils.getTime(messagesInConversation.get(i).timeSend*1000, "MM"));
@@ -226,6 +236,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                                     msg.message = this.getString(R.string.today);
                                 }
                                 messagesInConversation.add(i+1, msg);
+                                ids.add(null);
                                 i++;
                             }
 

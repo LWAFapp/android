@@ -16,17 +16,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.application.Application;
+import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
+import com.Zakovskiy.lwaf.menuDialog.MenuButton;
+import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.Bubble;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.BubbleType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
+import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 //color gold D28726
@@ -40,12 +45,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<Message> messages;
     private FragmentManager fragmentManager;
     private boolean theReceiver = false;
+    public GlobalConversationActivity ac;
 
     public MessagesAdapter(Context context,
-                           FragmentManager fragmentManager, List<Message> messages) {
+                           FragmentManager fragmentManager, List<Message> messages, GlobalConversationActivity ac) {
         this.context = context;
         this.messages = messages;
         this.fragmentManager = fragmentManager;
+        this.ac = ac;
     }
 
     public int getCount() {
@@ -167,7 +174,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private class TextMessageViewHolder extends RecyclerView.ViewHolder {
         private TextView username = null;
-        private TextView message;
+        private TextView messageCon;
         private TextView date;
         private TextView replyUsername;
         private TextView replyMessage;
@@ -182,7 +189,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (!theReceiver)
                 username = itemView.findViewById(R.id.commentUsername);
             avatar = itemView.findViewById(R.id.commentAvatar);
-            message = itemView.findViewById(R.id.commentContent);
+            messageCon = itemView.findViewById(R.id.commentContent);
             date = itemView.findViewById(R.id.commentDate);
             replyUsername = itemView.findViewById(R.id.replyUsernameMessage);
             replyMessage = itemView.findViewById(R.id.replyTextMessage);
@@ -190,6 +197,30 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         public void bind(Message message) throws IOException, XmlPullParserException {
+            this.replyLayout.setOnClickListener(v -> {
+                if (ac.getClass() == GlobalConversationActivity.class) {
+                    int pos = ac.ids.indexOf(message.replyMessage.messageId);
+                    ac.listMessages.scrollToPosition(pos);
+                }
+            });
+            this.messageBubble.setOnClickListener(v -> {
+                List<MenuButton> btns = new ArrayList<>();
+                btns.add(new MenuButton(ac.getString(R.string.reply), "#FFFFFF", (vb) -> {
+                    ac.setReply(message);
+                }));
+                btns.add(new MenuButton(ac.getString(R.string.copy), "#FFFFFF", (vb) -> {
+                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    android.content.ClipData clip = android.content.ClipData.newPlainText("LWAF message", message.message);
+                    clipboard.setPrimaryClip(clip);
+                }));
+                btns.add(new MenuButton(ac.getString(R.string.gotoprofile), "#FFFFFF", (vb) -> {
+                    ProfileDialogFragment.newInstance(context, message.user.userId).show(fragmentManager, "ProfileDialogFragment");
+                }));
+                btns.add(new MenuButton(ac.getString(R.string.report), "#e10f4a", (vb) -> {
+                    Logs.debug("Today, in a faraway city, someone was reported");
+                }));
+                MenuDialogFragment.newInstance(context, btns).show(ac.getSupportFragmentManager(), "MenuButtons");
+            });
             Bubble bubble = message.bubble;
             if (message.user.userId.equals(Application.lwafCurrentUser.userId)) {
                 messageBubble.setBackgroundResource(R.drawable.message_bg_receiver);
@@ -210,7 +241,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             avatar.setOnClickListener((v)->{
                 ProfileDialogFragment.newInstance(context, message.user.userId).show(fragmentManager, "ProfileDialogFragment");
             });
-            this.message.setText(message.message);
+            this.messageCon.setText(message.message);
             date.setText(TimeUtils.getTime(message.timeSend * 1000));
             if (message.replyMessage != null) {
                 replyUsername.setText(message.replyMessage.user.nickname);

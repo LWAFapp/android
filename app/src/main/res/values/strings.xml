@@ -180,4 +180,6 @@
     <string name="show_replies">Смотреть ответы</string>
     <string name="hide_replies">Скрыть ответы</string>
     <string name="today">Сегодня</string>
+    <string name="copy">Копировать</string>
+    <string name="gotoprofile">Перейти в профиль</string>
 </resources>
