@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="7dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/rankIcon"
@@ -22,9 +22,9 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/rankTitle"
-            android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:textSize="14sp" />
     </LinearLayout>
 

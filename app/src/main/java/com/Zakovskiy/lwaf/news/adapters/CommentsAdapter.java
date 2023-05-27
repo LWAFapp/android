@@ -18,18 +18,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.application.Application;
+import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
+import com.Zakovskiy.lwaf.menuDialog.MenuButton;
+import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.post.PostComment;
 import com.Zakovskiy.lwaf.models.post.PostReaction;
+import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.news.PostActivity;
+import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.Logs;
+import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -40,6 +48,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<PostComment> comments = new ArrayList<>();
     private PostActivity ac;
     private CommentsAdapter adapter;
+    private SocketHelper socketHelper = SocketHelper.getSocketHelper();
+
     public CommentsAdapter(Context context, FragmentManager fragmentManager, List<PostComment> comments, PostActivity ac) {
         this.context = context;
         this.fragmentManager = fragmentManager;
@@ -77,7 +87,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView commentAuthor;
         private TextView commentContent;
         private TextView commentDate;
-        private LinearLayout clickableReply;
+        private TextView clickableReply;
         private LinearLayout clickableShowHide;
         private TextView labelShowReplies;
         private ImageView decorativeArrow;
@@ -92,7 +102,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             this.commentAuthor = itemView.findViewById(R.id.commentUsername);
             this.commentContent = itemView.findViewById(R.id.commentContent);
             this.commentDate = itemView.findViewById(R.id.commentDate);
-            this.clickableReply = itemView.findViewById(R.id.clickableReply);
+            this.clickableReply = itemView.findViewById(R.id.commentReply);
             this.clickableShowHide = itemView.findViewById(R.id.clickableShowHide);
             this.labelShowReplies = itemView.findViewById(R.id.labelShowReplies);
             this.decorativeArrow = itemView.findViewById(R.id.decorativeArrow);
@@ -113,6 +123,32 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public void bind(PostComment comment, int position) throws IOException, XmlPullParserException {
             this.avatar.setUser(comment.user);
+            this.item.setOnClickListener(view -> {
+                List<MenuButton> btns = new ArrayList<>();
+                btns.add(new MenuButton(ac.getString(R.string.reply), "#FFFFFF", (vb) -> {
+                    ac.setReply(comment);
+                }));
+                btns.add(new MenuButton(ac.getString(R.string.copy), "#FFFFFF", (vb) -> {
+                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    android.content.ClipData clip = android.content.ClipData.newPlainText("Copied message", comment.content);
+                    clipboard.setPrimaryClip(clip);
+                }));
+                btns.add(new MenuButton(ac.getString(R.string.gotoprofile), "#FFFFFF", (vb) -> {
+                    ProfileDialogFragment.newInstance(context, comment.user.userId).show(fragmentManager, "ProfileDialogFragment");
+                }));
+                if(comment.user.userId.equals(Application.lwafCurrentUser.userId) || Application.lwafCurrentUser.isAdmin()) {
+                    btns.add(new MenuButton(ac.getString(R.string.delete), "#e10f4a", (vb) -> {
+                        HashMap<String, Object> dataMessage = new HashMap<>();
+                        dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POSTS_REMOVE_COMMENT);
+                        dataMessage.put(PacketDataKeys.COMMENT_ID, comment.commentId);
+                        socketHelper.sendData(new JSONObject(dataMessage));
+                    }));
+                }
+                MenuDialogFragment.newInstance(context, btns).show(ac.getSupportFragmentManager(), "MenuButtons");
+            });
+            this.avatar.setOnClickListener(view -> {
+                ProfileDialogFragment.newInstance(context, comment.user.userId).show(fragmentManager, "ProfileDialogFragment");
+            });
             this.commentAuthor.setText(comment.user.nickname);
             this.commentContent.setText(comment.content);
             this.commentDate.setText(TimeUtils.getDateAndTime(comment.timestamp * 1000));
@@ -132,9 +168,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
             if (!comment.replyComments.isEmpty()) {
-                Logs.info("zxc");
                 changeReplys(comment.replyComments, position);
-
             }
         }
     }

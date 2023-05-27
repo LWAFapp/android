@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.fragment.app.DialogFragment;
@@ -47,6 +48,7 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
     public RoomsAdapter roomsAdapter;
     private ShimmerFrameLayout roomsShimmer;
     private ListView roomsListView;
+    private ImageView ivAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +64,12 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         findViewById(R.id.menu__button_global_chat).setOnClickListener(this);
         findViewById(R.id.menu__button_profile).setOnClickListener(this);
         findViewById(R.id.menu__news).setOnClickListener(this);
+        this.ivAdmin = findViewById(R.id.menu__admin_panel);
         //new DialogTextBox(DashboardFragment.this, "Popup test").show();
         if(Application.lwafCurrentUser.wheelCount > 0)
             new DialogWheel( DashboardFragment.this).show();
+        if(Application.lwafCurrentUser.isAdmin())
+            this.ivAdmin.setVisibility(View.VISIBLE);
     }
 
     private void changeShimmer(boolean type) {

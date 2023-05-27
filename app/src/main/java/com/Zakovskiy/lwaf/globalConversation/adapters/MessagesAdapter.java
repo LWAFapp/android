@@ -23,15 +23,19 @@ import com.Zakovskiy.lwaf.models.Bubble;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.BubbleType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
+import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.Logs;
+import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 //color gold D28726
@@ -44,6 +48,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private List<Message> messages;
     private FragmentManager fragmentManager;
+    private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private boolean theReceiver = false;
     public GlobalConversationActivity ac;
 
@@ -158,7 +163,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
             systemHolder.message.setText(Html.fromHtml(String.format("<b>%s</b> %s %s",
                     messageGlobal.user.nickname,
-                    this.context.getString(R.string.delete),
+                    this.context.getString(R.string.deleted),
                     this.context.getString(R.string.current_track))));
         } else if (messageGlobal.type == MessageType.MESSAGE_DATE) {
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
@@ -205,20 +210,26 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
             this.messageBubble.setOnClickListener(v -> {
                 List<MenuButton> btns = new ArrayList<>();
-                btns.add(new MenuButton(ac.getString(R.string.reply), "#FFFFFF", (vb) -> {
-                    ac.setReply(message);
-                }));
+                if (ac.getClass() == GlobalConversationActivity.class)
+                    btns.add(new MenuButton(ac.getString(R.string.reply), "#FFFFFF", (vb) -> {
+                        ac.setReply(message);
+                    }));
                 btns.add(new MenuButton(ac.getString(R.string.copy), "#FFFFFF", (vb) -> {
                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                    android.content.ClipData clip = android.content.ClipData.newPlainText("LWAF message", message.message);
+                    android.content.ClipData clip = android.content.ClipData.newPlainText("Copied message", message.message);
                     clipboard.setPrimaryClip(clip);
                 }));
                 btns.add(new MenuButton(ac.getString(R.string.gotoprofile), "#FFFFFF", (vb) -> {
                     ProfileDialogFragment.newInstance(context, message.user.userId).show(fragmentManager, "ProfileDialogFragment");
                 }));
-                btns.add(new MenuButton(ac.getString(R.string.report), "#e10f4a", (vb) -> {
-                    Logs.debug("Today, in a faraway city, someone was reported");
-                }));
+                if(message.user.userId.equals(Application.lwafCurrentUser.userId) || Application.lwafCurrentUser.isAdmin()) {
+                    btns.add(new MenuButton(ac.getString(R.string.delete), "#e10f4a", (vb) -> {
+                        HashMap<String, Object> dataMessage = new HashMap<>();
+                        dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_DELETE_MESSAGE);
+                        dataMessage.put(PacketDataKeys.MESSAGE_ID, message.messageId);
+                        socketHelper.sendData(new JSONObject(dataMessage));
+                    }));
+                }
                 MenuDialogFragment.newInstance(context, btns).show(ac.getSupportFragmentManager(), "MenuButtons");
             });
             Bubble bubble = message.bubble;

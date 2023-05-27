@@ -56,7 +56,7 @@ public class MenuDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_menu, null);
         builder.setView(view);
 
-        menuButtonAdapter = new MenuButtonAdapter(this.context, buttons);
+        menuButtonAdapter = new MenuButtonAdapter(this.context, this, buttons);
         ((ListView)view.findViewById(R.id.menuButtonsList)).setAdapter(menuButtonAdapter);
         menuButtonAdapter.notifyDataSetChanged();
         return builder.create();

@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
 import com.Zakovskiy.lwaf.menuDialog.MenuButton;
+import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.google.android.material.button.MaterialButton;
@@ -23,12 +24,14 @@ import java.util.List;
 
 public class MenuButtonAdapter extends ArrayAdapter<MenuButton> {
     private Context context;
+    private MenuDialogFragment menuDialogFragment;
     private List<MenuButton> buttons;
 
-    public MenuButtonAdapter(Context context, List<MenuButton> buttons) {
+    public MenuButtonAdapter(Context context, MenuDialogFragment menuDialogFragment, List<MenuButton> buttons) {
         super(context, R.layout.item_menu_button, buttons);
         this.context = context;
         this.buttons = buttons;
+        this.menuDialogFragment = menuDialogFragment;
     }
 
     public int getCount() {
@@ -55,7 +58,10 @@ public class MenuButtonAdapter extends ArrayAdapter<MenuButton> {
         button.setText(menuButton.name);
         button.setStrokeColor(ColorStateList.valueOf(Color.parseColor(menuButton.hexColor)));
         button.setTextColor(ColorStateList.valueOf(Color.parseColor(menuButton.hexColor)));
-        button.setOnClickListener(menuButton.callable);
+        button.setOnClickListener((v)->{
+            menuButton.callable.onClick(v);
+            menuDialogFragment.dismiss();
+        });
         return view;
     }
 }

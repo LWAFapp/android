@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,11 +15,13 @@ import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.application.Application;
+import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.post.Post;
 import com.Zakovskiy.lwaf.models.post.PostComment;
 import com.Zakovskiy.lwaf.models.post.PostReaction;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.news.adapters.CommentsAdapter;
+import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
@@ -36,6 +39,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +47,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
 
     private final SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private String id;
+    private String authorId;
     public  PostComment replyComment;
     private UserAvatar userAvatar;
     private TextView tvPostAuthor;
@@ -58,9 +63,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
     private TextView tvPostDislikes;
     private ImageView btnLikes;
     private ImageView btnDislikes;
-    public List<PostComment> needAdapter = new ArrayList<PostComment>();
-    public HashMap<String, List<String>> repliesForAdapter = new HashMap<>();
-    private boolean replyPressedBefore = false;
+    private LinearLayout authorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +74,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
         findViewById(R.id.dislikesButton).setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         this.commentsAdapter = new CommentsAdapter(this, getSupportFragmentManager(), comments, this);
-        this.commentsView = (RecyclerView) findViewById(R.id.commentsView);
+        this.commentsView = findViewById(R.id.commentsView);
         this.commentsView.setAdapter(this.commentsAdapter);
         this.commentsView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         this.commentsView.setLayoutManager(linearLayoutManager);
@@ -79,34 +82,33 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
         this.tvPostLikes = findViewById(R.id.postLikes);
         this.btnLikes = findViewById(R.id.likesButton);
         this.btnDislikes = findViewById(R.id.dislikesButton);
-        this.userAvatar = (UserAvatar) findViewById(R.id.userAvatar2);
-        this.tvPostAuthor = (TextView) findViewById(R.id.postAuthor);
-        this.tvPostDate = (TextView) findViewById(R.id.postDate);
-        this.tvPostTitle = (TextView) findViewById(R.id.postTitle);
-        this.tvPostContent = (TextView) findViewById(R.id.postContent);
+        this.userAvatar = findViewById(R.id.userAvatar2);
+        this.tvPostAuthor = findViewById(R.id.postAuthor);
+        this.tvPostDate = findViewById(R.id.postDate);
+        this.tvPostTitle = findViewById(R.id.postTitle);
+        this.tvPostContent = findViewById(R.id.postContent);
+        this.authorLayout = findViewById(R.id.authorLayout);
+        this.authorLayout.setOnClickListener((view)->{
+            if(this.authorId.isEmpty()) return;
+            ProfileDialogFragment.newInstance(this, this.authorId).show(getSupportFragmentManager(), "ProfileDialogFragment");
+        });
         this.drawableLike = getResources().getDrawable(R.drawable.like);
         this.drawableFilled = getResources().getDrawable(R.drawable.ic_filled_like);
-
-        TextInputLayout til = (TextInputLayout) findViewById(R.id.commentInput);
+        TextInputLayout til = findViewById(R.id.commentInput);
         til.setEndIconOnClickListener(v -> {
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POST_CREATE_COMMENT);
             data.put(PacketDataKeys.POST_ID, id);
             data.put(PacketDataKeys.CONTENT, til.getEditText().getText().toString());
+            til.getEditText().setText("");
             data.put(PacketDataKeys.REPLY_COMMENT_ID, replyComment == null ? "" : replyComment.commentId);
             socketHelper.sendData(new JSONObject(data));
-            til.getEditText().setText("");
             findViewById(R.id.replyComment).setVisibility(View.GONE);
         });
-        ImageButton crc = (ImageButton) findViewById(R.id.cancelReplyComment);
+        ImageButton crc = findViewById(R.id.cancelReplyComment);
         crc.setOnClickListener(v -> {
             replyComment = null;
             findViewById(R.id.replyComment).setVisibility(View.GONE);
-            TextInputEditText tiet = (TextInputEditText) findViewById(R.id.CommentTIEText);
-            String[] splitted = tiet.getText().toString().split(",");
-            splitted = Arrays.copyOfRange(splitted, 1, splitted.length);
-            String textToLayout = StringUtils.join(splitted, ",");
-            tiet.setText(textToLayout);
         });
 
     }
@@ -114,21 +116,13 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
     public void setReply(PostComment comment) {
         this.replyComment = comment;
         findViewById(R.id.replyComment).setVisibility(View.VISIBLE);
-        TextView rca = (TextView) findViewById(R.id.replyCommentUsername);
-        TextView rcc = (TextView) findViewById(R.id.replyCommentContent);
+        TextView rca = findViewById(R.id.replyCommentUsername);
+        TextView rcc = findViewById(R.id.replyCommentContent);
         rca.setText(comment.user.nickname);
         rcc.setText(comment.content);
-        TextInputEditText til = (TextInputEditText) findViewById(R.id.CommentTIEText);
-        if (replyPressedBefore) {
-            String[] splitted = til.getText().toString().split(",");
-            splitted = Arrays.copyOfRange(splitted, 1, splitted.length);
-            String textToLayout = StringUtils.join(splitted, ",");
-            til.setText(comment.user.nickname + ", " + textToLayout);
-        } else {
-            til.setText(comment.user.nickname + ", " + til.getText().toString());
-            replyPressedBefore = true;
-        }
-
+        TextInputEditText til = findViewById(R.id.CommentTIEText);
+        String text = comment.user.nickname + ", " + til.getText().toString();
+        til.setText(text);
     }
 
     @Override
@@ -162,32 +156,70 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
                 switch (typeEvent) {
                     case "pgi":
+                        Post post = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.POST_INFO), Post.class);
+                        this.userAvatar.setUser(post.author, this);
+                        this.tvPostAuthor.setText(post.author.nickname);
+                        this.tvPostDate.setText(TimeUtils.getDateAndTime(post.time * 1000));
+                        this.tvPostTitle.setText(post.title);
+                        this.tvPostContent.setText(post.content);
+                        this.authorId = post.author.userId;
+                        List<PostComment> responseComments = Lists.reverse(post.comments);
 
-                        Post post = (Post) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.POST_INFO), Post.class);
-                        if (post != null) {
-                            this.userAvatar.setUser(post.author, this);
-                            this.tvPostAuthor.setText(post.author.nickname);
-                            this.tvPostDate.setText(TimeUtils.getDateAndTime(post.time * 1000));
-                            this.tvPostTitle.setText(post.title);
-                            this.tvPostContent.setText(post.content);
-                            List<PostComment> resp_comms = Lists.reverse(post.comments);
-
-                            changeComments(resp_comms);
-                            changeReactions(post.likes, post.dislikes);
-                            break;
-                        } else {
-                            new DialogTextBox(PostActivity.this, Config.ERRORS.get(10101)).show();
-                        }
+                        changeComments(responseComments);
+                        changeReactions(post.likes, post.dislikes);
                         break;
                     case "psr":
                         List<PostReaction> newLikes = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.POST_LIKES), PostReaction.class);
                         List<PostReaction> newDislikes = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.POST_DISLIKES), PostReaction.class);
                         changeReactions(newLikes, newDislikes);
                         break;
-                    case "pcc":
-                        PostComment response = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.POST_COMMENTS), PostComment.class);
-                        this.comments.add(response);
-                        changeComments(comments);
+                    case "pcc": // post_create_comment
+                        PostComment newComment = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.POST_COMMENTS), PostComment.class);
+                        List<PostComment> newCommentsWithAdd = new ArrayList<>(this.comments);
+                        if(!newComment.replyCommentId.isEmpty()) {
+                            for (PostComment finderComment : newCommentsWithAdd) {
+                                if (finderComment.commentId.equals(newComment.replyCommentId)) {
+                                    Logs.debug("add reply comment 1");
+                                    finderComment.replyComments.add(newComment);
+                                    break;
+                                } else {
+                                    for (PostComment finderReplyComment : finderComment.replyComments) {
+                                        if (finderReplyComment.commentId.equals(newComment.replyCommentId)) {
+                                            Logs.debug("add reply comment 2");
+                                            finderComment.replyComments.add(newComment);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            newCommentsWithAdd.add(0, newComment);
+                        }
+                        changeComments(newCommentsWithAdd);
+                        break;
+                    case "prc":
+                        String removedCommentId = json.get(PacketDataKeys.COMMENT_ID).asText();
+                        List<PostComment> newCommentsWithRemoved = new ArrayList<>(this.comments);
+                        Iterator<PostComment> it = newCommentsWithRemoved.iterator();
+                        while (it.hasNext()) {
+                            PostComment finderComment = it.next();
+                            if (finderComment.commentId.equals(removedCommentId)) {
+                                Logs.debug("remove comment");
+                                it.remove();
+                                break;
+                            } else {
+                                Iterator<PostComment> itReply = finderComment.replyComments.iterator();
+                                while(itReply.hasNext()) {
+                                    PostComment finderReplyComment = itReply.next();
+                                    if(finderReplyComment.commentId.equals(removedCommentId)) {
+                                        itReply.remove();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        changeComments(newCommentsWithRemoved);
+                        break;
                 }
             }
         });
@@ -224,7 +256,6 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        Logs.info("PRESSED");
         if (id == R.id.likesButton) {
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POST_SET_REACTION);

@@ -96,7 +96,8 @@
     <string name="set_superlike">СуперЛайк на трек</string>
     <string name="set">поставил</string>
     <string name="replace">поменял</string>
-    <string name="delete">удалил</string>
+    <string name="deleted">удалил</string>
+    <string name="delete">Удалить</string>
     <string name="current_track">текущий трек</string>
     <string name="name_track">Название трека</string>
     <string name="track_title">trackTitle</string>

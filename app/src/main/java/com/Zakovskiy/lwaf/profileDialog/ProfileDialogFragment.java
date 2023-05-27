@@ -354,7 +354,6 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
                 }));
             }
             MenuDialogFragment.newInstance(context, menuButtons).show(getFragmentManager(), "MenuButtons");
-            Logs.debug("press");
         });
         ((TextView)this.llStatistics.findViewById(R.id.textTracks)).setText(String.valueOf(user.tracks));
         ((TextView)this.llStatistics.findViewById(R.id.textDislikes)).setText(String.valueOf(user.dislikes));

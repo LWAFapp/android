@@ -45,13 +45,10 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     public RecyclerView listMessages;
     private ShimmerFrameLayout messagesShimmer;
     private ShimmerFrameLayout usersShimmer;
-    public List<Message> messagesInConversation;
-    private List<ShortUser> usersInConversation;
     private MessagesAdapter messagesAdapter;
     private UsersAdapter usersAdapter;
     private List<Message> globalMessages = new ArrayList<>();
     private List<ShortUser> globalUsers = new ArrayList<>();
-    private View currentView;
     private String replyId = "";
     private LinearLayout replyToLayout;
     public HashMap<Message, Integer> replyPositions = new HashMap<>();
@@ -77,9 +74,9 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             //Работает только для LEFT, если хочешь еще вправо свапать то switch делай
             int position = viewHolder.getAdapterPosition();
-            Message swappedMessage = messagesInConversation.get(position);
-            messagesInConversation.remove(position);
-            messagesInConversation.add(position, swappedMessage);
+            Message swappedMessage = globalMessages.get(position);
+            globalMessages.remove(position);
+            globalMessages.add(position, swappedMessage);
             messagesAdapter.notifyDataSetChanged();
             setReply(swappedMessage);
         }
@@ -210,7 +207,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         /*
                         Событие о юзерах чата. Здесь должны быть обработки ListView и адаптеров
                          */
-                        usersInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), ShortUser.class);
+                        List<ShortUser> usersInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.PLAYERS), ShortUser.class);
                         changesUsers(usersInConversation);
                         changeShimmerUsers(false);
                         break;
@@ -218,7 +215,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         /*
                         Событие о сообщениях чата. Тоже самое что и выше.
                          */
-                        messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
+                        List<Message> messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
                         for (int i = 0; i < messagesInConversation.size()-1; i++) {
                             ids.add(messagesInConversation.get(i).messageId);
                             String date1 = TimeUtils.getTime(messagesInConversation.get(i).timeSend*1000, "dd");
@@ -252,8 +249,9 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         /*
                         Событие о нью месседж. Тоже самое что и выше.
                          */
+                        List<Message> newMessages = new ArrayList<>(globalMessages);
                         Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
-                        Message lastMessage = messagesInConversation.get(messagesInConversation.size()-1);
+                        Message lastMessage = newMessages.get(newMessages.size()-1);
                         String lastMessageDate = TimeUtils.getTime(lastMessage.timeSend*1000, "dd");
                         String lastMessageMonth = TimeUtils.getTime(lastMessage.timeSend*1000, "MM");
                         String newMessageDate = TimeUtils.getTime(newMessage.timeSend*1000, "dd");
@@ -262,10 +260,10 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                             Message msg = new Message();
                             msg.type = MessageType.MESSAGE_DATE;
                             msg.message = newMessageDate + " " + TimeUtils.convertToWords(this, Integer.parseInt(newMessageMonth), true);
-                            messagesInConversation.add(msg);
+                            newMessages.add(msg);
                         }
-                        messagesInConversation.add(newMessage);
-                        changesMessages(messagesInConversation);
+                        newMessages.add(newMessage);
+                        changesMessages(newMessages);
                         this.listMessages.scrollToPosition(messagesAdapter.getCount() - 1);
                         break;
                     case "gcdm":
@@ -273,20 +271,21 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         Событие об удаление сообщения. Тоже самое что и выше.
                          */
                         String messageId = json.get(PacketDataKeys.MESSAGE_ID).asText();
-                        Iterator<Message> iterator = messagesInConversation.iterator();
+                        List<Message> messagesWithRemoves = new ArrayList<>(globalMessages);
+                        Iterator<Message> iterator = messagesWithRemoves.iterator();
                         while (iterator.hasNext()) {
                             Message message = iterator.next();
                             if (message.messageId.equals(messageId)) {
                                 iterator.remove();
                             }
                         }
-                        changesMessages(messagesInConversation);
+                        changesMessages(messagesWithRemoves);
                         break;
                     case "gcpl":
                         /*
                         Событие если кто-то выйдет из чата. Тоже самое что и выше.
                          */
-                        List<ShortUser> newUsersOfLeft = new ArrayList<>(usersInConversation);
+                        List<ShortUser> newUsersOfLeft = new ArrayList<>(globalUsers);
                         String userIdLeft = json.get(PacketDataKeys.USER_ID).asText();
                         Iterator<ShortUser> it = newUsersOfLeft.iterator();
                         while (it.hasNext()) {
@@ -301,9 +300,10 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         /*
                         Событие если кто-то войдет в чат. Тоже самое что и выше.
                          */
-                        ShortUser user = (ShortUser) JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.USER), ShortUser.class);
-                        usersInConversation.add(user);
-                        changesUsers(usersInConversation);
+                        ShortUser user = (ShortUser) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), ShortUser.class);
+                        List<ShortUser> usersInConversationWithJoin = new ArrayList<>(globalUsers);
+                        usersInConversationWithJoin.add(user);
+                        changesUsers(usersInConversationWithJoin);
                         break;
                 }
             }

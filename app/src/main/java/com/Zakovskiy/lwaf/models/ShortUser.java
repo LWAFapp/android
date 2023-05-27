@@ -22,4 +22,8 @@ public class ShortUser implements Serializable {
     public Long lastSeen = 0L;
     @JsonProperty("ava")
     public String avatar = "";
+
+    public boolean isAdmin() {
+        return this.role >= 50;
+    }
 }

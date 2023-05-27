@@ -24,34 +24,42 @@
             android:id="@+id/menu__admin_panel"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_weight="0"
-            android:background="@drawable/ic_admin"
-            android:visibility="visible" />
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_admin"
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/menu__news"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_weight="0"
-            android:background="@drawable/ic_news" />
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:focusable="true"
+            android:src="@drawable/ic_news" />
 
         <ImageView
             android:id="@+id/menu__settings"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_weight="0"
-            android:background="@drawable/ic_settings" />
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:focusable="true"
+            android:src="@drawable/ic_settings" />
 
         <ImageView
             android:id="@+id/menu__logout"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_weight="0"
-            android:background="@drawable/ic_exit" />
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:focusable="true"
+            android:src="@drawable/ic_exit" />
     </LinearLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="535sp"
+        android:layout_height="535dp"
         android:layout_above="@id/menu__buttons"
         android:layout_below="@+id/linearLayout"
         android:background="@drawable/rounded_rectangle">
@@ -117,7 +125,7 @@
             android:id="@+id/menu__rooms_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:dividerHeight="0sp"
+            android:dividerHeight="0dp"
             android:theme="@style/AppTheme.ListViewStyle"
             android:visibility="invisible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -125,7 +133,7 @@
     <LinearLayout
         android:id="@+id/menu__buttons"
         android:layout_width="match_parent"
-        android:layout_height="60sp"
+        android:layout_height="60dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="5dp"
