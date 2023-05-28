@@ -242,7 +242,7 @@
                                     android:layout_height="wrap_content"
                                     android:background="@color/white"
                                     android:backgroundTint="@color/black_primary"
-                                    android:enabled="true"
+                                    android:enabled="false"
                                     android:gravity="top"
                                     android:imeOptions="actionDone"
                                     android:inputType="textMultiLine"

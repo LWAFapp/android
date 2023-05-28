@@ -374,13 +374,13 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         }
         changeFavoriteTracks(user.favoriteTrack);
         if(!isSelf()){
-            this.tvAbout.setEnabled(false);
             if(user.avatar != null && !user.avatar.isEmpty()) {
                 this.civAvatar.setOnClickListener((v) -> {
                     new AvatarDialogFragment(context, user.avatar).show(getFragmentManager(), "AvatarDialogFragment");
                 });
             }
         } else {
+            this.tvAbout.setEnabled(true);
             this.civAvatar.setOnClickListener((v) -> {
                 if(user.avatar == null || user.avatar.isEmpty()) {
                     changeAvatar();
