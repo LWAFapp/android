@@ -21,11 +21,13 @@ import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
 import com.Zakovskiy.lwaf.menuDialog.MenuButton;
 import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.Bubble;
+import com.Zakovskiy.lwaf.models.LotoWinner;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.BubbleType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
+import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
@@ -178,8 +180,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else if (messageGlobal.type == MessageType.LOTO_WINNERS) {
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
             systemHolder.message.setText(context.getString(R.string.loto_winners));
-            systemHolder.adapter = new LotoWinnersAdapter(context, messageGlobal.message, fragmentManager);
-            systemHolder.changeAdapter();
+            List<LotoWinner> lotoWinnerList = JsonUtils.convertJsonStringToList(messageGlobal.message, LotoWinner.class);
+            Logs.info(lotoWinnerList.toString());
+            systemHolder.changeLotoWinners(lotoWinnerList);
         }
     }
 
@@ -275,20 +278,24 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private class SystemMessageViewHolder extends RecyclerView.ViewHolder {
         private final TextView message;
-        private final RecyclerView loto_winners_view;
+        private final RecyclerView lotoWinnersView;
         private LotoWinnersAdapter adapter;
+        private List<LotoWinner> lotoWinnerList = new ArrayList<>();
 
         SystemMessageViewHolder(@NonNull View itemView) {
             super(itemView);
             message = itemView.findViewById(R.id.message_view);
-            loto_winners_view = itemView.findViewById(R.id.loto_winners_view);
-            loto_winners_view.setAdapter(adapter);
-            loto_winners_view.setLayoutManager(new LinearLayoutManager(context));
+            lotoWinnersView = itemView.findViewById(R.id.loto_winners_view);
+            adapter = new LotoWinnersAdapter(context, lotoWinnerList, fragmentManager);
+            lotoWinnersView.setAdapter(adapter);
+            lotoWinnersView.setLayoutManager(new LinearLayoutManager(context));
         }
 
-        public void changeAdapter() {
-            loto_winners_view.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+        public void changeLotoWinners(List<LotoWinner> newLotoWinnerList) {
+            lotoWinnersView.setVisibility(View.VISIBLE);
+            this.lotoWinnerList.clear();
+            this.lotoWinnerList.addAll(newLotoWinnerList);
+            this.adapter.notifyDataSetChanged();
         }
     }
 }

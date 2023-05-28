@@ -123,4 +123,5 @@ public class PacketDataKeys {
     public static final String POSTS_REMOVE_COMMENT = "prc";
     public static final String COMMENT_ID = "cid";
     public static final String GET_RATING = "gr";
+    public static final String LOTO_WIN_SIZE = "lws";
 }

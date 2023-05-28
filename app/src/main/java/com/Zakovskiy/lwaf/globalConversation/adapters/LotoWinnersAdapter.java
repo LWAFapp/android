@@ -19,6 +19,7 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.models.LotoWinner;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
+import com.Zakovskiy.lwaf.utils.Logs;
 
 import java.util.List;
 
@@ -28,11 +29,10 @@ public class LotoWinnersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private FragmentManager fragmentManager;
     private List<LotoWinner> llw;
 
-    public LotoWinnersAdapter(Context context, String message, FragmentManager fragmentManager) {
+    public LotoWinnersAdapter(Context context, List<LotoWinner> lotoWinnerList, FragmentManager fragmentManager) {
         this.context = context;
-        this.message = message;
         this.fragmentManager = fragmentManager;
-        this.llw = JsonUtils.convertJsonStringToList(message, LotoWinner.class);
+        this.llw = lotoWinnerList;
     }
 
     @NonNull
@@ -52,7 +52,7 @@ public class LotoWinnersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return 0;
+        return this.llw.size();
     }
 
     class LWViewHolder extends RecyclerView.ViewHolder {
@@ -63,7 +63,8 @@ public class LotoWinnersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         public void bind(LotoWinner lw) {
-            SpannableStringBuilder ssb = new SpannableStringBuilder(lw.nickname + " - " + lw.lotoNumbers.toString());
+            Logs.info("lw");
+            SpannableStringBuilder ssb = new SpannableStringBuilder(lw.user.nickname + " - " + lw.lotoNumbers.toString());
             Bitmap coin = BitmapFactory.decodeResource(context.getResources(), R.drawable.coin_icon);
             ssb.setSpan(new ImageSpan(coin), ssb.length()-1, ssb.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             this.textView.setText(ssb, TextView.BufferType.SPANNABLE);
