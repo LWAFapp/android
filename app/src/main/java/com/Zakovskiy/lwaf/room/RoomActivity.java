@@ -20,6 +20,7 @@ import com.Zakovskiy.lwaf.api.models.ModelTrackResponse;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
 import com.Zakovskiy.lwaf.globalConversation.adapters.UsersAdapter;
+import com.Zakovskiy.lwaf.models.LotoWinner;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.ShortUser;

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.R;
@@ -45,6 +46,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private static final int TEXT_VIEW_TYPE = 0;
     private static final int SYSTEM_VIEW_TYPE = 1;
+    private static final int LOTO_WINNERS_TYPE = 8;
     private Context context;
     private List<Message> messages;
     private FragmentManager fragmentManager;
@@ -70,7 +72,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (messageGlobal.type == MessageType.TEXT) {
             this.theReceiver = messageGlobal.user.userId.equals(Application.lwafCurrentUser.userId);
             return TEXT_VIEW_TYPE;
-        } else {
+        } else if (messageGlobal.type == MessageType.LOTO_WINNERS) {
+            return LOTO_WINNERS_TYPE;
+        }
+        else {
             return SYSTEM_VIEW_TYPE;
         }
     }
@@ -91,7 +96,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 view = inflater.inflate(R.layout.item_user_message_sender, parent, false);
             }
             return new TextMessageViewHolder(view);
-        } else {
+        }
+        else {
             view = inflater.inflate(R.layout.item_system_message, parent, false);
             return new SystemMessageViewHolder(view);
         }
@@ -169,6 +175,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
             systemHolder.message.setText(messageGlobal.message);
             systemHolder.message.setTextColor(Color.WHITE);
+        } else if (messageGlobal.type == MessageType.LOTO_WINNERS) {
+            SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
+            systemHolder.message.setText(context.getString(R.string.loto_winners));
+            systemHolder.adapter = new LotoWinnersAdapter(context, messageGlobal.message, fragmentManager);
+            systemHolder.changeAdapter();
         }
     }
 
@@ -264,10 +275,20 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private class SystemMessageViewHolder extends RecyclerView.ViewHolder {
         private final TextView message;
+        private final RecyclerView loto_winners_view;
+        private LotoWinnersAdapter adapter;
 
         SystemMessageViewHolder(@NonNull View itemView) {
             super(itemView);
             message = itemView.findViewById(R.id.message_view);
+            loto_winners_view = itemView.findViewById(R.id.loto_winners_view);
+            loto_winners_view.setAdapter(adapter);
+            loto_winners_view.setLayoutManager(new LinearLayoutManager(context));
+        }
+
+        public void changeAdapter() {
+            loto_winners_view.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }
     }
 }
