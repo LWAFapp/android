@@ -122,6 +122,15 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity android:name=".settings.SettingsActivity"
+            android:exported="true"
+            android:label="@string/settings_activity_label"
+            android:theme="@style/Base.Theme.LWAF">
+            <intent-filter>
+                <action android:name="com.Zakovskiy.lwaf.settings.SettingsActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

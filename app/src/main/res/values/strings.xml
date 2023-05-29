@@ -11,6 +11,7 @@
     <string name="news_activity_label">NewsActivity</string>
     <string name="post_activity_label">PostActivity</string>
     <string name="ratings_activity_label">RatingsActivity</string>
+    <string name="settings_activity_label">SettingsActivity</string>
     <string name="next">Дальше</string>
     <string name="previous">Назад</string>
     <string name="cancel">Закрыть</string>
@@ -187,4 +188,16 @@
     <string name="of_superlikes">СуперЛайков</string>
     <string name="of_coins">Монеток</string>
     <string name="loto_winners">Победители лотереи</string>
+    <string name="settings">Настройки</string>
+    <string name="common">Общее</string>
+    <string name="privacy">Приватность</string>
+    <string name="change_gender">Сменить пол</string>
+    <string name="link_vk">Привязать ВК</string>
+    <string name="unlink_vk">Отвязать ВК</string>
+    <string name="change_name">Сменить никнейм</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="terms_of_use">Пользовательское соглашение</string>
+    <string name="show_list_friends">Отображать список друзей</string>
+    <string name="show_balance">Отображать баланс</string>
+    <string name="show_recent_tracks">Отображать недавние треки</string>
 </resources>
