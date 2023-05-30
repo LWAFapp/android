@@ -27,12 +27,14 @@ import retrofit2.Retrofit;
 
 public class DialogVKLogIn extends Dialog {
 
+    private final Integer action;
     private Context context;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
 
-    public DialogVKLogIn(Context context) {
+    public DialogVKLogIn(Context context, Integer action) {
         super(context);
         this.context = context;
+        this.action = action;
     }
 
     @Override
@@ -58,14 +60,18 @@ public class DialogVKLogIn extends Dialog {
                             String accessToken = json.optString("access_token", "");
                             String secret = json.optString("secret", "");
                             HashMap<String, Object> data = new HashMap<>();
-                            data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ACCOUNT_SIGN_VK);
+                            if(action == 0) {
+                                data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ACCOUNT_SIGN_VK);
+                                data.put(PacketDataKeys.DEVICE, Config.getDeviceID(DialogVKLogIn.this.context));
+                            } else if(action == 1) {
+                                data.put(PacketDataKeys.VK_SECRET, secret);
+                                data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.VK_TOKEN_CHANGE);
+                            }
                             data.put(PacketDataKeys.VK_TOKEN, accessToken);
-                            data.put(PacketDataKeys.VK_SECRET, secret);
-                            data.put(PacketDataKeys.DEVICE, Config.getDeviceID(DialogVKLogIn.this.context));
                             socketHelper.sendData(new JSONObject(data));
                         } else if (code == 401) {
                             DialogVKLogIn.this.dismiss();
-                            new DialogTextBox(DialogVKLogIn.this.context, "Неверные данные").show();
+                            new DialogTextBox(DialogVKLogIn.this.context, context.getString(R.string.invalid_data)).show();
                             return;
                         }
                     } catch (NullPointerException | IOException | JSONException e) {
@@ -81,12 +87,6 @@ public class DialogVKLogIn extends Dialog {
                     DialogVKLogIn.this.dismiss();
                 }
             });
-            /*HashMap<String, Object> data = new HashMap<>();
-            data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_CREATE);
-            data.put(PacketDataKeys.ROOM_NICKNAME, roomName.getEditText().getText().toString());
-            data.put(PacketDataKeys.ROOM_PASSWORD, roomPassword.getEditText().getText().toString());
-            data.put(PacketDataKeys.ROOM_PLAYERS_COUNT, Integer.valueOf(roomPlayersCountSize.getEditText().getText().toString()));
-            this.socketHelper.sendData(new JSONObject(data));*/
             DialogVKLogIn.this.dismiss();
         });
     }

@@ -124,4 +124,7 @@ public class PacketDataKeys {
     public static final String COMMENT_ID = "cid";
     public static final String GET_RATING = "gr";
     public static final String LOTO_WIN_SIZE = "lws";
+    public static final String VK_TOKEN_CHANGE = "vktc";
+    public static final String VK_TOKEN_REMOVE = "vktr";
+    public static final String VK_ID = "vid";
 }

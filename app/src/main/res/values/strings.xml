@@ -62,6 +62,7 @@
     <string name="password_hint">Пароль</string>
     <string name="transfer_to_signup">Ещё нет аккаунта?</string>
     <string name="app_lozung">Слушай C Друзьями</string>
+    <string name="invalid_data">Неправильные данные</string>
     <string name="registration">Регистрация</string>
     <string name="information">Информация</string>
     <string name="create_room_title">Создание комнаты</string>

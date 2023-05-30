@@ -57,7 +57,7 @@ public class WelcomeActivity extends ABCActivity implements SocketHelper.SocketL
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.buttonLogInVK) {
-            new DialogVKLogIn(this).show();
+            new DialogVKLogIn(this, 0).show();
         }
     }
 
