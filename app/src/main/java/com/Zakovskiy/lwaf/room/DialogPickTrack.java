@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
+import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.api.VKApi;
 import com.Zakovskiy.lwaf.api.models.ModelTrackResponse;
@@ -78,6 +79,12 @@ public class DialogPickTrack extends Dialog {
                     Logs.error(e.getMessage());
                     e.printStackTrace();
                     DialogPickTrack.this.dismiss();
+                } catch (NullPointerException e) {
+                    DialogPickTrack.this.dismiss();
+                    Logs.error(e.getMessage());
+                    e.printStackTrace();
+                    new DialogTextBox(context, "Произошла ошибка при загрузке треков. Вероятнее всего, это связано из-за устаревшего VK-токена. Смените его в настройках. Если проблема останется, сообщите нам.").show();
+
                 }
             }
 

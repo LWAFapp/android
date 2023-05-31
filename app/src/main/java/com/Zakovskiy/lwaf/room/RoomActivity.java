@@ -275,6 +275,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
             findViewById(R.id.errorUnsettingVK).setVisibility(View.VISIBLE);
             return;
         }
+
         if (this.roomTracks.size() > 0) { // если очередь из треков не пуста
             this.btnSetTrack.setVisibility(View.INVISIBLE);
             this.llPlayerTrack.setVisibility(View.VISIBLE);
