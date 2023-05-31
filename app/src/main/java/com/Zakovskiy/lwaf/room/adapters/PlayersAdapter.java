@@ -1,6 +1,11 @@
 package com.Zakovskiy.lwaf.room.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +62,16 @@ public class PlayersAdapter extends ArrayAdapter<Player> {
         });
         TextView username = view.findViewById(R.id.username);
         UserAvatar avatarImage = view.findViewById(R.id.circleImageView2);
-        username.setText(player.nickname);
+        if (player.superLikesSize > 0) {
+            SpannableStringBuilder ssb = new SpannableStringBuilder(player.nickname + "    " + String.valueOf(player.superLikesSize));
+            Bitmap sl = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
+            sl = Bitmap.createScaledBitmap(sl, 180, 190, true);
+            int len = String.valueOf(player.superLikesSize).length();
+            ssb.setSpan(new ImageSpan(sl), ssb.length() - len - 1, ssb.length() - len, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            username.setText(ssb, TextView.BufferType.SPANNABLE);
+        } else {
+            username.setText(player.nickname);
+        }
         avatarImage.setUser(player);
         return view;
     }

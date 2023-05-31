@@ -79,6 +79,8 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     public List<Track> roomTracks = new ArrayList();
     public List<Track> queueTracks = new ArrayList();
 
+    private Player currentDJ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -246,6 +248,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         this.llPlayerTrack.setTitle(currentTrack.title);
         this.llPlayerTrack.setIcon(currentTrack.icon.isEmpty() ? R.drawable.without_preview : currentTrack.icon);
         llPlayerTrack.resetReactions(currentTrack);
+        //for (Player player : roomUsers) {}
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Config.VK_API).build();
         VKApi vkApi = retrofit.create(VKApi.class);
         String sig = MD5Hash.md5(String.format("/method/audio.getById?v=5.102&access_token=%s&audios=%s%s", Application.lwafCurrentUser.vkontakteToken, currentTrack.key, Application.lwafCurrentUser.vkontakteSecret));
