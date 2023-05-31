@@ -201,4 +201,7 @@
     <string name="show_list_friends">Отображать список друзей</string>
     <string name="show_balance">Отображать баланс</string>
     <string name="show_recent_tracks">Отображать недавние треки</string>
+    <string name="send">Отправить</string>
+    <string name="reason">Причина</string>
+    <string name="report_text">Вы собираетесь пожаловаться на </string>
 </resources>

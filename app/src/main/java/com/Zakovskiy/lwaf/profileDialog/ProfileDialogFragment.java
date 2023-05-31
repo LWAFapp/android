@@ -17,8 +17,6 @@ import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -33,6 +31,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Zakovskiy.lwaf.DialogReport;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.api.LWAFApi;
@@ -43,10 +42,8 @@ import com.Zakovskiy.lwaf.menuDialog.adapters.MenuButtonAdapter;
 import com.Zakovskiy.lwaf.models.FavoriteTrack;
 import com.Zakovskiy.lwaf.models.LastTrack;
 import com.Zakovskiy.lwaf.models.Rank;
-import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.models.enums.FriendType;
-import com.Zakovskiy.lwaf.models.enums.Sex;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.profileDialog.adapters.LastTracksAdapter;
 import com.Zakovskiy.lwaf.profileDialog.adapters.RanksAdapter;
@@ -58,8 +55,6 @@ import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.json.JSONObject;
@@ -350,7 +345,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
                     this.socketHelper.sendData(new JSONObject(data));
                 }));
                 menuButtons.add(new MenuButton(getString(R.string.report), "#E10F4A", (vb) -> {
-                    Logs.debug("Report success");
+                    new DialogReport(context, user.nickname).show();
                 }));
             }
             MenuDialogFragment.newInstance(context, menuButtons).show(getFragmentManager(), "MenuButtons");
