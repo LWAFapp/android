@@ -25,7 +25,7 @@ public class RoomInLobby implements Serializable {
     @JsonProperty("pcs")
     public Integer playersCountSize = 0;
     @JsonProperty("p")
-    public List<ShortUser> players = new ArrayList<>();
+    public List<Player> players = new ArrayList<>();
     @JsonProperty("tr")
     public List<Track> tracks = new ArrayList<>();
 }

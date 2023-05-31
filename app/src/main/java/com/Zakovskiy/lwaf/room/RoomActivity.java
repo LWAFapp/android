@@ -19,9 +19,10 @@ import com.Zakovskiy.lwaf.api.VKApi;
 import com.Zakovskiy.lwaf.api.models.ModelTrackResponse;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
-import com.Zakovskiy.lwaf.globalConversation.adapters.UsersAdapter;
+import com.Zakovskiy.lwaf.room.adapters.PlayersAdapter;
 import com.Zakovskiy.lwaf.models.LotoWinner;
 import com.Zakovskiy.lwaf.models.Message;
+import com.Zakovskiy.lwaf.models.Player;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.Track;
@@ -69,11 +70,11 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
 
     // Adapters
     private MessagesAdapter messagesAdapter;
-    private UsersAdapter usersAdapter;
+    private PlayersAdapter usersAdapter;
     private TracksQueueAdapter tracksQueueAdapter;
 
     // Lists
-    public List<ShortUser> roomUsers = new ArrayList<>();
+    public List<Player> roomUsers = new ArrayList<>();
     public List<Message> messagesRoom = new ArrayList<>();;
     public List<Track> roomTracks = new ArrayList();
     public List<Track> queueTracks = new ArrayList();
@@ -104,7 +105,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         this.btnSetTrack.setOnClickListener(this);
 
         TextInputLayout inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
-        usersAdapter = new UsersAdapter(this, getSupportFragmentManager(), roomUsers);
+        usersAdapter = new PlayersAdapter(this, getSupportFragmentManager(), roomUsers);
         messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), messagesRoom, null);
         tracksQueueAdapter = new TracksQueueAdapter(this, queueTracks);
         this.listMessages.setAdapter(messagesAdapter);
@@ -155,9 +156,9 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
                         break;
                     case "pl": // player_join
-                        List<ShortUser> newUsersOfLeft = new ArrayList<>(roomUsers);
-                        ShortUser leftUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), ShortUser.class);
-                        Iterator<ShortUser> it = newUsersOfLeft.iterator();
+                        List<Player> newUsersOfLeft = new ArrayList<>(roomUsers);
+                        Player leftUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), Player.class);
+                        Iterator<Player> it = newUsersOfLeft.iterator();
                         while (it.hasNext()) {
                             if (it.next().userId.equals(leftUser.userId)) {
                                 it.remove();
@@ -166,8 +167,8 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         changesUsers(newUsersOfLeft);
                         break;
                     case "pj": // player_left
-                        List<ShortUser> newUsersOfJoin = new ArrayList<>(roomUsers);
-                        ShortUser joinUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), ShortUser.class);
+                        List<Player> newUsersOfJoin = new ArrayList<>(roomUsers);
+                        Player joinUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), Player.class);
                         newUsersOfJoin.add(joinUser);
                         changesUsers(newUsersOfJoin);
                         break;
@@ -234,7 +235,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         messagesAdapter.notifyDataSetChanged();
     }
 
-    public void changesUsers(List<ShortUser> list) {
+    public void changesUsers(List<Player> list) {
         roomUsers.clear();
         roomUsers.addAll(list);
         usersAdapter.notifyDataSetChanged();
