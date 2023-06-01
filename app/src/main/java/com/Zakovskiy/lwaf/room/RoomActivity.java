@@ -157,9 +157,9 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         changesMessages(newList);
                         this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
                         break;
-                    case "pl": // player_join
+                    case "pl": // player_left
                         List<Player> newUsersOfLeft = new ArrayList<>(roomUsers);
-                        Player leftUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), Player.class);
+                        Player leftUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.PLAYERS), Player.class);
                         Iterator<Player> it = newUsersOfLeft.iterator();
                         while (it.hasNext()) {
                             if (it.next().userId.equals(leftUser.userId)) {
@@ -168,10 +168,11 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         }
                         changesUsers(newUsersOfLeft);
                         break;
-                    case "pj": // player_left
+                    case "pj": // player_join
                         List<Player> newUsersOfJoin = new ArrayList<>(roomUsers);
-                        Player joinUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), Player.class);
+                        Player joinUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.PLAYERS), Player.class);
                         newUsersOfJoin.add(joinUser);
+                        Logs.info(newUsersOfJoin.toString());
                         changesUsers(newUsersOfJoin);
                         break;
                     case "et": // end_track

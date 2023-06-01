@@ -20,6 +20,7 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.models.Player;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
+import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 
 import java.util.List;
@@ -56,13 +57,14 @@ public class PlayersAdapter extends ArrayAdapter<Player> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Player player = getItem(position);
+        Logs.info(player.toString());
         View view = inflater.inflate(R.layout.item_user_in_listview, parent, false);
         view.setOnClickListener((v)->{
             ProfileDialogFragment.newInstance(context, player.userId).show(fragmentManager, "ProfileDialogFragment");
         });
         TextView username = view.findViewById(R.id.username);
         UserAvatar avatarImage = view.findViewById(R.id.circleImageView2);
-        if (player.superLikesSize != null &&player.superLikesSize > 0) {
+        if (player.superLikesSize != null && player.superLikesSize > 0) {
             SpannableStringBuilder ssb = new SpannableStringBuilder(player.nickname + "    " + String.valueOf(player.superLikesSize));
             Bitmap sl = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
             sl = Bitmap.createScaledBitmap(sl, 150, 150, true);
