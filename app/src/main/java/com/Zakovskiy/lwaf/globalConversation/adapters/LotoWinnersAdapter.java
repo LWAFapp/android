@@ -17,9 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.models.LotoWinner;
-import com.Zakovskiy.lwaf.models.Message;
-import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
+import com.Zakovskiy.lwaf.utils.StringUtils;
 
 import java.util.List;
 
@@ -56,18 +55,17 @@ public class LotoWinnersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     class LWViewHolder extends RecyclerView.ViewHolder {
-        private TextView textView;
+        private TextView numbersView;
+        private TextView winView;
         public LWViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.loto_winner_textview);
+            numbersView = itemView.findViewById(R.id.lotoWinnerNumbers);
+            winView = itemView.findViewById(R.id.lotoWinnerSize);
         }
 
         public void bind(LotoWinner lw) {
-            Logs.info("lw");
-            SpannableStringBuilder ssb = new SpannableStringBuilder(lw.user.nickname + " - " + lw.lotoNumbers.toString());
-            Bitmap coin = BitmapFactory.decodeResource(context.getResources(), R.drawable.coin_icon);
-            ssb.setSpan(new ImageSpan(coin), ssb.length()-1, ssb.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            this.textView.setText(ssb, TextView.BufferType.SPANNABLE);
+            this.numbersView.setText(lw.user.nickname + " - " + StringUtils.join_l(lw.lotoNumbers, ", "));
+            this.winView.setText(String.valueOf(lw.winSize));
         }
     }
 }
