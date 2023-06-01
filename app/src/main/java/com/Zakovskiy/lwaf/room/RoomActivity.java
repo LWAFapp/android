@@ -203,6 +203,10 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                             roomTracks.get(0).dislikes++;
                         } else if (type == TrackReactionsType.SUPER_LIKE) {
                             roomTracks.get(0).superLikes++;
+                            if (this.currentDJ != null) {
+                                this.currentDJ.superLikesSize++;
+                                this.usersAdapter.notifyDataSetChanged();
+                            }
                         } else if (type == TrackReactionsType.LIKE) {
                             roomTracks.get(0).likes++;
                         }
@@ -248,7 +252,12 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         this.llPlayerTrack.setTitle(currentTrack.title);
         this.llPlayerTrack.setIcon(currentTrack.icon.isEmpty() ? R.drawable.without_preview : currentTrack.icon);
         llPlayerTrack.resetReactions(currentTrack);
-        //for (Player player : roomUsers) {}
+        for (Player player : roomUsers) {
+            if (player.userId.equals(currentTrack.user.userId)) {
+                this.currentDJ = player;
+                break;
+            }
+        }
         Retrofit retrofit = new Retrofit.Builder().baseUrl(Config.VK_API).build();
         VKApi vkApi = retrofit.create(VKApi.class);
         String sig = MD5Hash.md5(String.format("/method/audio.getById?v=5.102&access_token=%s&audios=%s%s", Application.lwafCurrentUser.vkontakteToken, currentTrack.key, Application.lwafCurrentUser.vkontakteSecret));

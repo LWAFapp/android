@@ -65,7 +65,7 @@ public class PlayersAdapter extends ArrayAdapter<Player> {
         if (player.superLikesSize > 0) {
             SpannableStringBuilder ssb = new SpannableStringBuilder(player.nickname + "    " + String.valueOf(player.superLikesSize));
             Bitmap sl = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
-            sl = Bitmap.createScaledBitmap(sl, 180, 190, true);
+            sl = Bitmap.createScaledBitmap(sl, 150, 150, true);
             int len = String.valueOf(player.superLikesSize).length();
             ssb.setSpan(new ImageSpan(sl), ssb.length() - len - 1, ssb.length() - len, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             username.setText(ssb, TextView.BufferType.SPANNABLE);
