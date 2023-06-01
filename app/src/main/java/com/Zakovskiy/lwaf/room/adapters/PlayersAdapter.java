@@ -62,7 +62,7 @@ public class PlayersAdapter extends ArrayAdapter<Player> {
         });
         TextView username = view.findViewById(R.id.username);
         UserAvatar avatarImage = view.findViewById(R.id.circleImageView2);
-        if (player.superLikesSize > 0) {
+        if (player.superLikesSize != null &&player.superLikesSize > 0) {
             SpannableStringBuilder ssb = new SpannableStringBuilder(player.nickname + "    " + String.valueOf(player.superLikesSize));
             Bitmap sl = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
             sl = Bitmap.createScaledBitmap(sl, 150, 150, true);
