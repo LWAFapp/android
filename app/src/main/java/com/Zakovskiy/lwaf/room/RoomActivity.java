@@ -229,11 +229,13 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     @Override
     public void onDisconnected() {
         newActivity(BaseActivity.class, true, new Bundle());
+        socketHelper.unsubscribe(this);
     }
 
     @Override
     public void onReceiveError(String str) {
         newActivity(BaseActivity.class, true, new Bundle());
+        socketHelper.unsubscribe(this);
     }
 
     public void changesMessages(List<Message> list) {

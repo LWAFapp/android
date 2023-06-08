@@ -132,6 +132,7 @@ public class SocketHelper implements Serializable {
     }
 
     public void unsubscribe(Object obj) {
+        Logs.info("UNSUB" + obj.getClass().toString());
         if (obj instanceof SocketListener) {
             Iterator<SocketListener> it = this.lwafSocketListeners.iterator();
             while (it.hasNext()) {
@@ -141,6 +142,7 @@ public class SocketHelper implements Serializable {
             }
             return;
         }
+
         throw new IllegalArgumentException("UnSubscriber must be an instance of SocketListener");
     }
 

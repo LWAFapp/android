@@ -180,6 +180,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else if (messageGlobal.type == MessageType.LOTO_WINNERS) {
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
             systemHolder.message.setText(context.getString(R.string.loto_winners));
+            systemHolder.message.setTextSize(16);
             List<LotoWinner> lotoWinnerList = JsonUtils.convertJsonStringToList(messageGlobal.message, LotoWinner.class);
             Logs.info(lotoWinnerList.toString());
             systemHolder.changeLotoWinners(lotoWinnerList);

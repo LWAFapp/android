@@ -19,6 +19,7 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.models.LotoWinner;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.StringUtils;
+import com.Zakovskiy.lwaf.widgets.UserAvatar;
 
 import java.util.List;
 
@@ -39,12 +40,14 @@ public class LotoWinnersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(this.context);
         View view = inflater.inflate(R.layout.item_loto_winner, parent, false);
+        Logs.info("LOTO " + this.llw.toString());
         return new LWViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         LotoWinner lw = this.llw.get(position);
+        Logs.info("LOTO1 " + lw.user.nickname);
         LWViewHolder lwvh = (LWViewHolder) holder;
         lwvh.bind(lw);
     }
@@ -57,15 +60,22 @@ public class LotoWinnersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     class LWViewHolder extends RecyclerView.ViewHolder {
         private TextView numbersView;
         private TextView winView;
+        private TextView winUsername;
+        private UserAvatar winAvatar;
         public LWViewHolder(@NonNull View itemView) {
             super(itemView);
             numbersView = itemView.findViewById(R.id.lotoWinnerNumbers);
             winView = itemView.findViewById(R.id.lotoWinnerSize);
+            winUsername = itemView.findViewById(R.id.lotoWinnerUsername);
+            winAvatar = itemView.findViewById(R.id.lotoWinnerAvatar);
         }
 
         public void bind(LotoWinner lw) {
-            this.numbersView.setText(lw.user.nickname + " - " + StringUtils.join_l(lw.lotoNumbers, ", "));
+            Logs.info("LOTO2 " + lw.user.nickname);
+            this.numbersView.setText(StringUtils.join_l(lw.lotoNumbers, ", ") + " -");
             this.winView.setText(String.valueOf(lw.winSize));
+            this.winUsername.setText(lw.user.nickname);
+            this.winAvatar.setUser(lw.user);
         }
     }
 }
