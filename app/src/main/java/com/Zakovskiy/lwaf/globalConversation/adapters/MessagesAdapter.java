@@ -53,7 +53,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<Message> messages;
     private FragmentManager fragmentManager;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
-    private boolean theReceiver = false;
+    private boolean theReceiver = true;
     public GlobalConversationActivity ac;
 
     public MessagesAdapter(Context context,
