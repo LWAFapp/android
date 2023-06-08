@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
@@ -54,10 +55,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private FragmentManager fragmentManager;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private boolean theReceiver = true;
-    public GlobalConversationActivity ac;
+    public ABCActivity ac;
 
     public MessagesAdapter(Context context,
-                           FragmentManager fragmentManager, List<Message> messages, GlobalConversationActivity ac) {
+                           FragmentManager fragmentManager, List<Message> messages, ABCActivity ac) {
         this.context = context;
         this.messages = messages;
         this.fragmentManager = fragmentManager;
@@ -219,15 +220,15 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void bind(Message message) throws IOException, XmlPullParserException {
             this.replyLayout.setOnClickListener(v -> {
                 if (ac.getClass() == GlobalConversationActivity.class) {
-                    int pos = ac.ids.indexOf(message.replyMessage.messageId);
-                    ac.listMessages.scrollToPosition(pos);
+                    int pos = ((GlobalConversationActivity) ac).ids.indexOf(message.replyMessage.messageId);
+                    ((GlobalConversationActivity) ac).listMessages.scrollToPosition(pos);
                 }
             });
             this.messageBubble.setOnClickListener(v -> {
                 List<MenuButton> btns = new ArrayList<>();
-                if (ac.getClass() == GlobalConversationActivity.class)
+                if (ac != null && ac.getClass() == GlobalConversationActivity.class)
                     btns.add(new MenuButton(ac.getString(R.string.reply), "#FFFFFF", (vb) -> {
-                        ac.setReply(message);
+                        ((GlobalConversationActivity) ac).setReply(message);
                     }));
                 btns.add(new MenuButton(ac.getString(R.string.copy), "#FFFFFF", (vb) -> {
                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

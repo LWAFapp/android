@@ -108,10 +108,11 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
 
         TextInputLayout inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
         usersAdapter = new PlayersAdapter(this, getSupportFragmentManager(), roomUsers);
-        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), messagesRoom, null);
+        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), messagesRoom, this);
         tracksQueueAdapter = new TracksQueueAdapter(this, queueTracks);
         this.listMessages.setAdapter(messagesAdapter);
         this.listMessages.setLayoutManager(new LinearLayoutManager(this));
+        this.listMessages.getRecycledViewPool().setMaxRecycledViews(0, 0);
         this.listUsers.setAdapter(usersAdapter);
         this.listTracksQueue.setAdapter(tracksQueueAdapter);
         changesUsers(this.room.players);
