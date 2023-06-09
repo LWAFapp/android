@@ -204,4 +204,5 @@
     <string name="send">Отправить</string>
     <string name="reason">Причина</string>
     <string name="report_text">Вы собираетесь пожаловаться на </string>
+    <string name="change">Изменить</string>
 </resources>

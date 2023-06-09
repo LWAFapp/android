@@ -11,7 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.menuDialog.MenuButton;
+import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.Track;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
@@ -19,6 +22,7 @@ import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,11 +33,13 @@ public class TracksQueueAdapter extends ArrayAdapter<Track> {
     private Context context;
     private List<Track> tracks;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
+    private ABCActivity ac;
 
-    public TracksQueueAdapter(@NonNull Context context, List<Track> tracks) {
+    public TracksQueueAdapter(@NonNull Context context, List<Track> tracks, ABCActivity ac) {
         super(context, R.layout.item_track_in_queue, tracks);
         this.context = context;
         this.tracks = tracks;
+        this.ac = ac;
     }
 
     public int getCount() {
@@ -66,11 +72,19 @@ public class TracksQueueAdapter extends ArrayAdapter<Track> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        convertView.findViewById(R.id.trackInQueueDelete).setOnClickListener(v -> {
+
+        });
+        convertView.findViewById(R.id.trackInQueueEdit).setOnClickListener(v -> {
+
+        });
         holder.title.setText(Html.fromHtml(track.title));
         Integer durationMinutes = (Integer) track.duration / 60;
         Integer durationSeconds = (Integer) track.duration % 60;
         holder.duration.setText(String.format("%02d:%02d", durationMinutes, durationSeconds));
         ImageUtils.loadImage(this.context, track.icon.isEmpty() ? R.drawable.without_preview : track.icon, holder.icon);
+
+
         return convertView;
     }
 

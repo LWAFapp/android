@@ -218,12 +218,18 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         public void bind(Message message) throws IOException, XmlPullParserException {
-            this.replyLayout.setOnClickListener(v -> {
-                if (ac.getClass() == GlobalConversationActivity.class) {
+//            this.replyLayout.setOnClickListener(v -> {
+//                if (ac.getClass() == GlobalConversationActivity.class) {
+//                    int pos = ((GlobalConversationActivity) ac).ids.indexOf(message.replyMessage.messageId);
+//                    ((GlobalConversationActivity) ac).listMessages.scrollToPosition(pos);
+//                }
+//            });
+            if (ac.getClass() == GlobalConversationActivity.class) {
+                this.replyLayout.setOnClickListener(v -> {
                     int pos = ((GlobalConversationActivity) ac).ids.indexOf(message.replyMessage.messageId);
                     ((GlobalConversationActivity) ac).listMessages.scrollToPosition(pos);
-                }
-            });
+                });
+            }
             this.messageBubble.setOnClickListener(v -> {
                 List<MenuButton> btns = new ArrayList<>();
                 if (ac != null && ac.getClass() == GlobalConversationActivity.class)
