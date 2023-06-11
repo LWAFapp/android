@@ -2,10 +2,16 @@ package com.Zakovskiy.lwaf.room;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -13,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.models.enums.CommentReaction;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.room.adapters.LotoItemsAdapter;
@@ -25,8 +32,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
 
@@ -36,6 +45,9 @@ public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
     private TextView tvLotoTime;
     private RecyclerView rvLotoItems;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
+    private LinearLayout llTableLotoWinnerSize;
+    private Button btnQuestion;
+    private LinearLayout llButtonSubmit;
 
     public DialogLoto(Context context) {
         super(context);
@@ -50,6 +62,27 @@ public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
         this.lotoItemsAdapter.notifyDataSetChanged();
     }
 
+    private void sendNumbers(List<Integer> numbers) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < numbers.size(); i++) {
+            sb.append(numbers.get(i));
+            if(i != numbers.size() - 1) {
+                sb.append(",");
+            }
+        }
+        String pickedNumbers = sb.toString();
+        HashMap<String, Object> dataMessage = new HashMap<>();
+        dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.LOTO_SEND_NUMBERS);
+        dataMessage.put(PacketDataKeys.LOTO_NUMBERS, pickedNumbers);
+        socketHelper.sendData(new JSONObject(dataMessage));
+    }
+
+    public void getBalance() {
+        HashMap<String, Object> dataMessage = new HashMap<>();
+        dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GET_BALANCE);
+        socketHelper.sendData(new JSONObject(dataMessage));
+    }
+
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -58,6 +91,16 @@ public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
         setContentView(R.layout.dialog_loto);
         setCancelable(true);
         this.rvLotoItems = findViewById(R.id.rvLotoItems);
+        this.llTableLotoWinnerSize = findViewById(R.id.llTableLotoWinnerSize);
+        this.btnQuestion = findViewById(R.id.btn_questionLoto);
+        this.btnQuestion.setOnClickListener((view)->{
+            boolean pressed = this.llTableLotoWinnerSize.getVisibility() == View.VISIBLE;
+            this.llTableLotoWinnerSize.setVisibility(pressed ? View.GONE : View.VISIBLE);
+            this.rvLotoItems.setVisibility(pressed ? View.VISIBLE : View.GONE);
+            this.btnQuestion.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(pressed ? R.color.black_primary : R.color.white)));
+            this.btnQuestion.setTextColor(context.getResources().getColor(pressed ? R.color.white : R.color.black_primary));
+        });
+        this.llButtonSubmit = findViewById(R.id.button_submit);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 6);
         rvLotoItems.setAdapter(lotoItemsAdapter);
         rvLotoItems.setLayoutManager(gridLayoutManager);
@@ -68,6 +111,34 @@ public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
             newLotoItems.add(new LotoItem(i, false));
         }
         changesItems(newLotoItems);
+        this.llButtonSubmit.setOnClickListener((view)->{
+            newLotoItems.forEach((item)->{
+                if(item.pressed) {
+                    item.pressed = false;
+                }
+            });
+            Integer countGeneratedNumbers = 1;
+            Integer balance = Application.lwafCurrentUser.balance;
+            if(balance >= 13) {
+                countGeneratedNumbers = 13;
+            } else if(balance != 0) {
+                countGeneratedNumbers += balance;
+            }
+            List<Integer> list = new ArrayList<Integer>();
+            for (int i=1; i<=30; i++) list.add(i);
+            Collections.shuffle(list);
+            list = list.subList(0, countGeneratedNumbers);
+            Logs.info(list.toString());
+            List<LotoItem> changedLotoItems = new ArrayList<>(newLotoItems);
+            list.forEach((num)->{
+                changedLotoItems.forEach((item)->{
+                    if(Objects.equals(item.number, num)) {
+                        item.pressed = true;
+                    }
+                });
+            });
+            changesItems(changedLotoItems);
+        });
         new CountDownTimer(15010, 1000) { // 30 seconds timer with 1 second interval
 
             public void onTick(long millisUntilFinished) {  // on every tick of timer
@@ -77,37 +148,23 @@ public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
 
             public void onFinish() {  // when timer finishes
                 lotoItemsAdapter.setAccess(false);
+                llButtonSubmit.setClickable(false);
                 List<Integer> pickedItems = new ArrayList<>();
                 for(int i=0; i < lotoItems.size(); i++) {
                     if(lotoItems.get(i).pressed) {
                         pickedItems.add(lotoItems.get(i).number);
                     }
                 }
-                StringBuilder sb = new StringBuilder();
-                for(int i = 0; i < pickedItems.size(); i++) {
-                    sb.append(pickedItems.get(i));
-                    if(i != pickedItems.size() - 1) {
-                        sb.append(",");
-                    }
-                }
-                String pickedNumbers = sb.toString();
-                HashMap<String, Object> dataMessage = new HashMap<>();
-                dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.LOTO_SEND_NUMBERS);
-                dataMessage.put(PacketDataKeys.LOTO_NUMBERS, pickedNumbers);
-                socketHelper.sendData(new JSONObject(dataMessage));
+                sendNumbers(pickedItems);
             }
         }.start();
     }
 
     @Override
-    public void onConnected() {
-
-    }
+    public void onConnected() {}
 
     @Override
-    public void onDisconnected() {
-
-    }
+    public void onDisconnected() {}
 
     @Override
     public void onReceive(JsonNode json) {
@@ -122,7 +179,6 @@ public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
                         for(int il=0; il < newList.size(); il++) {
                             if(newList.get(il).number.equals(num)) {
                                 newList.get(il).valid = true;
-                                Logs.info(String.valueOf(newList.get(il).number));
                             }
                         }
                         changesItems(newList);
@@ -138,7 +194,7 @@ public class DialogLoto extends Dialog implements SocketHelper.SocketListener {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                rvLotoItems.post(this::dismiss);
+                rvLotoItems.post(()->{this.socketHelper.unsubscribe(this); getBalance(); this.dismiss();});
             }
         }
     }

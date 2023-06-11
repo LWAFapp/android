@@ -81,6 +81,8 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
 
     private Player currentDJ;
 
+    private DialogLoto currentDialogLoto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,6 +150,13 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                 new DialogTextBox(RoomActivity.this, Config.ERRORS.get(json.get(PacketDataKeys.ERROR).asInt())).show();
             } else if (json.has(PacketDataKeys.TYPE_EVENT)) {
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
+                switch(typeEvent) {
+                    case "gb":
+                        Integer balance = json.get(PacketDataKeys.BALANCE).asInt();
+                        Application.lwafCurrentUser.balance = balance;
+                        Logs.info("change balance");
+                        break;
+                }
             } else if (json.has(PacketDataKeys.ROOM_TYPE_EVENT)) {
                 String roomTypeEvent = json.get(PacketDataKeys.ROOM_TYPE_EVENT).asText();
                 switch(roomTypeEvent) {
@@ -215,8 +224,13 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         llPlayerTrack.resetReactions(roomTracks.get(0));
                         break;
                     case "sl": // start_loto
-                        new DialogLoto(this).show();
+                        currentDialogLoto = new DialogLoto(this);
+                        currentDialogLoto.show();
                         break;
+//                    case "lr":
+//                        List<Integer> lotoResultNumbers = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.LOTO_NUMBERS), Integer.class);
+//                        currentDialogLoto.updateLotoResult(lotoResultNumbers);
+//                        break;
                 }
             }
         });

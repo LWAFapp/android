@@ -9,7 +9,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -41,19 +41,189 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <TextView
-                android:id="@+id/tvLotoTime"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/bets_can_be_placed"
-                android:textColor="#252525"
-                android:textStyle="bold"
-                android:textSize="14sp" />
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvLotoTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/bets_can_be_placed"
+                    android:textColor="#252525"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_questionLoto"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="10dp"
+                    android:padding="0dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="\?"
+                    android:textSize="18sp"
+                    android:backgroundTint="@color/black_primary"/>
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvLotoItems"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:visibility="visible"/>
+
+            <LinearLayout
+                android:id="@+id/llTableLotoWinnerSize"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:layout_weight="1"
+                        android:text="@string/good_integers"
+                        android:textStyle="bold"
+                        android:textColor="@color/black_primary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:text="@string/win_size"
+                        android:textColor="@color/coin"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:layout_weight="1"
+                        android:text="1"
+                        android:textColor="@color/black_primary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+
+                        android:text="1"
+                        android:drawableEnd="@drawable/coin_icon"
+                        android:textColor="@color/coin"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:layout_weight="1"
+                        android:text="2"
+                        android:textColor="@color/black_primary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+
+                        android:text="5"
+                        android:drawableEnd="@drawable/coin_icon"
+                        android:textColor="@color/coin"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:layout_weight="1"
+                        android:text="3"
+                        android:textColor="@color/black_primary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+
+                        android:text="10"
+                        android:drawableEnd="@drawable/coin_icon"
+                        android:textColor="@color/coin"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:layout_weight="1"
+                        android:text="4"
+                        android:textColor="@color/black_primary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+
+                        android:text="35"
+                        android:drawableEnd="@drawable/coin_icon"
+                        android:textColor="@color/coin"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:layout_weight="1"
+                        android:text="5"
+                        android:textColor="@color/black_primary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+
+                        android:text="75"
+                        android:drawableEnd="@drawable/coin_icon"
+                        android:textColor="@color/coin"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:layout_weight="1"
+                        android:text="6"
+                        android:textColor="@color/black_primary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+
+                        android:text="150"
+                        android:drawableEnd="@drawable/coin_icon"
+                        android:textColor="@color/coin"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/can_pick_one_number_free"
+                android:textColor="#252525"
+                android:textSize="14sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -70,7 +240,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/stavki"
+                android:text="@string/random"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="20sp"

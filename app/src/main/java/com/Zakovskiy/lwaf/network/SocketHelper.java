@@ -1,7 +1,10 @@
 package com.Zakovskiy.lwaf.network;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
 
@@ -18,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
@@ -82,40 +86,26 @@ public class SocketHelper implements Serializable {
 
     public void startReceiver() {
         this.lwafStopReceiver = false;
-        Logs.debug("ssr");
         if (this.lwafSocket != null) {
             new Thread(new Runnable() {
                 public void run() {
                     try {
-                        InputStream unused = SocketHelper.this.lwafInputStream = SocketHelper.this.lwafSocket.getInputStream();
+                        InputStream inputStream = SocketHelper.this.lwafSocket.getInputStream();
+                        DataInputStream dataInputStream = new DataInputStream(inputStream);
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        byte[] bArr = new byte[2048];
-                        do {
-                            int read = SocketHelper.this.lwafInputStream.read(bArr);
-                            if (read != -1) {
-                                int i = read - 1;
-                                if (bArr[i] == 10) {
-                                    byteArrayOutputStream.write(bArr, 0, i);
-                                    String byteArrayOutputStream2 = byteArrayOutputStream.toString();
-                                    byteArrayOutputStream.reset();
-                                    for (String str : byteArrayOutputStream2.trim().split("[\n]")) {
-                                        JsonNode convertJsonStringToJsonNode = JsonUtils.convertJsonStringToJsonNode(str.trim());
-                                        if (convertJsonStringToJsonNode == null) {
-                                            if (!str.equals("p")) {
-                                                SocketHelper.this.sendErrorToSubscribers("WRONG JSON ERROR");
-                                            }
-                                        } else {
-                                            Logs.debug("READ FROM SOCKET: " + str);
-                                            SocketHelper.this.sendToSubscribers(convertJsonStringToJsonNode);
-                                        }
-                                    }
-                                } else {
-                                    byteArrayOutputStream.write(bArr, 0, read);
+
+                        while (!SocketHelper.this.lwafStopReceiver) {
+                            int availableBytes = dataInputStream.available();
+                            if (availableBytes > 0) {
+                                byte[] buffer = new byte[availableBytes];
+                                int bytesRead = dataInputStream.read(buffer);
+                                if (bytesRead != -1) {
+                                    byteArrayOutputStream.write(buffer, 0, bytesRead);
+                                    processReceivedData(byteArrayOutputStream);
                                 }
-                            } else {
-                                return;
                             }
-                        } while (!SocketHelper.this.lwafStopReceiver);
+                        }
+
                         Logs.debug("SOCKET RECEIVER STOP");
                     } catch (Exception e) {
                         Logs.debug("startReceiver DISCONNECT");
@@ -123,9 +113,48 @@ public class SocketHelper implements Serializable {
                         e.printStackTrace();
                     }
                 }
+
+                private void processReceivedData(ByteArrayOutputStream byteArrayOutputStream) throws IOException, JSONException {
+                    byte[] data = byteArrayOutputStream.toByteArray();
+                    int startIndex = 0;
+                    int endIndex;
+                    while ((endIndex = findNextMessageIndex(data, startIndex)) != -1) {
+                        byte[] messageBytes = Arrays.copyOfRange(data, startIndex, endIndex);
+                        String message = new String(messageBytes);
+                        processMessage(message);
+                        startIndex = endIndex + 1;
+                    }
+
+                    byteArrayOutputStream.reset();
+                    if (startIndex < data.length) {
+                        byteArrayOutputStream.write(data, startIndex, data.length - startIndex);
+                    }
+                }
+
+                private int findNextMessageIndex(byte[] data, int startIndex) {
+                    for (int i = startIndex; i < data.length; i++) {
+                        if (data[i] == '\n') {
+                            return i;
+                        }
+                    }
+                    return -1;
+                }
+
+                private void processMessage(String message) throws JSONException {
+                    JsonNode convertJsonStringToJsonNode = JsonUtils.convertJsonStringToJsonNode(message.trim());
+                    if (convertJsonStringToJsonNode == null) {
+                        if (!message.equals("p")) {
+                            SocketHelper.this.sendErrorToSubscribers("WRONG JSON ERROR");
+                        }
+                    } else {
+                        Logs.debug("READ FROM SOCKET: " + message);
+                        SocketHelper.this.sendToSubscribers(convertJsonStringToJsonNode);
+                    }
+                }
             }).start();
         }
     }
+
 
     public void subscribe(SocketListener socketListener) {
         this.lwafSocketListeners.add(socketListener);

@@ -54,10 +54,6 @@ public class LotoItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         itemHolder.bind(lotoItem);
     }
 
-    public void setValid(Integer num) {
-
-    }
-
     @Override
     public int getItemCount() {
         return this.lotoItems.size();
@@ -79,6 +75,8 @@ public class LotoItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
             if(lotoItem.pressed) {
                 llLotoItem.setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.design_default_color_primary));
+            } else {
+                llLotoItem.setBackgroundColor(context.getResources().getColor(R.color.white));
             }
             tvLotoItem.setText(String.valueOf(lotoItem.number));
             llLotoItem.setOnClickListener((v)->{

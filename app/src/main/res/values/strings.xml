@@ -188,7 +188,7 @@
     <string name="gotoprofile">Перейти в профиль</string>
     <string name="of_superlikes">СуперЛайков</string>
     <string name="of_coins">Монеток</string>
-    <string name="loto_winners">Победители лотереи</string>
+    <string name="loto_winners">Таблица выигрышей в Лото</string>
     <string name="settings">Настройки</string>
     <string name="common">Общее</string>
     <string name="privacy">Приватность</string>
@@ -205,4 +205,8 @@
     <string name="reason">Причина</string>
     <string name="report_text">Вы собираетесь пожаловаться на </string>
     <string name="change">Изменить</string>
+    <string name="can_pick_one_number_free">Вы можете выбрать 1 число бесплатно</string>
+    <string name="random">Рандом</string>
+    <string name="win_size">Выигрыш</string>
+    <string name="good_integers">Угадано цифр</string>
 </resources>
