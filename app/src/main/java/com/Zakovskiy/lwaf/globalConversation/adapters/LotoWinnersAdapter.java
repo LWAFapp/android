@@ -1,11 +1,6 @@
 package com.Zakovskiy.lwaf.globalConversation.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,14 +37,12 @@ public class LotoWinnersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(this.context);
         View view = inflater.inflate(R.layout.item_loto_winner, parent, false);
-        Logs.info("LOTO " + this.llw.toString());
         return new LWViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         LotoWinner lw = this.llw.get(position);
-        Logs.info("LOTO1 " + lw.user.nickname);
         LWViewHolder lwvh = (LWViewHolder) holder;
         lwvh.bind(lw);
     }

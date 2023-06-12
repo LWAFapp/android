@@ -108,6 +108,8 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         this.btnSetTrack = findViewById(R.id.btnSetTrack);
         this.btnSetTrack.setOnClickListener(this);
 
+        findViewById(R.id.btnShowQueue).setOnClickListener(this);
+
         TextInputLayout inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
         usersAdapter = new PlayersAdapter(this, getSupportFragmentManager(), roomUsers);
         messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), messagesRoom, this);
@@ -342,7 +344,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         int id = v.getId();
         if (id == R.id.btnSetTrack) {
             setTrack();
-        } else if (id == R.id.playerLayout) {
+        } else if (id == R.id.btnShowQueue) {
             this.listTracksQueue.setVisibility(this.listTracksQueue.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         }
     }
