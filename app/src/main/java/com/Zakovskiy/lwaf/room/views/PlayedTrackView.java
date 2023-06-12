@@ -1,11 +1,17 @@
 package com.Zakovskiy.lwaf.room.views;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Path;
 import android.text.Html;
 import android.util.AttributeSet;
+import android.util.Range;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -17,19 +23,25 @@ import com.Zakovskiy.lwaf.models.Track;
 import com.Zakovskiy.lwaf.models.enums.TrackReactionsType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.room.RoomActivity;
+import com.Zakovskiy.lwaf.utils.ArrayUtils;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 
 import org.json.JSONObject;
 
+import java.awt.font.NumericShaper;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PlayedTrackView extends LinearLayout implements View.OnClickListener {
 
     private CircleImageView icon;
+    private Context context;
     private TextView title;
     private LinearLayout reactionLike;
     private LinearLayout reactionDislike;
@@ -72,14 +84,38 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
         rotate.setDuration(6000);
         rotate.setRepeatCount(Animation.INFINITE);
         this.icon.startAnimation(rotate);
+
+//        Animation anim = AnimationUtils.loadAnimation(this.context, R.anim.anim_track_text_motion);
+//        anim.setDuration(6000);
+//        anim.setRepeatCount(Animation.INFINITE);
+//        anim.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                title.animate().translationX(0);
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//        this.title.startAnimation(anim);
+        this.title.setSelected(true);
     }
 
     public void stopAnimation() {
         this.icon.clearAnimation();
+        this.title.clearAnimation();
     }
 
     private void initView(Context context) {
         inflate(context, R.layout.view_played_track, this);
+        this.context = context;
         this.icon = findViewById(R.id.playerTrackIcon);
         this.title = findViewById(R.id.playerTrackTitle);
         this.reactionDislike = findViewById(R.id.trackReactionDislike);

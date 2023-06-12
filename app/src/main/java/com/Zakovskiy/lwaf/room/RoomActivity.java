@@ -130,6 +130,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
             inputNewMessage.getEditText().setText("");
             this.socketHelper.sendData(new JSONObject(dataMessage));
         });
+
     }
 
     @Override
@@ -346,6 +347,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
             setTrack();
         } else if (id == R.id.btnShowQueue) {
             this.listTracksQueue.setVisibility(this.listTracksQueue.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            findViewById(R.id.queueSpace).setVisibility(this.listTracksQueue.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
         }
     }
 

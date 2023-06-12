@@ -86,8 +86,10 @@
         </LinearLayout>
 
         <Space
+            android:id="@+id/queueSpace"
             android:layout_width="match_parent"
-            android:layout_height="5dp" />
+            android:layout_height="5dp"
+            android:visibility="gone" />
 
         <ListView
             android:id="@+id/tracksQueue"
@@ -98,7 +100,7 @@
             android:orientation="vertical"
             android:padding="5sp"
             android:theme="@style/AppTheme.ListViewStyle"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <Space
             android:layout_width="match_parent"
