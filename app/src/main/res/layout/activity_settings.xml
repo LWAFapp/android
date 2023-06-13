@@ -31,10 +31,6 @@
         android:background="@drawable/rectangle"
         android:orientation="vertical">
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="5dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,28 +40,31 @@
                 android:layout_width="20dp"
                 android:layout_height="wrap_content" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:id="@+id/buttonSettingsCommon"
-                android:layout_width="110sp"
-                android:layout_height="35sp"
-                android:layout_marginTop="5sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/rounded"
-                android:backgroundTint="#FFF"
+                android:layout_marginTop="-5dp"
                 android:text="@string/common"
-                android:textColor="#000000"
-                android:textSize="14sp" />
+                android:textColor="@color/black_primary"
+                android:textSize="18sp"
+                app:strokeColor="@color/white"
+                app:strokeWidth="3dp"/>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                app:strokeColor="@color/white"
+                app:strokeWidth="3dp"
                 android:id="@+id/buttonSettingsPrivacy"
-                android:layout_width="110sp"
-                android:layout_height="35sp"
-                android:layout_marginTop="5sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/rounded"
+                android:layout_marginTop="-5dp"
                 android:text="@string/privacy"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp" />
+                android:textSize="18sp"/>
 
             <Space
                 android:layout_width="20dp"
@@ -93,32 +92,58 @@
                     android:layout_width="match_parent"
                     android:layout_height="5dp" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/buttonSettingsChangeGender"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="35sp"
-                    android:layout_marginTop="5sp"
-                    android:background="@drawable/rounded"
-                    android:text="@string/change_gender"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp" />
+                    android:layout_height="wrap_content">
 
-                <androidx.appcompat.widget.AppCompatButton
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:focusable="false"
+                        android:hint="@string/sex"
+                        android:textColorHint="@color/white"
+                        app:boxBackgroundColor="@color/transparent"
+                        app:hintTextColor="@color/white"
+                        app:placeholderTextColor="@color/white">
+
+
+                        <AutoCompleteTextView
+                            android:id="@+id/autoCompleteSex"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp"
+                            android:inputType="none"
+                            android:shadowColor="@color/transparent"
+                            android:textColor="#FFFFFF"
+                            app:simpleItemSelectedColor="@color/transparent"
+                            app:simpleItemSelectedRippleColor="@color/transparent" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="3dp"
                     android:id="@+id/buttonSettingsLinkVK"
                     android:layout_width="match_parent"
-                    android:layout_height="35sp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="5sp"
-                    android:background="@drawable/rounded"
                     android:text="@string/link_vk"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="3dp"
                     android:id="@+id/buttonSettingsChangeName"
                     android:layout_width="match_parent"
-                    android:layout_height="35sp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="5sp"
-                    android:background="@drawable/rounded"
                     android:text="@string/change_name"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp" />
@@ -158,6 +183,7 @@
                     android:checked="true"
                     android:text="@string/show_list_friends"
                     android:textColor="#FFF"
+                    android:visibility="gone"
                     app:buttonIconTint="#FFF" />
 
                 <CheckBox

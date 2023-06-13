@@ -3,7 +3,8 @@ package com.Zakovskiy.lwaf;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.LinearLayout;
+import android.support.v4.app.DialogFragment;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,34 +18,37 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class DialogReport extends Dialog {
+public class SetNicknameDialog extends Dialog {
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private Context context;
-    private User user;
+    private Integer type;
 
-    public DialogReport(@NonNull Context context, User user) {
+    public SetNicknameDialog(@NonNull Context context, Integer type) {
         super(context);
         this.context = context;
-        this.user = user;
+        this.type = type;
     }
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        requestWindowFeature(1);
+        requestWindowFeature(type);
         getWindow().setBackgroundDrawableResource(R.color.transparent);
-        setContentView(R.layout.dialog_report);
+        setContentView(R.layout.dialog_set_nickname);
         setCancelable(true);
-        TextView text = findViewById(R.id.dialogReportMainText);
-        TextInputLayout tilReason = findViewById(R.id.tilReasonReport);
-        text.setText(context.getString(R.string.report_text) + " " + this.user.nickname);
-        findViewById(R.id.button_submit).setOnClickListener(v -> {
+        TextInputLayout tilNewNickname = findViewById(R.id.tilNewNickname);
+        TextView tvHelpText = findViewById(R.id.tvHelpText);
+        if(type == 0) {
+            tvHelpText.setVisibility(View.GONE);
+        }
+        findViewById(R.id.button_submit).setOnClickListener((view)->{
+            String newNickname = tilNewNickname.getEditText().getText().toString();
+            if(newNickname.isEmpty()) return;
             HashMap<String, Object> data = new HashMap<>();
-            data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.REPORT_USER_SEND);
-            data.put(PacketDataKeys.CONTENT, tilReason.getEditText().getText().toString());
-            data.put(PacketDataKeys.TO_ID, this.user.userId);
+            data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.CHANGE_NICKNAME);
+            data.put(PacketDataKeys.NICKNAME, newNickname);
             this.socketHelper.sendData(new JSONObject(data));
-            DialogReport.this.dismiss();
+            dismiss();
         });
     }
 }

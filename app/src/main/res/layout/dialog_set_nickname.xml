@@ -14,7 +14,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="@string/report"
+                android:text="@string/changes_nickname"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
@@ -22,10 +22,10 @@
         <LinearLayout android:gravity="center" android:orientation="vertical" android:background="@color/white" android:padding="24dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="150dp">
 
             <TextView
-                android:id="@+id/dialogReportMainText"
+                android:id="@+id/tvHelpText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/report_text"
+                android:text="@string/price_change_nickname"
                 android:textAlignment="center"
                 android:textColor="#000000" />
 
@@ -34,10 +34,10 @@
                 android:layout_height="wrap_content" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilReasonReport"
+                android:id="@+id/tilNewNickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/reason"
+                android:hint="@string/hint_new_nickname"
                 android:textColorHint="@color/hint">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:rotationX="180"
-                android:text="@string/send"
+                android:text="@string/change"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="20sp" />

@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.api.models.ModelTrackResponse;
 import com.Zakovskiy.lwaf.models.FavoriteTrack;
+import com.Zakovskiy.lwaf.models.Track;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.room.DialogPickTrack;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
@@ -79,7 +80,12 @@ public class TracksResponseAdapter extends ArrayAdapter<ModelTrackResponse> {
             HashMap<String, Object> data = new HashMap<>();
             if(type == 0) {
                 data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_TRACK_ADD);
-                data.put(PacketDataKeys.KEY, String.format("%s\n%s\n%s\n%s\n%s", track.id, track.ownerId, title, track.duration, track.album.thumb.photo_1200));
+                Track newAddTrack = new Track();
+                newAddTrack.key = String.format("%s_%s", track.ownerId, track.id);
+                newAddTrack.title = title;
+                newAddTrack.duration = track.duration;
+                newAddTrack.icon = track.album.thumb.photo_1200;
+                data.put(PacketDataKeys.TRACK, newAddTrack);
             } else if(type == 1 || type == 2) {
                 data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.SET_FAVORITE_TRACK);
                 FavoriteTrack favoriteTrack = new FavoriteTrack();
@@ -89,6 +95,14 @@ public class TracksResponseAdapter extends ArrayAdapter<ModelTrackResponse> {
                 favoriteTrack.duration = track.duration;
                 favoriteTrack.icon = track.album.thumb.photo_1200;
                 data.put(PacketDataKeys.FAVORITE_TRACK, favoriteTrack);
+            } else if(type == 3) {
+                data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_REPLACE_TRACK);
+                Track newReplacedrack = new Track();
+                newReplacedrack.key = String.format("%s_%s", track.ownerId, track.id);
+                newReplacedrack.title = title;
+                newReplacedrack.duration = track.duration;
+                newReplacedrack.icon = track.album.thumb.photo_1200;
+                data.put(PacketDataKeys.TRACK, newReplacedrack);
             }
             this.socketHelper.sendData(JsonUtils.convertObjectToJsonString(data));
             this.dialogPickTrack.dismiss();

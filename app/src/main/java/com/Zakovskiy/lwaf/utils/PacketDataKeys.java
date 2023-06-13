@@ -2,6 +2,8 @@ package com.Zakovskiy.lwaf.utils;
 
 public class PacketDataKeys {
 
+    public static final String NEW_TRACK = "nt";
+    public static final String OLD_TRACK = "ot";
     public static final String ROOM_TRACK_ADD = "rta";
     public static final String ACCOUNT_SIGN_VK = "asvk";
     public static final String ACCOUNT = "a";
@@ -73,6 +75,7 @@ public class PacketDataKeys {
     public static final String LOGOUT = "lo";
     public static final String PASSWORD = "pw";
     public static final String DEVICE = "did";
+    public static final String TO_ID = "tid";
     public static final String CONVERSATION_MESSAGE = "cm";
     public static final String PRIVATE_CONVERSATION = "pc";
     public static final String PRIVATE_CONVERSATION_TITLE = "pct";
@@ -128,4 +131,9 @@ public class PacketDataKeys {
     public static final String VK_TOKEN_CHANGE = "vktc";
     public static final String VK_TOKEN_REMOVE = "vktr";
     public static final String VK_ID = "vid";
+    public static final String REPORT_USER_SEND = "rus";
+    public static final String CHANGE_CONFIDENTIALITY = "cc";
+    public static final String CHANGE_NICKNAME = "cn";
+    public static final String DELETE_TRACK = "dt";
+    public static final String ROOM_REPLACE_TRACK = "rrt";
 }

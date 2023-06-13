@@ -50,6 +50,13 @@ public class DialogPickTrack extends Dialog {
     private Integer type = 0;
 
     public DialogPickTrack(@NonNull Context context, Integer type) {
+        /*
+            type:
+                0 - поставить трек в руму
+                1 - поставить фаворитный трек в профиль
+                2 - поставить фаворитный трек в профиль, если уже стоит
+                3 - заменить трек в руме в очереди
+         */
         super(context);
         this.context = context;
         this.type = type;
@@ -58,7 +65,6 @@ public class DialogPickTrack extends Dialog {
     }
 
     public void changesTracks(List<ModelTrackResponse> list) {
-        Logs.debug("tracks"+list.toString());
         tracks.clear();
         tracks.addAll(list);
         tracksResponseAdapter.notifyDataSetChanged();

@@ -13,6 +13,11 @@ import java.util.List;
 public class ServerConfig {
     @JsonProperty("services")
     public Services services = new Services();
+
+    @JsonProperty("politics")
+    public String politics = "";
+    @JsonProperty("to_u")
+    public String toU;
     @JsonProperty("loto_counts")
     public Integer lotoCounts = 0;
     @JsonProperty("loto_guessed_numbers")

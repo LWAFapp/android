@@ -65,10 +65,8 @@ public class UserAvatar extends CircleImageView {
                 this.setImageDrawable(drawable);
             });
         }
-        if (user.sex == Sex.FEMALE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                this.setBorderColor(getContext().getColor(R.color.red));
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            this.setBorderColor(getContext().getColor(user.sex.color));
         }
     }
 }

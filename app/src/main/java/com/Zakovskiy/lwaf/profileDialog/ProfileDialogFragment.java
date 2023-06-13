@@ -345,7 +345,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
                     this.socketHelper.sendData(new JSONObject(data));
                 }));
                 menuButtons.add(new MenuButton(getString(R.string.report), "#E10F4A", (vb) -> {
-                    new DialogReport(context, user.nickname).show();
+                    new DialogReport(context, user).show();
                 }));
             }
             MenuDialogFragment.newInstance(context, menuButtons).show(getFragmentManager(), "MenuButtons");
@@ -444,6 +444,10 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
                 user.avatar = "";
                 civAvatar.post(()-> {
                     civAvatar.setUser(user);
+                });
+            } else if(typeEvent.equals(PacketDataKeys.REPORT_USER_SEND)) {
+                getActivity().runOnUiThread(()->{
+                    new DialogTextBox(context, context.getString(R.string.report_success_send)).show();
                 });
             }
         }

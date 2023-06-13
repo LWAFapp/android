@@ -2,6 +2,7 @@ package com.Zakovskiy.lwaf.room;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -76,8 +77,8 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     // Lists
     public List<Player> roomUsers = new ArrayList<>();
     public List<Message> messagesRoom = new ArrayList<>();;
-    public List<Track> roomTracks = new ArrayList();
-    public List<Track> queueTracks = new ArrayList();
+    public List<Track> roomTracks = new ArrayList<>();
+    public List<Track> queueTracks = new ArrayList<>();
 
     private Player currentDJ;
 
@@ -157,7 +158,6 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                     case "gb":
                         Integer balance = json.get(PacketDataKeys.BALANCE).asInt();
                         Application.lwafCurrentUser.balance = balance;
-                        Logs.info("change balance");
                         break;
                 }
             } else if (json.has(PacketDataKeys.ROOM_TYPE_EVENT)) {
@@ -197,12 +197,24 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         roomTracks.add(JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.TRACK), Track.class));
                         refreshAudioPlayer();
                         break;
+                    case "rrt":
+                        Track oldReplacedTrack = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.OLD_TRACK), Track.class);;
+                        Track newReplacedTrack = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.NEW_TRACK), Track.class);
+                        for(int i = 0; i < roomTracks.size(); i++) {
+                            Track itReplacedTrack = roomTracks.get(i);
+                            if(itReplacedTrack.key.equals(oldReplacedTrack.key) && itReplacedTrack.user.userId.equals(oldReplacedTrack.user.userId)) {
+                                roomTracks.set(i, newReplacedTrack);
+                            }
+                        }
+                        refreshAudioPlayer();
+                        break;
                     case "dt": // delete_track
-                        String key = json.get(PacketDataKeys.KEY).asText();
+                        Track removedTrack = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.TRACK), Track.class);
                         Iterator<Track> itOfDeleteTrack = roomTracks.iterator();
                         int index = 0;
                         while (itOfDeleteTrack.hasNext()) {
-                            if (itOfDeleteTrack.next().key.equals(key)) {
+                            Track itRemovedTrack = itOfDeleteTrack.next();
+                            if (itRemovedTrack.key.equals(removedTrack.key) && itRemovedTrack.user.userId.equals(removedTrack.user.userId)) {
                                 itOfDeleteTrack.remove();
                                 if (index == 0)
                                     audioPlayer.stopSong();
@@ -225,6 +237,9 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                             roomTracks.get(0).likes++;
                         }
                         llPlayerTrack.resetReactions(roomTracks.get(0));
+                        HashMap<String, Object> dataMessage = new HashMap<>();
+                        dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GET_BALANCE);
+                        socketHelper.sendData(new JSONObject(dataMessage));
                         break;
                     case "sl": // start_loto
                         currentDialogLoto = new DialogLoto(this);

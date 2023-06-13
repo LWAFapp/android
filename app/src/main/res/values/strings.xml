@@ -102,6 +102,7 @@
     <string name="deleted">удалил</string>
     <string name="delete">Удалить</string>
     <string name="current_track">текущий трек</string>
+    <string name="yourself_track">свой трек</string>
     <string name="name_track">Название трека</string>
     <string name="track_title">trackTitle</string>
     <string name="demo_track_duration">0:00</string>
@@ -174,6 +175,8 @@
     <string name="you_have">У вас</string>
     <string name="spins">Вращений</string>
     <string name="changes">Поменять</string>
+    <string name="replace_track">Поменять трек</string>
+    <string name="remove_track">Удалить трек</string>
     <string name="remove">Удалить</string>
     <string name="author">Автор</string>
     <string name="title">Заголовок</string>
@@ -210,4 +213,9 @@
     <string name="win_size">Выигрыш</string>
     <string name="good_integers">Угадано цифр</string>
     <string name="download_image">Скачать изображение</string>
+    <string name="report_success_send">Жалоба успешно отправлена</string>
+    <string name="changes_nickname">Смена никнейма</string>
+    <string name="price_change_nickname">Это обойдется вам в 1000 монет</string>
+    <string name="hint_new_nickname">Новый никнейм</string>
+    <string name="successfully_change_nickname">Ник успешно изменен</string>
 </resources>

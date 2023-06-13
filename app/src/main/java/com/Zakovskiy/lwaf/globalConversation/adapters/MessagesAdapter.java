@@ -167,13 +167,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             systemHolder.message.setText(Html.fromHtml(String.format("<b>%s</b> %s %s",
                     messageGlobal.user.nickname,
                     this.context.getString(R.string.replace),
-                    this.context.getString(R.string.current_track))));
+                    this.context.getString(R.string.yourself_track))));
         } else if (messageGlobal.type == MessageType.DELETE_TRACK) {
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
             systemHolder.message.setText(Html.fromHtml(String.format("<b>%s</b> %s %s",
                     messageGlobal.user.nickname,
                     this.context.getString(R.string.deleted),
-                    this.context.getString(R.string.current_track))));
+                    this.context.getString(R.string.yourself_track))));
         } else if (messageGlobal.type == MessageType.MESSAGE_DATE) {
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
             systemHolder.message.setText(messageGlobal.message);
