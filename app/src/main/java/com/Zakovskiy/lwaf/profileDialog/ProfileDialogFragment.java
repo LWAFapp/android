@@ -371,7 +371,8 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         if(!isSelf()){
             if(user.avatar != null && !user.avatar.isEmpty()) {
                 this.civAvatar.setOnClickListener((v) -> {
-                    new AvatarDialogFragment(context, user.avatar).show(getFragmentManager(), "AvatarDialogFragment");
+                    new AvatarDialogFragment(context, user.avatar, user.nickname).show(getFragmentManager(), "AvatarDialogFragment");
+
                 });
             }
         } else {
@@ -393,7 +394,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
                     return false;
                 });
                 menuOpenAvatar.setOnMenuItemClickListener((mv)->{
-                    new AvatarDialogFragment(context, user.avatar).show(getFragmentManager(), "AvatarDialogFragment");
+                    new AvatarDialogFragment(context, user.avatar, user.nickname).show(getFragmentManager(), "AvatarDialogFragment");
                     return false;
                 });
                 menuSetAvatar.setOnMenuItemClickListener((mv)->{

@@ -2,12 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:gravity="center"
-    android:layout_gravity="center">
+    android:orientation="vertical">
+
     <ImageView
-        android:layout_gravity="center"
         android:id="@+id/avatarImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_gravity="center" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnSaveImage"
+        android:layout_width="match_parent"
+        android:layout_height="35sp"
+        android:layout_marginTop="5sp"
+        android:background="@drawable/rounded"
+        android:text="@string/download_image"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:visibility="gone" />
 </LinearLayout>
