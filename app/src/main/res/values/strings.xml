@@ -218,4 +218,6 @@
     <string name="price_change_nickname">Это обойдется вам в 1000 монет</string>
     <string name="hint_new_nickname">Новый никнейм</string>
     <string name="successfully_change_nickname">Ник успешно изменен</string>
+    <string name="Set">Поставил</string>
+    <string name="_000">0:00</string>
 </resources>

@@ -36,4 +36,13 @@ public class TimeUtils {
         String[] monthsFSM = context.getResources().getStringArray(R.array.months_fsm);
         return forSystemMsg ? monthsFSM[month-1] : months[month-1];
     }
+
+    public static String secondsToDur(int seconds) {
+        int minutes = (int)(seconds/60);
+        String minutes_ = minutes < 10 ? "0"+String.valueOf(minutes) : String.valueOf(minutes);
+        int secs = seconds-minutes*60;
+        String seconds_ = secs < 10 ? "0"+String.valueOf(secs) : String.valueOf(secs);
+        String res = minutes_ + ":" + seconds_;
+        return res;
+    }
 }

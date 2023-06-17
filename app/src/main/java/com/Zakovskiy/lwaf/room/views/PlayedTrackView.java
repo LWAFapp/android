@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.TrackDialogFragment;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.models.Track;
 import com.Zakovskiy.lwaf.models.enums.TrackReactionsType;
@@ -49,6 +50,8 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
     private Button buttonSetTrack;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private RoomActivity room;
+    private Track track;
+    private long timestamp;
 
     public PlayedTrackView(Context context) {
         super(context);
@@ -65,6 +68,8 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
         initView(context);
     }
 
+    public void setTimestamp(long timestamp) {this.timestamp = timestamp;}
+
     public void setRoom(RoomActivity room) {
         this.room = room;
     }
@@ -76,6 +81,7 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
     public void setIcon(Object url) {
         ImageUtils.loadImage(this.getContext(), url, this.icon);
     }
+    public void setTrack(Track track) {this.track = track;}
 
     public void startAnimation() {
         RotateAnimation rotate = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF,
@@ -126,6 +132,7 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
         this.reactionDislike.setOnClickListener(this);
         this.buttonSetTrack = findViewById(R.id.btnSetTrack);
         this.buttonSetTrack.setOnClickListener(this);
+        this.icon.setOnClickListener(this);
         Logs.debug(Application.lwafServerConfig.toString());
         Logs.debug(Application.lwafServerConfig.colors.setSuperLikeOnTrack);
         ((TextView) this.reactionSuperlike.findViewById(R.id.trackReactionRockText)).setTextColor(Color.parseColor(Application.lwafServerConfig.colors.setSuperLikeOnTrack));
@@ -160,6 +167,8 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
             setReaction(TrackReactionsType.SUPER_LIKE);
         } else if (itemId == R.id.btnSetTrack) {
             this.room.setTrack();
+        } else if (itemId == R.id.playerTrackIcon) {
+            new TrackDialogFragment(context, this.track, this.timestamp).show(room.getSupportFragmentManager(), "TrackDialogFragment");
         }
     }
 }
