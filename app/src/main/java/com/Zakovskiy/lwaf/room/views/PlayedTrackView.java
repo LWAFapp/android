@@ -51,7 +51,6 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private RoomActivity room;
     private Track track;
-    private long timestamp;
 
     public PlayedTrackView(Context context) {
         super(context);
@@ -67,8 +66,6 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
         super(context, attributeSet, i);
         initView(context);
     }
-
-    public void setTimestamp(long timestamp) {this.timestamp = timestamp;}
 
     public void setRoom(RoomActivity room) {
         this.room = room;
@@ -168,7 +165,7 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
         } else if (itemId == R.id.btnSetTrack) {
             this.room.setTrack();
         } else if (itemId == R.id.playerTrackIcon) {
-            new TrackDialogFragment(context, this.track, this.timestamp).show(room.getSupportFragmentManager(), "TrackDialogFragment");
+            new TrackDialogFragment(context, this.track).show(room.getSupportFragmentManager(), "TrackDialogFragment");
         }
     }
 }

@@ -81,7 +81,6 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     public List<Track> queueTracks = new ArrayList<>();
 
     private Player currentDJ;
-    private long timestamp_track_set = 0;
     private DialogLoto currentDialogLoto;
 
     @Override
@@ -309,7 +308,6 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                     List<ModelTrackResponse> tracks = JsonUtils.convertJsonNodeToList(json, ModelTrackResponse.class);
                     Logs.debug(tracks.get(0).url);
                     audioPlayer.playSong(tracks.get(0).url);
-                    llPlayerTrack.setTimestamp(System.currentTimeMillis()/1000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

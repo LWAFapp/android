@@ -38,11 +38,8 @@ public class TimeUtils {
     }
 
     public static String secondsToDur(int seconds) {
-        int minutes = (int)(seconds/60);
-        String minutes_ = minutes < 10 ? "0"+String.valueOf(minutes) : String.valueOf(minutes);
-        int secs = seconds-minutes*60;
-        String seconds_ = secs < 10 ? "0"+String.valueOf(secs) : String.valueOf(secs);
-        String res = minutes_ + ":" + seconds_;
-        return res;
+        Integer durationMinutes = (Integer) seconds / 60;
+        Integer durationSeconds = (Integer) seconds % 60;
+        return String.format("%02d:%02d", durationMinutes, durationSeconds);
     }
 }

@@ -6,6 +6,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -26,11 +28,11 @@ public class TrackDialogFragment extends DialogFragment {
     private long timestamp;
     private SeekBar seekBar;
     private TextView currentTime;
-    public TrackDialogFragment(Context context, Track track, long timestamp) {
+    public TrackDialogFragment(Context context, Track track) {
         super();
         this.context = context;
         this.track = track;
-        this.timestamp = timestamp;
+        this.timestamp = track.timeStamp;
     }
 
     @Override
@@ -48,17 +50,14 @@ public class TrackDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceBundle) {
         Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(1);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_fragment_track);
         TextView whoSet = dialog.findViewById(R.id.whoSetTrack);
-        whoSet.setText(Html.fromHtml("Поставил <b>"+this.track.user.nickname+"</b>"));
+        whoSet.setText(Html.fromHtml(String.format("%s %s", context.getString(R.string.Set), "<b>"+this.track.user.nickname+"</b>")));
         ImageView trackIcon = dialog.findViewById(R.id.trackIcon);
-        if (this.track.icon.equals("") || this.track.icon == null) {
+        if (this.track.icon.equals("")) {
             trackIcon.setImageResource(R.drawable.without_preview);
-            ViewGroup.LayoutParams params = trackIcon.getLayoutParams();
-            params.width = 500;
-            params.height = 500;
-            trackIcon.setLayoutParams(params);
         } else {
             ImageUtils.loadImage(this.context, this.track.icon, trackIcon, false, false);
         }
@@ -68,10 +67,9 @@ public class TrackDialogFragment extends DialogFragment {
         this.seekBar = dialog.findViewById(R.id.seekBar);
         TextView allTime = dialog.findViewById(R.id.allTime);
         allTime.setText(TimeUtils.secondsToDur(this.track.duration));
-        Logs.info("TIME ALL: " + TimeUtils.secondsToDur(this.track.duration));
-        Logs.info("TIME ALL: " + String.valueOf(this.track.duration));
         this.currentTime = dialog.findViewById(R.id.momentTime);
         this.seekBar.setMax(this.track.duration);
+        this.seekBar.setOnTouchListener((view, motionEvent) -> true);
         repeat();
 
 
@@ -83,8 +81,6 @@ public class TrackDialogFragment extends DialogFragment {
                 () -> {
                     int alreadyPlayed = (int) (System.currentTimeMillis()/1000 - timestamp);
                     this.currentTime.setText(TimeUtils.secondsToDur(alreadyPlayed));
-                    Logs.info("TIME NOW: " + TimeUtils.secondsToDur(alreadyPlayed));
-                    Logs.info("TIME NOW: " + String.valueOf(alreadyPlayed));
                     this.seekBar.setProgress(alreadyPlayed);
                     repeat();
                 }, 1000

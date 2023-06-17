@@ -12,7 +12,6 @@
         android:id="@+id/whoSetTrack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Set"
         android:textSize="18sp" />
 
     <LinearLayout
@@ -22,8 +21,8 @@
 
         <ImageView
             android:id="@+id/trackIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="300dp"
+            android:layout_height="300dp" />
 
         <TextView
             android:id="@+id/trackAuthor"
