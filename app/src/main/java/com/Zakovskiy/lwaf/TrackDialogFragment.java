@@ -80,8 +80,13 @@ public class TrackDialogFragment extends DialogFragment {
         this.seekBar.postDelayed(
                 () -> {
                     int alreadyPlayed = (int) (System.currentTimeMillis()/1000 - timestamp);
+                    if (alreadyPlayed >= this.track.duration) {
+                        this.dismiss();
+                        return;
+                    }
                     this.currentTime.setText(TimeUtils.secondsToDur(alreadyPlayed));
                     this.seekBar.setProgress(alreadyPlayed);
+
                     repeat();
                 }, 1000
         );
