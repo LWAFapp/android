@@ -1,5 +1,7 @@
 package com.Zakovskiy.lwaf.models;
 
+import android.content.Context;
+
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.application.Application;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,6 +40,18 @@ public class ServerConfig {
     public String rootUserId;
     @JsonProperty("wheel_items")
     public List<WheelItem> wheelItems;
+    @JsonProperty("allows")
+    public Allows allows;
+
+    // Данный класс нужен для задания разрешний у всяких ролей
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Allows {
+        @JsonProperty("create_post")
+        public Integer createPost = 90;
+        @JsonProperty("unallowed_service")
+        public Integer unallowedService = 10;
+    }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -53,8 +67,8 @@ public class ServerConfig {
             return this.label.equals("1") ? R.drawable.coin_icon : R.drawable.icon_spin_active;
         }
 
-        public String getString() {
-            return this.label.equals("1") ? "Монет" : "Вращений";
+        public int getString() {
+            return this.label.equals("1") ? R.string.of_coins : R.string.of_wheels;
         }
 
         public int getColor() {

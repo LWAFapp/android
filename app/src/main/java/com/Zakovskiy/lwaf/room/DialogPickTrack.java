@@ -89,7 +89,7 @@ public class DialogPickTrack extends Dialog {
                     DialogPickTrack.this.dismiss();
                     Logs.error(e.getMessage());
                     e.printStackTrace();
-                    new DialogTextBox(context, "Произошла ошибка при загрузке треков. Вероятнее всего, это связано из-за устаревшего VK-токена. Смените его в настройках. Если проблема останется, сообщите нам.").show();
+                    new DialogTextBox(context, context.getString(R.string.error_load_vk_tracks)).show();
 
                 }
             }

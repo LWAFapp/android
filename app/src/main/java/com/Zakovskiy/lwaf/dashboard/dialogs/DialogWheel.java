@@ -138,22 +138,6 @@ public class DialogWheel extends Dialog implements SocketHelper.SocketListener {
                     isRotate = true;
                     wheelView.rotateWheelTo(elementFromStart);
                     refreshAmountWheels();
-//                    wheelView.post(()->{
-//                        Logs.info(String.valueOf(wheelView.angle));
-//                        float PI = (float) Math.PI;
-//                        float targetAngle = wheelView.getAnglePerItem() * elementFromStart;
-//                        float currentAngle = wheelView.angle % (PI * 2);
-//                        float additionalAngle = (targetAngle - currentAngle + PI * 2) % (PI * 2);
-//
-//                        float rotations = (targetAngle - currentAngle + PI * 2) / (PI * 2);
-//                        float totalAngle = rotations * (PI * 2) + additionalAngle;
-//
-//                        wheelView.rotate(totalAngle, duration + interval, interval);
-//
-//                        wheelView.setListener(item -> {
-//
-//                        });
-//                    });
                     break;
 
             }

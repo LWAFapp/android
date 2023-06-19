@@ -1,13 +1,10 @@
 package com.Zakovskiy.lwaf.dashboard;
 
-import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
-
-import androidx.fragment.app.DialogFragment;
 
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.BaseActivity;
@@ -18,10 +15,10 @@ import com.Zakovskiy.lwaf.WelcomeActivity;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.dashboard.adapters.RoomsAdapter;
 import com.Zakovskiy.lwaf.dashboard.dialogs.DialogWheel;
+import com.Zakovskiy.lwaf.friends.FriendsActivity;
 import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
 import com.Zakovskiy.lwaf.models.Player;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
-import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.User;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.news.NewsActivity;
@@ -38,7 +35,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,12 +42,28 @@ import java.util.List;
 
 public class DashboardFragment extends ABCActivity implements SocketHelper.SocketListener, View.OnClickListener {
 
-    private SocketHelper socketHelper = SocketHelper.getSocketHelper();
+    private final SocketHelper socketHelper = SocketHelper.getSocketHelper();
     public List<RoomInLobby> rooms = new ArrayList<>();
     public RoomsAdapter roomsAdapter;
     private ShimmerFrameLayout roomsShimmer;
     private ListView roomsListView;
     private ImageView ivAdmin;
+
+    private final View.OnClickListener downButtonsListener = (view) -> {
+        int itemId = view.getId();
+        if (itemId == R.id.menu__button_create_room) {
+            new DialogCreateRoom(this).show();
+        } else if (itemId == R.id.menu__button_global_chat) {
+            newActivity(GlobalConversationActivity.class);
+        } else if (itemId == R.id.menu__button_profile) {
+            ProfileDialogFragment profileDialogFragment = ProfileDialogFragment.newInstance(this, Application.lwafCurrentUser.userId);
+            profileDialogFragment.show(getSupportFragmentManager(), "ProfileDialogFragment");
+        } else if (itemId == R.id.menu__button_ratings) {
+            newActivity(RatingsActivity.class);
+        } else if(itemId == R.id.menu__button_friends) {
+            newActivity(FriendsActivity.class);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,19 +74,15 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         this.roomsShimmer = findViewById(R.id.roomsShimmer);
         changeShimmer(true);
         this.roomsListView.setAdapter(roomsAdapter);
-        findViewById(R.id.menu__button_create_room).setOnClickListener(this);
+        findViewById(R.id.menu__button_create_room).setOnClickListener(downButtonsListener);
         findViewById(R.id.menu__logout).setOnClickListener(this);
-        findViewById(R.id.menu__button_global_chat).setOnClickListener(this);
-        findViewById(R.id.menu__button_profile).setOnClickListener(this);
+        findViewById(R.id.menu__button_global_chat).setOnClickListener(downButtonsListener);
+        findViewById(R.id.menu__button_profile).setOnClickListener(downButtonsListener);
         findViewById(R.id.menu__news).setOnClickListener(this);
-        findViewById(R.id.menu__button_ratings).setOnClickListener(this);
+        findViewById(R.id.menu__button_ratings).setOnClickListener(downButtonsListener);
         findViewById(R.id.menu__settings).setOnClickListener(this);
+        findViewById(R.id.menu__button_friends).setOnClickListener(downButtonsListener);
         this.ivAdmin = findViewById(R.id.menu__admin_panel);
-        //new DialogTextBox(DashboardFragment.this, "Popup test").show();
-        if(Application.lwafCurrentUser.wheelCount > 0)
-            new DialogWheel( DashboardFragment.this).show();
-        if(Application.lwafCurrentUser.isAdmin())
-            this.ivAdmin.setVisibility(View.VISIBLE);
     }
 
     private void changeShimmer(boolean type) {
@@ -106,8 +114,8 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
 
     @Override
     protected void onStop() {
-        super.onStop();
         this.socketHelper.unsubscribe(this);
+        super.onStop();
     }
 
     @Override
@@ -134,20 +142,24 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
                 switch (typeEvent) {
                     case "db": // dashboard
-                        Application.lwafCurrentUser = (User) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ACCOUNT), User.class);
+                        Application.lwafCurrentUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ACCOUNT), User.class);
                         HashMap<String, Object> data = new HashMap<>();
                         data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_LIST);
                         this.socketHelper.sendData(new JSONObject(data));
+                        if(Application.lwafCurrentUser.isAdmin())
+                            this.ivAdmin.setVisibility(View.VISIBLE);
                         break;
                     case "rli": // room list
                         List<RoomInLobby> roomsInLobby = JsonUtils.convertJsonNodeToList(json.get("rr"), RoomInLobby.class);
                         changesRooms(roomsInLobby);
                         changeShimmer(false);
+                        if(Application.lwafCurrentUser.wheelCount > 0)
+                            new DialogWheel( DashboardFragment.this).show();
                         break;
                     case "lo": // logout
                         SharedPreferences sPref = getSharedPreferences("lwaf_user", 0);
                         SharedPreferences.Editor ed = sPref.edit();
-                        ed.putString("access_token", "");
+                        ed.clear();
                         ed.apply();
                         newActivity(WelcomeActivity.class, true, null);
                         break;
@@ -202,22 +214,12 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.menu__button_create_room) {
-            new DialogCreateRoom(this).show();
-        } else if (id == R.id.menu__button_global_chat) {
-            newActivity(GlobalConversationActivity.class);
-        } else if (id == R.id.menu__logout) {
+        if (id == R.id.menu__logout) {
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.LOGOUT);
             this.socketHelper.sendData(new JSONObject(data));
-        } else if (id == R.id.menu__button_profile) {
-            Logs.info(Application.lwafCurrentUser.userId);
-            ProfileDialogFragment profileDialogFragment = ProfileDialogFragment.newInstance(this, Application.lwafCurrentUser.userId);
-            profileDialogFragment.show(getSupportFragmentManager(), "ProfileDialogFragment");
         } else if (id == R.id.menu__news) {
             newActivity(NewsActivity.class);
-        } else if (id == R.id.menu__button_ratings) {
-            newActivity(RatingsActivity.class);
         } else if (id == R.id.menu__settings) {
             newActivity(SettingsActivity.class);
         }

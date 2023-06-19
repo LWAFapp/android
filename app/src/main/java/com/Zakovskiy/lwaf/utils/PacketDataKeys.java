@@ -2,6 +2,8 @@ package com.Zakovskiy.lwaf.utils;
 
 public class PacketDataKeys {
 
+    public static final String USERS = "us";
+    public static final String SEARCH_USER = "su";
     public static final String NEW_TRACK = "nt";
     public static final String OLD_TRACK = "ot";
     public static final String ROOM_TRACK_ADD = "rta";

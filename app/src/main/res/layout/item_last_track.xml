@@ -25,6 +25,7 @@
             android:layout_height="match_parent"
             android:maxLength="50"
             android:text="@string/track_title"
+            android:textColor="@color/white"
             android:textAlignment="center"
             android:textSize="11sp" />
     </LinearLayout>
