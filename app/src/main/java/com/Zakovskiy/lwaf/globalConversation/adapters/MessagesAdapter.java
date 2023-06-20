@@ -22,11 +22,13 @@ import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
 import com.Zakovskiy.lwaf.menuDialog.MenuButton;
 import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.Bubble;
+import com.Zakovskiy.lwaf.models.Friend;
 import com.Zakovskiy.lwaf.models.LotoWinner;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.BubbleType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
+import com.Zakovskiy.lwaf.privateChat.PrivateChatActivity;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
@@ -56,13 +58,15 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private boolean theReceiver = true;
     public ABCActivity ac;
+    private String friend;
 
     public MessagesAdapter(Context context,
-                           FragmentManager fragmentManager, List<Message> messages, ABCActivity ac) {
+                           FragmentManager fragmentManager, List<Message> messages, ABCActivity ac, String friend) {
         this.context = context;
         this.messages = messages;
         this.fragmentManager = fragmentManager;
         this.ac = ac;
+        this.friend = friend;
     }
 
     public int getCount() {
@@ -247,7 +251,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if(message.user.userId.equals(Application.lwafCurrentUser.userId) || Application.lwafCurrentUser.isAdmin()) {
                     btns.add(new MenuButton(ac.getString(R.string.delete), "#e10f4a", (vb) -> {
                         HashMap<String, Object> dataMessage = new HashMap<>();
-                        dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_DELETE_MESSAGE);
+                        if (friend != null) {
+                            dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.PRIVATE_CONVERSATION_DELETE_MESSAGE);
+                            dataMessage.put(PacketDataKeys.FRIEND_ID, friend);
+                        }
+                        else {
+                            dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_DELETE_MESSAGE);
+                        }
                         dataMessage.put(PacketDataKeys.MESSAGE_ID, message.messageId);
                         socketHelper.sendData(new JSONObject(dataMessage));
                     }));

@@ -226,4 +226,5 @@
     <string name="Set">Поставил</string>
     <string name="_000">0:00</string>
     <string name="searching">Поиск</string>
+    <string name="clear_chat">Очистить историю</string>
 </resources>

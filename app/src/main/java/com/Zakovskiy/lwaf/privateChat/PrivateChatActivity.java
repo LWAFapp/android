@@ -16,10 +16,13 @@ import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
+import com.Zakovskiy.lwaf.menuDialog.MenuButton;
+import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
+import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
@@ -96,8 +99,9 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
         this.listMessages = findViewById(R.id.listViewMessages);
         this.messagesShimmer = findViewById(R.id.shimmerMessages);
         this.inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
-        this.tvTitle = findViewById(R.id.textTitle);
-        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages, this);
+        this.tvTitle = findViewById(R.id.friendUsername);
+        this.friendId = (String) getIntent().getSerializableExtra("friend");
+        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages, this, friendId);
         this.listMessages.setAdapter(messagesAdapter);
         this.listMessages.setLayoutManager(new LinearLayoutManager(this));
         this.listMessages.getRecycledViewPool().setMaxRecycledViews(0, 0);
@@ -116,12 +120,23 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
             replyId = "";
             this.socketHelper.sendData(new JSONObject(dataMessage));
         });
-        this.friendId = (String) getIntent().getSerializableExtra("friend");
         HashMap<String, Object> dataMessage = new HashMap<>();
         dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.PRIVATE_CONVERSATION_JOIN);
         dataMessage.put(PacketDataKeys.FRIEND_ID, this.friendId);
         this.socketHelper.sendData(new JSONObject(dataMessage));
         changeShimmerMessages(true);
+        ImageButton menuButton = findViewById(R.id.menuButtons);
+        menuButton.setOnClickListener(v -> {
+            List<MenuButton> btns = new ArrayList<>();
+            btns.add(new MenuButton(getString(R.string.clear_chat), "#E10F4A", (vb) -> {
+                HashMap<String, Object> data = new HashMap<>();
+                data.put(PacketDataKeys.TYPE_EVENT,PacketDataKeys.PRIVATE_CONVERSATION_DELETE_MESSAGE);
+                data.put(PacketDataKeys.MESSAGE_ID, "*");
+                data.put(PacketDataKeys.FRIEND_ID, friendId);
+                this.socketHelper.sendData(new JSONObject(data));
+            }));
+            MenuDialogFragment.newInstance(this, btns).show(getSupportFragmentManager(), "MenuDialogFragment");
+        });
     }
 
     @Override
@@ -184,6 +199,18 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
                     Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
                     newMessages.add(newMessage);
                     changesMessages(newMessages);
+                } else if (typeEvent.equals(PacketDataKeys.PRIVATE_CONVERSATION_CLEAR_MESSAGES)) {
+                    Logs.info("HERE CLEAR");
+                    globalMessages.clear();
+                    messagesAdapter.notifyDataSetChanged();
+                } else if (typeEvent.equals(PacketDataKeys.PRIVATE_CONVERSATION_DELETE_MESSAGE)) {
+                    for (int i = 0; i < globalMessages.size(); i++) {
+                        if (globalMessages.get(i).messageId.equals(json.get(PacketDataKeys.MESSAGE_ID).asText())) {
+                            globalMessages.remove(i);
+                            messagesAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
                 }
             }
         });
@@ -191,6 +218,7 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
 
     public void changesMessages(List<Message> list) {
         Logs.debug("messages"+list.toString());
+        if (list.size() == 0) {return;}
         if(list.size() > 1) {
             globalMessages.clear();
             globalMessages.addAll(list);

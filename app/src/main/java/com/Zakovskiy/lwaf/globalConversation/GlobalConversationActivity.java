@@ -107,7 +107,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         this.messagesShimmer = findViewById(R.id.shimmerMessages);
         this.usersShimmer = findViewById(R.id.shimmerViewUsers);
         this.inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
-        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages, this);
+        messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages, this, null);
         this.listMessages.setAdapter(messagesAdapter);
         this.listMessages.setLayoutManager(new LinearLayoutManager(this));
         this.listMessages.getRecycledViewPool().setMaxRecycledViews(0, 0);

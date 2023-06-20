@@ -139,4 +139,5 @@ public class PacketDataKeys {
     public static final String DELETE_TRACK = "dt";
     public static final String ROOM_REPLACE_TRACK = "rrt";
     public static final String PRIVATE_CONVERSATION_NEW_MESSAGE = "pcnm";
+    public static final String PRIVATE_CONVERSATION_CLEAR_MESSAGES = "pccm";
 }
