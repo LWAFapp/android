@@ -147,7 +147,10 @@
             android:id="@+id/menu__button_ratings"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="30dp"
@@ -172,7 +175,10 @@
             android:id="@+id/menu__button_friends"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/menu__image_friends"
@@ -198,7 +204,10 @@
             android:id="@+id/menu__button_create_room"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/menu__image_create_room"
@@ -214,7 +223,10 @@
             android:id="@+id/menu__button_global_chat"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/menu__image_global_chat"
@@ -240,7 +252,10 @@
             android:id="@+id/menu__button_profile"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/menu__image_profile"

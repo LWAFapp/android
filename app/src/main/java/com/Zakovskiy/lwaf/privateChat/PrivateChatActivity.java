@@ -21,11 +21,13 @@ import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.network.SocketHelper;
+import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
+import com.Zakovskiy.lwaf.widgets.UserAvatar;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.android.material.textfield.TextInputLayout;
@@ -48,6 +50,7 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
     private String friendId;
     private TextView tvTitle;
     private ShimmerFrameLayout messagesShimmer;
+    private UserAvatar uaFriendAvatar;
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
@@ -77,6 +80,7 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
         }
     };
 
+
     public void setReply(Message message) {
         replyToLayout.setVisibility(View.VISIBLE);
         TextView replyToUser = (TextView) replyToLayout.findViewById(R.id.replyTo_username);
@@ -99,6 +103,7 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
         this.listMessages = findViewById(R.id.listViewMessages);
         this.messagesShimmer = findViewById(R.id.shimmerMessages);
         this.inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
+        this.uaFriendAvatar = findViewById(R.id.friendAvatar);
         this.tvTitle = findViewById(R.id.friendUsername);
         this.friendId = (String) getIntent().getSerializableExtra("friend");
         messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages, this, friendId);
@@ -180,37 +185,48 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
                 new DialogTextBox(PrivateChatActivity.this, Config.ERRORS.get(json.get(PacketDataKeys.ERROR).asInt())).show();
             } else if (json.has(PacketDataKeys.TYPE_EVENT)) {
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
-                if(typeEvent.equals(PacketDataKeys.PRIVATE_CONVERSATION_JOIN)) {
-                    ShortUser shortUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), ShortUser.class);
-                    this.tvTitle.setText(String.format("%s", shortUser.nickname));
-                    HashMap<String, Object> dataMessage = new HashMap<>();
-                    dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.PRIVATE_CONVERSATION_GET_MESSAGES);
-                    dataMessage.put(PacketDataKeys.FRIEND_ID, this.friendId);
-                    this.socketHelper.sendData(new JSONObject(dataMessage));
-                } else if(typeEvent.equals(PacketDataKeys.PRIVATE_CONVERSATION_GET_MESSAGES)) {
-                    List<Message> newMessages = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
-                    changesMessages(newMessages);
-                    this.listMessages.postDelayed(()->{
-                        this.listMessages.scrollToPosition(messagesAdapter.getCount() - 1);
-                        changeShimmerMessages(false);
-                    }, 200);
-                } else if(typeEvent.equals(PacketDataKeys.PRIVATE_CONVERSATION_NEW_MESSAGE)) {
-                    List<Message> newMessages = new ArrayList<>(globalMessages);
-                    Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
-                    newMessages.add(newMessage);
-                    changesMessages(newMessages);
-                } else if (typeEvent.equals(PacketDataKeys.PRIVATE_CONVERSATION_CLEAR_MESSAGES)) {
-                    Logs.info("HERE CLEAR");
-                    globalMessages.clear();
-                    messagesAdapter.notifyDataSetChanged();
-                } else if (typeEvent.equals(PacketDataKeys.PRIVATE_CONVERSATION_DELETE_MESSAGE)) {
-                    for (int i = 0; i < globalMessages.size(); i++) {
-                        if (globalMessages.get(i).messageId.equals(json.get(PacketDataKeys.MESSAGE_ID).asText())) {
-                            globalMessages.remove(i);
-                            messagesAdapter.notifyDataSetChanged();
-                            break;
-                        }
+                switch (typeEvent) {
+                    case PacketDataKeys.PRIVATE_CONVERSATION_JOIN:
+                        ShortUser shortUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), ShortUser.class);
+                        this.tvTitle.setText(String.format("%s", shortUser.nickname));
+                        this.uaFriendAvatar.setUser(shortUser);
+                        this.uaFriendAvatar.setOnClickListener((view)->{
+                            ProfileDialogFragment.newInstance(this, shortUser.userId).show(getSupportFragmentManager(), "ProfileDialogFragment");
+                        });
+                        HashMap<String, Object> dataMessage = new HashMap<>();
+                        dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.PRIVATE_CONVERSATION_GET_MESSAGES);
+                        dataMessage.put(PacketDataKeys.FRIEND_ID, this.friendId);
+                        this.socketHelper.sendData(new JSONObject(dataMessage));
+                        break;
+                    case PacketDataKeys.PRIVATE_CONVERSATION_GET_MESSAGES: {
+                        List<Message> newMessages = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
+                        changesMessages(newMessages);
+                        this.listMessages.postDelayed(() -> {
+                            this.listMessages.scrollToPosition(messagesAdapter.getCount() - 1);
+                            changeShimmerMessages(false);
+                        }, 200);
+                        break;
                     }
+                    case PacketDataKeys.PRIVATE_CONVERSATION_NEW_MESSAGE: {
+                        List<Message> newMessages = new ArrayList<>(globalMessages);
+                        Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
+                        newMessages.add(newMessage);
+                        changesMessages(newMessages);
+                        break;
+                    }
+                    case PacketDataKeys.PRIVATE_CONVERSATION_CLEAR_MESSAGES:
+                        globalMessages.clear();
+                        messagesAdapter.notifyDataSetChanged();
+                        break;
+                    case PacketDataKeys.PRIVATE_CONVERSATION_DELETE_MESSAGE:
+                        for (int i = 0; i < globalMessages.size(); i++) {
+                            if (globalMessages.get(i).messageId.equals(json.get(PacketDataKeys.MESSAGE_ID).asText())) {
+                                globalMessages.remove(i);
+                                messagesAdapter.notifyDataSetChanged();
+                                break;
+                            }
+                        }
+                        break;
                 }
             }
         });
