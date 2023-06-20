@@ -13,6 +13,7 @@
     <string name="ratings_activity_label">RatingsActivity</string>
     <string name="settings_activity_label">SettingsActivity</string>
     <string name="friends_activity_label">FriendsActivity</string>
+    <string name="private_chat_activity_label">PrivateChatActivity</string>
     <string name="next">Дальше</string>
     <string name="previous">Назад</string>
     <string name="cancel">Закрыть</string>
