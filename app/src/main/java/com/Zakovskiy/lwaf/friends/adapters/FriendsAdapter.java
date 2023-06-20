@@ -1,6 +1,8 @@
 package com.Zakovskiy.lwaf.friends.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.FriendType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
+import com.Zakovskiy.lwaf.privateChat.PrivateChatActivity;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
@@ -30,6 +33,7 @@ import com.Zakovskiy.lwaf.widgets.UserAvatar;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -114,7 +118,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             });
             this.itemView.setOnClickListener((view)->{
                 if(friend.friendType == FriendType.REMOVE_FRIEND) {
-                    // Тут зробиш переход в приват чат
+                    Bundle b = new Bundle();
+                    b.putSerializable("friend", friend.friendId);
+                    Intent intent = new Intent(context, PrivateChatActivity.class);
+                    intent.putExtras(b);
+                    itemView.getContext().startActivity(intent);
                 }
             });
             if(friend.lastMessage.messageId != null && !friend.lastMessage.messageId.equals("")) {

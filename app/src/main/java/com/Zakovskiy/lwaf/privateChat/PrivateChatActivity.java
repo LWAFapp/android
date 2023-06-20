@@ -45,6 +45,7 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
     private LinearLayout replyToLayout;
     public List<String> ids = new ArrayList<>();
     private TextInputLayout inputNewMessage;
+    private String friend_id;
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
@@ -113,6 +114,7 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
             replyId = "";
             this.socketHelper.sendData(new JSONObject(dataMessage));
         });
+        this.friend_id = (String) getIntent().getSerializableExtra("friend");
     }
 
     @Override
