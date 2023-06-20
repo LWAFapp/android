@@ -13,9 +13,7 @@ import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.friends.adapters.FriendsAdapter;
-import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
 import com.Zakovskiy.lwaf.models.Friend;
-import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
@@ -44,7 +42,7 @@ public class FriendsActivity extends ABCActivity implements SocketHelper.SocketL
         setContentView(R.layout.activity_friends);
         RecyclerView rvFriend = findViewById(R.id.rvFriends);
         tilSearchUsers = findViewById(R.id.tilSearchUsers);
-        tvTitle = findViewById(R.id.textTitle);
+        tvTitle = findViewById(R.id.friendUsername);
         this.friendsAdapter = new FriendsAdapter(this, getSupportFragmentManager(), friendList);
         rvFriend.setAdapter(this.friendsAdapter);
         rvFriend.getRecycledViewPool().setMaxRecycledViews(0, 0);

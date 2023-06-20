@@ -2,7 +2,6 @@ package com.Zakovskiy.lwaf.room;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -21,11 +20,9 @@ import com.Zakovskiy.lwaf.api.models.ModelTrackResponse;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
 import com.Zakovskiy.lwaf.room.adapters.PlayersAdapter;
-import com.Zakovskiy.lwaf.models.LotoWinner;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.Player;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
-import com.Zakovskiy.lwaf.models.ShortUser;
 import com.Zakovskiy.lwaf.models.Track;
 import com.Zakovskiy.lwaf.models.enums.RoomType;
 import com.Zakovskiy.lwaf.models.enums.TrackReactionsType;
@@ -90,7 +87,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         this.socketHelper.subscribe(this);
         this.room = (RoomInLobby) getIntent().getSerializableExtra("room");
         this.roomTracks = new ArrayList<>(this.room.tracks);
-        ((TextView)findViewById(R.id.textTitle)).setText(this.room.title);
+        ((TextView)findViewById(R.id.friendUsername)).setText(this.room.title);
         this.listMessages = findViewById(R.id.listViewMessages);
         this.listUsers = findViewById(R.id.listViewUsers);
 

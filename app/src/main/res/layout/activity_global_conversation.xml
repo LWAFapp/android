@@ -17,7 +17,7 @@
         tools:layout_editor_absoluteY="14dp">
 
         <TextView
-            android:id="@+id/textTitle"
+            android:id="@+id/friendUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"

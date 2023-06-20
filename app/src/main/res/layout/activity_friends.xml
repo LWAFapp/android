@@ -10,7 +10,7 @@
     tools:context="com.Zakovskiy.lwaf.friends.FriendsActivity">
 
     <TextView
-        android:id="@+id/textTitle"
+        android:id="@+id/friendUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
