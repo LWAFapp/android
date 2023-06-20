@@ -18,13 +18,12 @@ import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.ShortUser;
-import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.utils.Config;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
-import com.Zakovskiy.lwaf.utils.TimeUtils;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -32,7 +31,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class PrivateChatActivity extends ABCActivity implements SocketHelper.SocketListener {
@@ -43,9 +41,10 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
     private List<Message> globalMessages = new ArrayList<>();
     private String replyId = "";
     private LinearLayout replyToLayout;
-    public List<String> ids = new ArrayList<>();
     private TextInputLayout inputNewMessage;
-    private String friend_id;
+    private String friendId;
+    private TextView tvTitle;
+    private ShimmerFrameLayout messagesShimmer;
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
@@ -95,7 +94,9 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
         setContentView(R.layout.activity_private_chat);
         this.replyToLayout = findViewById(R.id.replyTo);
         this.listMessages = findViewById(R.id.listViewMessages);
+        this.messagesShimmer = findViewById(R.id.shimmerMessages);
         this.inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
+        this.tvTitle = findViewById(R.id.textTitle);
         messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), globalMessages, this);
         this.listMessages.setAdapter(messagesAdapter);
         this.listMessages.setLayoutManager(new LinearLayoutManager(this));
@@ -107,24 +108,44 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
             if (messageString.isEmpty()) return;
             replyToLayout.findViewById(R.id.replyTo).setVisibility(View.GONE);
             HashMap<String, Object> dataMessage = new HashMap<>();
-            dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GLOBAL_CONVERSATION_SEND_MESSAGE);
+            dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.PRIVATE_CONVERSATION_SEND_MESSAGE);
             dataMessage.put(PacketDataKeys.MESSAGE, messageString);
+            dataMessage.put(PacketDataKeys.FRIEND_ID, this.friendId);
             dataMessage.put(PacketDataKeys.REPLY_MESSAGE_ID, replyId);
             this.inputNewMessage.getEditText().setText("");
             replyId = "";
             this.socketHelper.sendData(new JSONObject(dataMessage));
         });
-        this.friend_id = (String) getIntent().getSerializableExtra("friend");
+        this.friendId = (String) getIntent().getSerializableExtra("friend");
+        HashMap<String, Object> dataMessage = new HashMap<>();
+        dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.PRIVATE_CONVERSATION_JOIN);
+        dataMessage.put(PacketDataKeys.FRIEND_ID, this.friendId);
+        this.socketHelper.sendData(new JSONObject(dataMessage));
+        changeShimmerMessages(true);
     }
 
     @Override
     public void onStart() {
+
+        this.socketHelper.subscribe(this);
         super.onStart();
     }
 
     @Override
     public void onStop() {
+        this.socketHelper.unsubscribe(this);
         super.onStop();
+    }
+
+    private void changeShimmerMessages(boolean type) {
+        if(type) {
+            this.messagesShimmer.startShimmer();
+        } else {
+            this.messagesShimmer.stopShimmer();
+        }
+        this.inputNewMessage.setEnabled(!type);
+        this.messagesShimmer.setVisibility(type ? View.VISIBLE : View.INVISIBLE);
+        this.listMessages.setVisibility(type ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override
@@ -144,8 +165,25 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
                 new DialogTextBox(PrivateChatActivity.this, Config.ERRORS.get(json.get(PacketDataKeys.ERROR).asInt())).show();
             } else if (json.has(PacketDataKeys.TYPE_EVENT)) {
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
-                switch (typeEvent) {
-
+                if(typeEvent.equals(PacketDataKeys.PRIVATE_CONVERSATION_JOIN)) {
+                    ShortUser shortUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), ShortUser.class);
+                    this.tvTitle.setText(String.format("%s", shortUser.nickname));
+                    HashMap<String, Object> dataMessage = new HashMap<>();
+                    dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.PRIVATE_CONVERSATION_GET_MESSAGES);
+                    dataMessage.put(PacketDataKeys.FRIEND_ID, this.friendId);
+                    this.socketHelper.sendData(new JSONObject(dataMessage));
+                } else if(typeEvent.equals(PacketDataKeys.PRIVATE_CONVERSATION_GET_MESSAGES)) {
+                    List<Message> newMessages = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
+                    changesMessages(newMessages);
+                    this.listMessages.postDelayed(()->{
+                        this.listMessages.scrollToPosition(messagesAdapter.getCount() - 1);
+                        changeShimmerMessages(false);
+                    }, 200);
+                } else if(typeEvent.equals(PacketDataKeys.PRIVATE_CONVERSATION_NEW_MESSAGE)) {
+                    List<Message> newMessages = new ArrayList<>(globalMessages);
+                    Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
+                    newMessages.add(newMessage);
+                    changesMessages(newMessages);
                 }
             }
         });
