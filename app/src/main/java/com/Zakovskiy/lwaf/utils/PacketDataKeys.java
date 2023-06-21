@@ -140,4 +140,14 @@ public class PacketDataKeys {
     public static final String ROOM_REPLACE_TRACK = "rrt";
     public static final String PRIVATE_CONVERSATION_NEW_MESSAGE = "pcnm";
     public static final String PRIVATE_CONVERSATION_CLEAR_MESSAGES = "pccm";
+    public static final String NEWS = "news";
+    public static final String WHEEL_TIMESTAMP = "wts";
+    public static final String TIME_BAN = "tb";
+    public static final String LAST_TRACKS = "ltr";
+    public static final String RANKS = "rs";
+    public static final String HIDEN_BALANCE = "hb";
+    public static final String HIDEN_LAST_TRACKS = "hlt";
+    public static final String HIDEN_FRIENDS = "hf";
+    public static final String LAST_SEEN = "ls";
+    public static final String AVATAR = "ava";
 }

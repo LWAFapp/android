@@ -1,6 +1,7 @@
 package com.Zakovskiy.lwaf.models;
 
 import com.Zakovskiy.lwaf.models.enums.Sex;
+import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,20 +11,20 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ShortUser implements Serializable {
-    @JsonProperty("uid")
+    @JsonProperty(PacketDataKeys.USER_ID)
     public String userId = "";
-    @JsonProperty("n")
+    @JsonProperty(PacketDataKeys.NICKNAME)
     public String nickname = "";
-    @JsonProperty("s")
+    @JsonProperty(PacketDataKeys.SEX)
     public Sex sex = Sex.MALE;
-    @JsonProperty("r")
+    @JsonProperty(PacketDataKeys.ROLE)
     public Integer role = 0;
-    @JsonProperty("ls")
+    @JsonProperty(PacketDataKeys.LAST_SEEN)
     public Long lastSeen = 0L;
-    @JsonProperty("ava")
+    @JsonProperty(PacketDataKeys.AVATAR)
     public String avatar = "";
 
     public boolean isAdmin() {
-        return this.role >= 50;
+        return this.role >= 5;
     }
 }
