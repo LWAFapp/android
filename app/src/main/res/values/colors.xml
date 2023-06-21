@@ -16,7 +16,7 @@
     <color name="dark_transparent">#24000000</color>
     <color name="blue">#160FE1</color>
     <color name="red">#E10F4A</color>
-
+    <color name="message_last_transparent">#1AFFFFFF</color>
     <string-array name="rainbow_dash">
         <item>#c20000</item>
         <item>#ff7400</item>

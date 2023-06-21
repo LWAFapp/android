@@ -23,6 +23,7 @@ import com.Zakovskiy.lwaf.models.Friend;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.FriendType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
+import com.Zakovskiy.lwaf.models.enums.ReadType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.privateChat.PrivateChatActivity;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
@@ -99,7 +100,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private TextView dateLastMessage;
         private UserAvatar avatar;
         private View itemView;
-
+        private LinearLayout llLastMessage;
 
         public FriendViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,6 +108,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             avatar = itemView.findViewById(R.id.userAvatar);
             dateLastMessage = itemView.findViewById(R.id.tvTime);
             lastMessage = itemView.findViewById(R.id.lastMessage);
+            llLastMessage = itemView.findViewById(R.id.llLastMessage);
             this.itemView = itemView;
         }
 
@@ -126,9 +128,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             });
             if(friend.lastMessage.messageId != null && !friend.lastMessage.messageId.equals("")) {
-                this.lastMessage.setText(Html.fromHtml(String.format("<b>%s</b> %s", friend.lastMessage.user.nickname, friend.lastMessage.message)));
+                Message lastMessage = friend.lastMessage;
+                this.lastMessage.setText(Html.fromHtml(String.format("<b>%s</b> %s", lastMessage.user.nickname, lastMessage.message)));
                 this.dateLastMessage.setVisibility(View.VISIBLE);
-                this.dateLastMessage.setText(TimeUtils.getDateAndTime(friend.lastMessage.timeSend*1000));
+                this.dateLastMessage.setText(TimeUtils.getDateAndTime(lastMessage.timeSend*1000));
+                if(friend.lastMessage.read == ReadType.UNREAD) {
+                    if(friend.lastMessage.user.userId.equals(Application.lwafCurrentUser.userId)) {
+                        llLastMessage.setBackgroundColor(context.getColor(R.color.message_last_transparent));
+                    } else {
+                        avatar.drawCircle();
+                    }
+                }
             }
         }
     }

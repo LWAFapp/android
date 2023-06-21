@@ -27,6 +27,7 @@ import com.Zakovskiy.lwaf.models.LotoWinner;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.BubbleType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
+import com.Zakovskiy.lwaf.models.enums.ReadType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.privateChat.PrivateChatActivity;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
@@ -206,6 +207,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private LinearLayout replyLayout;
         private LinearLayout messageBubble;
         private UserAvatar avatar;
+        private LinearLayout llLayoutMessage;
 
 
         public TextMessageViewHolder(@NonNull View itemView) {
@@ -219,20 +221,18 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             replyUsername = itemView.findViewById(R.id.replyUsernameMessage);
             replyMessage = itemView.findViewById(R.id.replyTextMessage);
             replyLayout = itemView.findViewById(R.id.replyLayout);
+            llLayoutMessage = itemView.findViewById(R.id.layoutMessageSender);
         }
 
         public void bind(Message message) throws IOException, XmlPullParserException {
-//            this.replyLayout.setOnClickListener(v -> {
-//                if (ac.getClass() == GlobalConversationActivity.class) {
-//                    int pos = ((GlobalConversationActivity) ac).ids.indexOf(message.replyMessage.messageId);
-//                    ((GlobalConversationActivity) ac).listMessages.scrollToPosition(pos);
-//                }
-//            });
             if (ac.getClass() == GlobalConversationActivity.class) {
                 this.replyLayout.setOnClickListener(v -> {
                     int pos = ((GlobalConversationActivity) ac).ids.indexOf(message.replyMessage.messageId);
                     ((GlobalConversationActivity) ac).listMessages.scrollToPosition(pos);
                 });
+            }
+            if(message.read == ReadType.UNREAD && message.user.userId.equals(Application.lwafCurrentUser.userId)) {
+                llLayoutMessage.setBackgroundColor(context.getColor(R.color.message_last_transparent));
             }
             this.messageBubble.setOnClickListener(v -> {
                 List<MenuButton> btns = new ArrayList<>();
@@ -240,6 +240,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     btns.add(new MenuButton(ac.getString(R.string.reply), "#FFFFFF", (vb) -> {
                         ((GlobalConversationActivity) ac).setReply(message);
                     }));
+
                 btns.add(new MenuButton(ac.getString(R.string.copy), "#FFFFFF", (vb) -> {
                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                     android.content.ClipData clip = android.content.ClipData.newPlainText("Copied message", message.message);

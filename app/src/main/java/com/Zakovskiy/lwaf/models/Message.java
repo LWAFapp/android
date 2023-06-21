@@ -2,6 +2,7 @@ package com.Zakovskiy.lwaf.models;
 
 import com.Zakovskiy.lwaf.models.abc.ABCMessage;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
+import com.Zakovskiy.lwaf.models.enums.ReadType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -29,4 +30,6 @@ public class Message {
     public Message replyMessage = null;
     @JsonProperty("b")
     public Bubble bubble = new Bubble();
+    @JsonProperty("r")
+    public ReadType read = ReadType.UNREAD;
 }

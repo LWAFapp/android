@@ -2,7 +2,9 @@ package com.Zakovskiy.lwaf.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
 
@@ -17,7 +19,7 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserAvatar extends CircleImageView {
-
+    private Boolean drawRedCircle = false;
 
     public UserAvatar(Context context) {
         this(context, null);
@@ -48,11 +50,8 @@ public class UserAvatar extends CircleImageView {
                 ColorGenerator generator = ColorGenerator.DEFAULT; // выберите любой генератор цвета
                 int color = generator.getColor(user.nickname); // получаем цвет на основе имени пользователя
                 int width = getWidth();
-                Logs.info(String.valueOf(width));
                 int newSize = (int) (width * 2.5);
-                Logs.info(String.valueOf(newSize));
                 int fontSize = newSize / 2;
-                Logs.info(String.valueOf(fontSize));
                 TextDrawable drawable = TextDrawable.builder()
                         .beginConfig()
                         .textColor(Color.WHITE)
@@ -67,6 +66,32 @@ public class UserAvatar extends CircleImageView {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.setBorderColor(getContext().getColor(user.sex.color));
+        }
+    }
+
+    public void drawCircle() {
+        drawRedCircle = true;
+        postInvalidate();
+    }
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        // рисуем сначала View
+        super.dispatchDraw(canvas);
+
+        if (drawRedCircle) {
+            Paint paint = new Paint();
+            Logs.info("dr");
+            int radius = 10; // радиус круга в пикселях
+            int padding = 5; // отступ круга от верхнего правого угла View в пикселях
+            int x = getWidth() - radius - padding; // координата x центра круга
+            int y = radius + padding; // координата y центра круга
+
+            // цвет круга - красный
+            paint.setColor(Color.RED);
+
+            // рисуем круг
+            canvas.drawCircle(x, y, radius, paint);
         }
     }
 }
