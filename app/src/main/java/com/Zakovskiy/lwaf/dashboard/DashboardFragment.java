@@ -1,6 +1,12 @@
 package com.Zakovskiy.lwaf.dashboard;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +26,7 @@ import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
 import com.Zakovskiy.lwaf.models.Player;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.User;
+import com.Zakovskiy.lwaf.models.enums.NewsType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.news.NewsActivity;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
@@ -148,6 +155,28 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                         this.socketHelper.sendData(new JSONObject(data));
                         if(Application.lwafCurrentUser.isAdmin())
                             this.ivAdmin.setVisibility(View.VISIBLE);
+                        if (Application.lwafCurrentUser.news == NewsType.UNCHEKED) {
+                            Paint paint = new Paint();
+                            Logs.info("dr");
+                            ImageView newsImage = findViewById(R.id.menu__news);
+                            int radius = 100; // радиус круга в пикселях
+                            int padding = 5; // отступ круга от верхнего правого угла View в пикселях
+                            int x = newsImage.getWidth() - radius - padding; // координата x центра круга
+                            int y = radius + padding; // координата y центра круга
+
+                            // цвет круга - красный
+                            paint.setColor(Color.RED);
+                            Drawable d = getResources().getDrawable(R.drawable.ic_news);
+                            Bitmap bitmap = Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+
+                            Canvas canvas = new Canvas(bitmap);
+                            canvas.drawCircle(x , y, radius, paint);
+
+                            d.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                            d.draw(canvas);
+                            newsImage.setImageDrawable(d);
+
+                        }
                         break;
                     case "rli": // room list
                         List<RoomInLobby> roomsInLobby = JsonUtils.convertJsonNodeToList(json.get("rr"), RoomInLobby.class);
