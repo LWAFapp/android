@@ -30,14 +30,32 @@
             android:src="@drawable/ic_admin"
             android:visibility="invisible" />
 
-        <ImageView
-            android:id="@+id/menu__news"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:foreground="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:focusable="true"
-            android:src="@drawable/ic_news" />
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/menu__news"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_news"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/newsRedCircle"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/red_circle"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
             android:id="@+id/menu__settings"
@@ -187,6 +205,20 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 app:srcCompat="@drawable/ic_friends" />
+
+            <TextView
+                android:id="@+id/tvNewsFriends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/menu__image_friends"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/red_circle"
+                android:gravity="end"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/menu__text_friends"

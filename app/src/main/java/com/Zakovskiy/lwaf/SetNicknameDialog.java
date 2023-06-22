@@ -32,10 +32,10 @@ public class SetNicknameDialog extends Dialog {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        requestWindowFeature(type);
+        requestWindowFeature(1);
         getWindow().setBackgroundDrawableResource(R.color.transparent);
         setContentView(R.layout.dialog_set_nickname);
-        setCancelable(true);
+        setCancelable(type == 1);
         TextInputLayout tilNewNickname = findViewById(R.id.tilNewNickname);
         TextView tvHelpText = findViewById(R.id.tvHelpText);
         if(type == 0) {
@@ -47,6 +47,7 @@ public class SetNicknameDialog extends Dialog {
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.CHANGE_NICKNAME);
             data.put(PacketDataKeys.NICKNAME, newNickname);
+            data.put(PacketDataKeys.IS_FREE, type == 0);
             this.socketHelper.sendData(new JSONObject(data));
             dismiss();
         });

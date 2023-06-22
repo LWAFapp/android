@@ -1,5 +1,6 @@
 package com.Zakovskiy.lwaf.models;
 
+import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,22 +10,22 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Track implements Serializable {
-    @JsonProperty("tt")
+    @JsonProperty(PacketDataKeys.TRACK_TITLE)
     public String title = "";
-    @JsonProperty("i")
+    @JsonProperty(PacketDataKeys.ICON)
     public String icon = "";
-    @JsonProperty("u")
+    @JsonProperty(PacketDataKeys.USER)
     public ShortUser user = new ShortUser();
-    @JsonProperty("du")
+    @JsonProperty(PacketDataKeys.DURATION)
     public Integer duration = 0;
-    @JsonProperty("k")
+    @JsonProperty(PacketDataKeys.KEY)
     public String key = "";
-    @JsonProperty("ts")
+    @JsonProperty(PacketDataKeys.TRACK_TIME_SET)
     public Integer timeStamp = 0;
-    @JsonProperty("l")
+    @JsonProperty(PacketDataKeys.LIKES)
     public Integer likes = 0;
-    @JsonProperty("di")
+    @JsonProperty(PacketDataKeys.DISLIKES)
     public Integer dislikes = 0;
-    @JsonProperty("sli")
+    @JsonProperty(PacketDataKeys.SUPER_LIKES)
     public Integer superLikes = 0;
 }

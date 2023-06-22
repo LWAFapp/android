@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class WelcomeActivity extends ABCActivity implements SocketHelper.SocketListener, View.OnClickListener {
 
-    private ActivityResultLauncher authLauncher;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
 
     @Override
@@ -31,19 +30,18 @@ public class WelcomeActivity extends ABCActivity implements SocketHelper.SocketL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         ((AppCompatButton)findViewById(R.id.buttonLogInVK)).setOnClickListener(this);
-        this.socketHelper.subscribe(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(".READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{".READ_EXTERNAL_STORAGE"}, 101);
-            }
-        }
-
     }
 
     @Override
     protected void onStop() {
         this.socketHelper.unsubscribe(this);
         super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        this.socketHelper.subscribe(this);
+        super.onStart();
     }
 
     public void onLogin(View v) {
@@ -62,9 +60,7 @@ public class WelcomeActivity extends ABCActivity implements SocketHelper.SocketL
     }
 
     @Override
-    public void onConnected() {
-
-    }
+    public void onConnected() {}
 
     @Override
     public void onDisconnected() {

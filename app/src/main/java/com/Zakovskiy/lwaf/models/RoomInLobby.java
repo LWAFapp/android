@@ -2,6 +2,7 @@ package com.Zakovskiy.lwaf.models;
 
 
 import com.Zakovskiy.lwaf.models.enums.RoomType;
+import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,18 +15,18 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoomInLobby implements Serializable {
 
-    @JsonProperty("rid")
+    @JsonProperty(PacketDataKeys.ROOM_IDENTIFICATOR)
     public String roomId = "";
-    @JsonProperty("rt")
+    @JsonProperty(PacketDataKeys.ROOM_TYPE)
     public RoomType roomType = RoomType.VK;
-    @JsonProperty("rn")
+    @JsonProperty(PacketDataKeys.ROOM_NAME)
     public String title = "";
-    @JsonProperty("pw")
+    @JsonProperty(PacketDataKeys.ROOM_PASSWORD)
     public Boolean password = false;
-    @JsonProperty("pcs")
+    @JsonProperty(PacketDataKeys.PLAYERS_COUNT_SIZE)
     public Integer playersCountSize = 0;
-    @JsonProperty("p")
+    @JsonProperty(PacketDataKeys.PLAYERS)
     public List<Player> players = new ArrayList<>();
-    @JsonProperty("tr")
+    @JsonProperty(PacketDataKeys.TRACKS)
     public List<Track> tracks = new ArrayList<>();
 }

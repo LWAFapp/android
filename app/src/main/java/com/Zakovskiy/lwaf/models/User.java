@@ -20,8 +20,12 @@ public class User extends ShortUser{
     public Integer wheelTimestamp = 0;
     @JsonProperty(PacketDataKeys.NEWS)
     public NewsType news = NewsType.UNCHEKED;
+    @JsonProperty(PacketDataKeys.FRIENDS_NEWS)
+    public Integer friendsNews = 0;
     @JsonProperty(PacketDataKeys.TIME_BAN)
     public Long banTime = 0L;
+    @JsonProperty(PacketDataKeys.FREE_NICKNAME)
+    public Boolean freeNickname;
     @JsonProperty(PacketDataKeys.FAVORITE_TRACK)
     public FavoriteTrack favoriteTrack = null;
     @JsonProperty(PacketDataKeys.LAST_TRACKS)

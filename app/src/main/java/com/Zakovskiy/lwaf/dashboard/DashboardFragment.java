@@ -6,17 +6,20 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.BaseActivity;
 import com.Zakovskiy.lwaf.DialogCreateRoom;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.SetNicknameDialog;
 import com.Zakovskiy.lwaf.WelcomeActivity;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.dashboard.adapters.RoomsAdapter;
@@ -55,6 +58,8 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
     private ShimmerFrameLayout roomsShimmer;
     private ListView roomsListView;
     private ImageView ivAdmin;
+    private TextView tvNewsFriends;
+
 
     private final View.OnClickListener downButtonsListener = (view) -> {
         int itemId = view.getId();
@@ -90,6 +95,10 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         findViewById(R.id.menu__settings).setOnClickListener(this);
         findViewById(R.id.menu__button_friends).setOnClickListener(downButtonsListener);
         this.ivAdmin = findViewById(R.id.menu__admin_panel);
+        this.tvNewsFriends = findViewById(R.id.tvNewsFriends);
+        if(Application.lwafCurrentUser.freeNickname) {
+            new SetNicknameDialog(this, 0).show();
+        }
     }
 
     private void changeShimmer(boolean type) {
@@ -155,27 +164,14 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                         this.socketHelper.sendData(new JSONObject(data));
                         if(Application.lwafCurrentUser.isAdmin())
                             this.ivAdmin.setVisibility(View.VISIBLE);
-                        if (Application.lwafCurrentUser.news == NewsType.UNCHEKED) {
-                            Paint paint = new Paint();
-                            Logs.info("dr");
-                            ImageView newsImage = findViewById(R.id.menu__news);
-                            int radius = 100; // радиус круга в пикселях
-                            int padding = 5; // отступ круга от верхнего правого угла View в пикселях
-                            int x = newsImage.getWidth() - radius - padding; // координата x центра круга
-                            int y = radius + padding; // координата y центра круга
-
-                            // цвет круга - красный
-                            paint.setColor(Color.RED);
-                            Drawable d = getResources().getDrawable(R.drawable.ic_news);
-                            Bitmap bitmap = Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-
-                            Canvas canvas = new Canvas(bitmap);
-                            canvas.drawCircle(x , y, radius, paint);
-
-                            d.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-                            d.draw(canvas);
-                            newsImage.setImageDrawable(d);
-
+                        findViewById(R.id.newsRedCircle).setVisibility(Application.lwafCurrentUser.news == NewsType.UNCHEKED ? View.VISIBLE : View.GONE);
+                        if(Application.lwafCurrentUser.friendsNews > 0) {
+                            String newsText = "99+";
+                            if(Application.lwafCurrentUser.friendsNews <= 99) {
+                                newsText = String.valueOf(Application.lwafCurrentUser.friendsNews);
+                            }
+                            this.tvNewsFriends.setText(newsText);
+                            this.tvNewsFriends.setVisibility(View.VISIBLE);
                         }
                         break;
                     case "rli": // room list
@@ -209,7 +205,7 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                         changesRooms(newList);
                         break;
                     case "pc": // players count size
-                        String roomId = json.get(PacketDataKeys.ROOM_IDENTIFICATOR).asText();
+                       String roomId = json.get(PacketDataKeys.ROOM_IDENTIFICATOR).asText();
                         List<RoomInLobby> newListPCS = new ArrayList<>(rooms);
                         for (RoomInLobby roomInLobby : newListPCS) {
                             if (roomInLobby.roomId.equals(roomId)) {

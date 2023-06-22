@@ -64,9 +64,9 @@ public class DialogVKLogIn extends Dialog {
                                 data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ACCOUNT_SIGN_VK);
                                 data.put(PacketDataKeys.DEVICE, Config.getDeviceID(DialogVKLogIn.this.context));
                             } else if(action == 1) {
-                                data.put(PacketDataKeys.VK_SECRET, secret);
                                 data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.VK_TOKEN_CHANGE);
                             }
+                            data.put(PacketDataKeys.VK_SECRET, secret);
                             data.put(PacketDataKeys.VK_TOKEN, accessToken);
                             socketHelper.sendData(new JSONObject(data));
                         } else if (code == 401) {

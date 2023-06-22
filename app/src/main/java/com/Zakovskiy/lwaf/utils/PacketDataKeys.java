@@ -150,4 +150,11 @@ public class PacketDataKeys {
     public static final String HIDEN_FRIENDS = "hf";
     public static final String LAST_SEEN = "ls";
     public static final String AVATAR = "ava";
+    public static final String ICON = "i";
+    public static final String DURATION = "du";
+    public static final String ROOM_TYPE = "rt";
+    public static final String ROOM_NAME = "rn";
+    public static final String FRIENDS_NEWS = "f_news";
+    public static final String FREE_NICKNAME = "fn";
+    public static final String IS_FREE = "if";
 }
