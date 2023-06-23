@@ -20,6 +20,7 @@ import com.Zakovskiy.lwaf.menuDialog.MenuButton;
 import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.ShortUser;
+import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.Config;
@@ -27,6 +28,7 @@ import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
+import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -51,6 +53,7 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
     private TextView tvTitle;
     private ShimmerFrameLayout messagesShimmer;
     private UserAvatar uaFriendAvatar;
+    public List<String> ids = new ArrayList<>();
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
@@ -200,6 +203,30 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
                         break;
                     case PacketDataKeys.PRIVATE_CONVERSATION_GET_MESSAGES: {
                         List<Message> newMessages = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
+
+                        for (int i = 0; i < newMessages.size()-1; i++) {
+                            ids.add(newMessages.get(i).messageId);
+                            String date1 = TimeUtils.getTime(newMessages.get(i).timeSend*1000, "dd");
+                            String finalDay = TimeUtils.getTime(newMessages.get(i+1).timeSend*1000, "dd");
+                            int month1 = Integer.parseInt(TimeUtils.getTime(newMessages.get(i).timeSend*1000, "MM"));
+                            int finalMonth = Integer.parseInt(TimeUtils.getTime(newMessages.get(i+1).timeSend*1000, "MM"));
+                            String year = TimeUtils.getTime(System.currentTimeMillis(), "yyyy").equals(TimeUtils.getTime(newMessages.get(i + 1).timeSend * 1000, "yyyy")) ? "" : TimeUtils.getTime(newMessages.get(i + 1).timeSend * 1000, "yyyy");
+                            //Logs.info(String.format("MESSAGE %s.%s %s.%s", date1, month1, finalDay, finalMonth));
+                            if (Integer.parseInt(date1) < Integer.parseInt(finalDay) || month1 < finalMonth) {
+                                Message msg = new Message();
+                                msg.type = MessageType.MESSAGE_DATE;
+                                msg.message = finalDay + " " + TimeUtils.convertToWords(this, finalMonth, true) + " " + year;
+                                //Logs.info(TimeUtils.getTime(System.currentTimeMillis(), "dd:MM:yyyy"));
+                                if (TimeUtils.getTime(System.currentTimeMillis(), "dd:MM:yyyy").equals(TimeUtils.getTime(newMessages.get(i + 1).timeSend * 1000, "dd:MM:yyyy"))) {
+                                    msg.message = this.getString(R.string.today);
+                                }
+                                newMessages.add(i+1, msg);
+                                ids.add(null);
+                                i++;
+                            }
+
+                        }
+
                         changesMessages(newMessages);
                         this.listMessages.postDelayed(() -> {
                             this.listMessages.scrollToPosition(messagesAdapter.getCount() - 1);
@@ -210,6 +237,19 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
                     case PacketDataKeys.PRIVATE_CONVERSATION_NEW_MESSAGE: {
                         List<Message> newMessages = new ArrayList<>(globalMessages);
                         Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
+
+                        Message lastMessage = newMessages.get(newMessages.size()-1);
+                        String lastMessageDate = TimeUtils.getTime(lastMessage.timeSend*1000, "dd");
+                        String lastMessageMonth = TimeUtils.getTime(lastMessage.timeSend*1000, "MM");
+                        String newMessageDate = TimeUtils.getTime(newMessage.timeSend*1000, "dd");
+                        String newMessageMonth = TimeUtils.getTime(newMessage.timeSend*1000, "MM");
+                        if (Integer.parseInt(lastMessageDate) < Integer.parseInt(newMessageDate) || Integer.parseInt(lastMessageMonth) < Integer.parseInt(newMessageMonth)) {
+                            Message msg = new Message();
+                            msg.type = MessageType.MESSAGE_DATE;
+                            msg.message = newMessageDate + " " + TimeUtils.convertToWords(this, Integer.parseInt(newMessageMonth), true);
+                            newMessages.add(msg);
+                        }
+
                         newMessages.add(newMessage);
                         changesMessages(newMessages);
                         break;
