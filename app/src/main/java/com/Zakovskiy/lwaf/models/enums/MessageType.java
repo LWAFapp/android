@@ -12,6 +12,7 @@ public enum MessageType {
     LOTO_WINNERS(8),
     REPLACE_TRACK(9),
     DELETE_TRACK(10),
+    TRACK_OUT_OF_TURN(11),
     MESSAGE_DATE(999);
 
     private Integer type;

@@ -111,7 +111,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     private RanksAdapter ranksAdapter;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private CardView cvLastTracks;
-    private Boolean changedAbout;
+    private Boolean changedAbout = false;
     private Handler handler = new Handler();
     private Runnable runnableAvatarScroll = new Runnable() {
         @Override

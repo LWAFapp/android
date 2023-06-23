@@ -78,7 +78,7 @@ public class TracksResponseAdapter extends ArrayAdapter<ModelTrackResponse> {
         String title = String.format("<b>%s</b> - %s", track.artist, track.title);
         convertView.setOnClickListener((v)->{
             HashMap<String, Object> data = new HashMap<>();
-            if(type == 0) {
+            if(type == 0 || type == 4) {
                 data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_TRACK_ADD);
                 Track newAddTrack = new Track();
                 newAddTrack.key = String.format("%s_%s", track.ownerId, track.id);
@@ -86,6 +86,7 @@ public class TracksResponseAdapter extends ArrayAdapter<ModelTrackResponse> {
                 newAddTrack.duration = track.duration;
                 newAddTrack.icon = track.album.thumb.photo_1200;
                 data.put(PacketDataKeys.TRACK, newAddTrack);
+                data.put(PacketDataKeys.SKIP, type == 4);
             } else if(type == 1 || type == 2) {
                 data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.SET_FAVORITE_TRACK);
                 FavoriteTrack favoriteTrack = new FavoriteTrack();

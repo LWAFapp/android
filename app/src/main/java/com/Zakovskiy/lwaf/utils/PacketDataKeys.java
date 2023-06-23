@@ -157,6 +157,11 @@ public class PacketDataKeys {
     public static final String FRIENDS_NEWS = "f_news";
     public static final String FREE_NICKNAME = "fn";
     public static final String IS_FREE = "if";
+    public static final String ROOM_TRACK_OUT_OF_TURN = "rtoot";
+    public static final String PLAYER_LEFT = "pl";
+    public static final String PLAYER_JOIN = "pj";
+    public static final String START_LOTO = "sl";
+    public static final String SKIP = "skip";
     public static final String POST_CREATE = "pc";
     public static final String POST_CONTENT = "pcn";
     public static final String POST_TITLE = "pt";

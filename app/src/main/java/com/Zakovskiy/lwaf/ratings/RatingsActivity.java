@@ -67,6 +67,12 @@ public class RatingsActivity extends ABCActivity implements SocketHelper.SocketL
         super.onStop();
     }
 
+    @Override
+    protected void onDestroy() {
+        this.socketHelper.unsubscribe(this);
+        super.onDestroy();
+    }
+
     private void setMenu(RatingsType type) {
 
         if(type == RatingsType.COINS) {

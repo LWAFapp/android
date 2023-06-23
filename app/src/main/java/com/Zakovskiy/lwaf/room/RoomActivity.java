@@ -105,8 +105,6 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         this.btnSetTrack = findViewById(R.id.btnSetTrack);
         this.btnSetTrack.setOnClickListener(this);
 
-        findViewById(R.id.btnShowQueue).setOnClickListener(this);
-
         TextInputLayout inputNewMessage = findViewById(R.id.inputLayoutSendMessage);
         usersAdapter = new PlayersAdapter(this, getSupportFragmentManager(), roomUsers);
         messagesAdapter = new MessagesAdapter(this, getSupportFragmentManager(), messagesRoom, this, null);
@@ -143,6 +141,12 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         super.onStop();
     }
 
+    private void getBalance() {
+        HashMap<String, Object> dataMessage = new HashMap<>();
+        dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GET_BALANCE);
+        socketHelper.sendData(new JSONObject(dataMessage));
+    }
+
     @Override
     public void onReceive(JsonNode json) {
         this.runOnUiThread(() -> {
@@ -151,7 +155,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
             } else if (json.has(PacketDataKeys.TYPE_EVENT)) {
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
                 switch(typeEvent) {
-                    case "gb":
+                    case PacketDataKeys.GET_BALANCE:
                         Integer balance = json.get(PacketDataKeys.BALANCE).asInt();
                         Application.lwafCurrentUser.balance = balance;
                         break;
@@ -159,14 +163,14 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
             } else if (json.has(PacketDataKeys.ROOM_TYPE_EVENT)) {
                 String roomTypeEvent = json.get(PacketDataKeys.ROOM_TYPE_EVENT).asText();
                 switch(roomTypeEvent) {
-                    case "nm": // new message
+                    case PacketDataKeys.NEW_MESSAGE: // new message
                         Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.MESSAGE), Message.class);
                         List<Message> newList = new ArrayList<>(messagesRoom);
                         newList.add(newMessage);
                         changesMessages(newList);
                         this.listMessages.smoothScrollToPosition(messagesAdapter.getCount() - 1);
                         break;
-                    case "pl": // player_left
+                    case PacketDataKeys.PLAYER_LEFT: // player_left
                         List<Player> newUsersOfLeft = new ArrayList<>(roomUsers);
                         Player leftUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.PLAYERS), Player.class);
                         Iterator<Player> it = newUsersOfLeft.iterator();
@@ -177,23 +181,25 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         }
                         changesUsers(newUsersOfLeft);
                         break;
-                    case "pj": // player_join
+                    case PacketDataKeys.PLAYER_JOIN: // player_join
                         List<Player> newUsersOfJoin = new ArrayList<>(roomUsers);
                         Player joinUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.PLAYERS), Player.class);
                         newUsersOfJoin.add(joinUser);
                         Logs.info(newUsersOfJoin.toString());
                         changesUsers(newUsersOfJoin);
                         break;
-                    case "et": // end_track
+                    case PacketDataKeys.END_TRACK: // end_track
                         roomTracks.remove(0);
                         audioPlayer.stopSong();
                         refreshAudioPlayer();
+                        getBalance();
                         break;
-                    case "st": // set_track
+                    case PacketDataKeys.SET_TRACK: // set_track
                         roomTracks.add(JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.TRACK), Track.class));
                         refreshAudioPlayer();
+                        getBalance();
                         break;
-                    case "rrt":
+                    case PacketDataKeys.ROOM_REPLACE_TRACK:
                         Track oldReplacedTrack = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.OLD_TRACK), Track.class);;
                         Track newReplacedTrack = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.NEW_TRACK), Track.class);
                         for(int i = 0; i < roomTracks.size(); i++) {
@@ -204,7 +210,13 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         }
                         refreshAudioPlayer();
                         break;
-                    case "dt": // delete_track
+                    case PacketDataKeys.ROOM_TRACK_OUT_OF_TURN:
+                        Track newOutOfTurnTrack = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.NEW_TRACK), Track.class);
+                        audioPlayer.stopSong();
+                        roomTracks.set(0, newOutOfTurnTrack);
+                        refreshAudioPlayer();
+                        break;
+                    case PacketDataKeys.DELETE_TRACK: // delete_track
                         Track removedTrack = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.TRACK), Track.class);
                         Iterator<Track> itOfDeleteTrack = roomTracks.iterator();
                         int index = 0;
@@ -219,7 +231,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                         }
                         refreshAudioPlayer();
                         break;
-                    case "rtsr": // room_track_set_reaction
+                    case PacketDataKeys.ROOM_TRACK_SET_REACTION: // room_track_set_reaction
                         TrackReactionsType type = TrackReactionsType.fromInt(json.get(PacketDataKeys.TYPE).asInt());
                         if (type == TrackReactionsType.DISLIKE) {
                             roomTracks.get(0).dislikes++;
@@ -233,11 +245,9 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
                             roomTracks.get(0).likes++;
                         }
                         llPlayerTrack.resetReactions(roomTracks.get(0));
-                        HashMap<String, Object> dataMessage = new HashMap<>();
-                        dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GET_BALANCE);
-                        socketHelper.sendData(new JSONObject(dataMessage));
+                        getBalance();
                         break;
-                    case "sl": // start_loto
+                    case PacketDataKeys.START_LOTO: // start_loto
                         currentDialogLoto = new DialogLoto(this);
                         currentDialogLoto.show();
                         break;
@@ -342,7 +352,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
         this.llPlayerTrack.setVisibility(View.INVISIBLE);
     }
 
-    public void setTrack() {
+    public void setTrack(Integer type) {
         if (this.room.roomType == RoomType.DEFAULT) {
             Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
             chooseFile.setType("audio/mpeg");
@@ -350,16 +360,20 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
             startActivityForResult(chooseFile, 1);
             return;
         }
-        new DialogPickTrack(this, 0).show();
+        new DialogPickTrack(this, type).show();
     }
+
+
+    public void showQueue() {
+        this.listTracksQueue.setVisibility(this.listTracksQueue.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        findViewById(R.id.queueSpace).setVisibility(this.listTracksQueue.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
+    }
+
 
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btnSetTrack) {
-            setTrack();
-        } else if (id == R.id.btnShowQueue) {
-            this.listTracksQueue.setVisibility(this.listTracksQueue.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            findViewById(R.id.queueSpace).setVisibility(this.listTracksQueue.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
+            setTrack(0);
         }
     }
 

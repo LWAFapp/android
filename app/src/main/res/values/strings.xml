@@ -303,4 +303,6 @@
     <string name="i"><i>I</i></string>
     <string name="u"><u>U</u></string>
     <string name="s"><strike>St</strike></string>
+    <string name="out_of_turn">Вне очереди</string>
+    <string name="help_tv_out_of_turn_track_title">Вы можете поставить трек вне очереди за 10</string>
 </resources>

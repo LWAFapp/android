@@ -3,9 +3,13 @@ package com.Zakovskiy.lwaf.room;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -48,6 +52,7 @@ public class DialogPickTrack extends Dialog {
     private ListView viewTracks;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private Integer type = 0;
+    private TextView tvOutOfTurnTrackTitle;
 
     public DialogPickTrack(@NonNull Context context, Integer type) {
         /*
@@ -56,6 +61,7 @@ public class DialogPickTrack extends Dialog {
                 1 - поставить фаворитный трек в профиль
                 2 - поставить фаворитный трек в профиль, если уже стоит
                 3 - заменить трек в руме в очереди
+                4 - поставить трек вне очереди
          */
         super(context);
         this.context = context;
@@ -122,6 +128,7 @@ public class DialogPickTrack extends Dialog {
         setCancelable(true);
         this.viewTracks = findViewById(R.id.listTracks);
         this.shimmerTracks = findViewById(R.id.shimmerListTracks);
+        this.tvOutOfTurnTrackTitle = findViewById(R.id.tvOutOfTurnTrackTitle);
         TextInputLayout searchTextLayout = findViewById(R.id.searchTrackLayout);
         if(type == 2) {
             MaterialButton btnRemoveFavoriteTrack = findViewById(R.id.btnRemoveFavoriteTrack);
@@ -132,6 +139,8 @@ public class DialogPickTrack extends Dialog {
                 this.socketHelper.sendData(JsonUtils.convertObjectToJsonString(data));
                 dismiss();
             });
+        } else if (type == 4) {
+            this.tvOutOfTurnTrackTitle.setVisibility(View.VISIBLE);
         }
         searchTextLayout.getEditText().setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_NEXT) {

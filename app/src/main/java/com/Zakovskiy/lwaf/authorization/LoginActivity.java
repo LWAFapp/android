@@ -34,7 +34,6 @@ public class LoginActivity extends ABCActivity implements SocketHelper.SocketLis
         setContentView(R.layout.activity_login);
         this.loginEdit = (EditText) findViewById(R.id.editTextLogin);
         this.passwordEdit = (EditText) findViewById(R.id.editTextPassword);
-        this.socketHelper.subscribe(this);
     }
 
     public void onLogin(View v) {
@@ -51,6 +50,18 @@ public class LoginActivity extends ABCActivity implements SocketHelper.SocketLis
         data.put(PacketDataKeys.PASSWORD, MD5Hash.md5Salt(password));
         data.put(PacketDataKeys.DEVICE, Config.getDeviceID(this));
         this.socketHelper.sendData(new JSONObject(data));
+    }
+
+    @Override
+    protected void onStart(){
+        this.socketHelper.subscribe(this);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        this.socketHelper.unsubscribe(this);
+        super.onStop();
     }
 
     public void onMissedAccount(View v) {
@@ -75,15 +86,17 @@ public class LoginActivity extends ABCActivity implements SocketHelper.SocketLis
                 String error = Config.ERRORS.get(json.get(PacketDataKeys.ERROR).asInt());
                 Logs.warning(error);
                 new DialogTextBox(LoginActivity.this, error).show();
-            } else if (json.get(PacketDataKeys.TYPE_EVENT).asText().equals(PacketDataKeys.ACCOUNT_SIGNIN)) {
-                Application.lwafCurrentUser = (User) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ACCOUNT), User.class);
-                SharedPreferences sPref = getSharedPreferences("lwaf_user", 0);
-                SharedPreferences.Editor ed = sPref.edit();
-                ed.putString("access_token", Application.lwafCurrentUser.accessToken);
-                ed.apply();
-                newActivity(DashboardFragment.class, true, null);
+            } else if (json.has(PacketDataKeys.TYPE_EVENT)){
+                String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
+                if(typeEvent.equals(PacketDataKeys.ACCOUNT_SIGNIN)) {
+                    Application.lwafCurrentUser = (User) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ACCOUNT), User.class);
+                    SharedPreferences sPref = getSharedPreferences("lwaf_user", 0);
+                    SharedPreferences.Editor ed = sPref.edit();
+                    ed.putString("access_token", Application.lwafCurrentUser.accessToken);
+                    ed.apply();
+                    newActivity(DashboardFragment.class, true, null);
+                }
             }
-            Logs.info("RECV: " + json.toString());
         });
     }
 

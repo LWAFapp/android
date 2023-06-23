@@ -106,4 +106,14 @@
         android:visibility="gone"
         app:strokeColor="@color/white"
         app:strokeWidth="3sp" />
+
+    <TextView
+        android:id="@+id/tvOutOfTurnTrackTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="16sp"
+        android:drawableEnd="@drawable/coin_icon"
+        android:text="@string/help_tv_out_of_turn_track_title"/>
 </LinearLayout>

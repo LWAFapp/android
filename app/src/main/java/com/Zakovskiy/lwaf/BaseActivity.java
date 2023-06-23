@@ -63,6 +63,7 @@ public class BaseActivity extends ABCActivity implements SocketHelper.SocketList
         Config.ERRORS.put(92, getString(R.string.error_92));
         Config.ERRORS.put(93, getString(R.string.error_93));
         Config.ERRORS.put(94, getString(R.string.error_94));
+        Config.ERRORS.put(95, getString(R.string.error_95));
         Config.ERRORS.put(100, getString(R.string.error_100));
         Config.ERRORS.put(110, getString(R.string.error_110));
         Config.ERRORS.put(111, getString(R.string.error_111));

@@ -14,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -48,6 +49,8 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
     private LinearLayout reactionDislike;
     private LinearLayout reactionSuperlike;
     private Button buttonSetTrack;
+    private Button buttonOutOfTurnTrack;
+    private ImageButton btnShowQueue;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private RoomActivity room;
     private Track track;
@@ -128,6 +131,10 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
         this.reactionLike.setOnClickListener(this);
         this.reactionDislike.setOnClickListener(this);
         this.buttonSetTrack = findViewById(R.id.btnSetTrack);
+        this.buttonOutOfTurnTrack = findViewById(R.id.btnOutOfTurnTrack);
+        this.btnShowQueue = findViewById(R.id.btnShowQueue);
+        this.btnShowQueue.setOnClickListener(this);
+        this.buttonOutOfTurnTrack.setOnClickListener(this);
         this.buttonSetTrack.setOnClickListener(this);
         this.icon.setOnClickListener(this);
         Logs.debug(Application.lwafServerConfig.toString());
@@ -141,9 +148,11 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
         ((TextView) this.reactionSuperlike.findViewById(R.id.trackReactionRockText)).setText(String.valueOf(track.superLikes));
         if (track.user.userId.equals(Application.lwafCurrentUser.userId)) {
             this.buttonSetTrack.setVisibility(INVISIBLE);
+            this.buttonOutOfTurnTrack.setVisibility(INVISIBLE);
             return;
         }
         this.buttonSetTrack.setVisibility(VISIBLE);
+        this.buttonOutOfTurnTrack.setVisibility(VISIBLE);
     }
 
     private void setReaction(TrackReactionsType type) {
@@ -163,9 +172,13 @@ public class PlayedTrackView extends LinearLayout implements View.OnClickListene
         } else if (itemId == R.id.trackReactionSuperlike) {
             setReaction(TrackReactionsType.SUPER_LIKE);
         } else if (itemId == R.id.btnSetTrack) {
-            this.room.setTrack();
+            this.room.setTrack(0);
         } else if (itemId == R.id.playerTrackIcon) {
             new TrackDialogFragment(context, this.track).show(room.getSupportFragmentManager(), "TrackDialogFragment");
+        } else if (itemId == R.id.btnOutOfTurnTrack) {
+            this.room.setTrack(4);
+        } else if(itemId == R.id.btnShowQueue) {
+            this.room.showQueue();
         }
     }
 }
