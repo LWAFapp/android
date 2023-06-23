@@ -173,6 +173,7 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                             this.tvNewsFriends.setText(newsText);
                             this.tvNewsFriends.setVisibility(View.VISIBLE);
                         }
+                        Logs.info("HERE "+Config.ERRORS.toString());
                         break;
                     case "rli": // room list
                         List<RoomInLobby> roomsInLobby = JsonUtils.convertJsonNodeToList(json.get("rr"), RoomInLobby.class);
