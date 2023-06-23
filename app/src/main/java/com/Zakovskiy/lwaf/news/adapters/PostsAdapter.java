@@ -3,6 +3,7 @@ package com.Zakovskiy.lwaf.news.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             author.setText(post.author.nickname);
             date.setText(TimeUtils.getDateAndTime(post.time*1000));
             title.setText(post.title);
-            content.setText(post.content);
+            String content_ = post.content.replace("\n", "<br>");
+            content.setText(Html.fromHtml(content_));
             likes.setText(String.valueOf(post.likes));
             dislikes.setText(String.valueOf(post.dislikes));
             this.item.setOnClickListener(v -> {

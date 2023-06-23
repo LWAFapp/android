@@ -14,6 +14,7 @@
     <string name="settings_activity_label">SettingsActivity</string>
     <string name="friends_activity_label">FriendsActivity</string>
     <string name="private_chat_activity_label">PrivateChatActivity</string>
+    <string name="create_post_activity_label">CreatePostActivity</string>
     <string name="next">Дальше</string>
     <string name="previous">Назад</string>
     <string name="cancel">Закрыть</string>
@@ -296,4 +297,10 @@
     <string name="_000">0:00</string>
     <string name="searching">Поиск</string>
     <string name="clear_chat">Очистить историю</string>
+    <string name="create_post">Создание записи</string>
+    <string name="create_post_end">Опубликовать запись</string>
+    <string name="b"><b>B</b></string>
+    <string name="i"><i>I</i></string>
+    <string name="u"><u>U</u></string>
+    <string name="s"><strike>St</strike></string>
 </resources>

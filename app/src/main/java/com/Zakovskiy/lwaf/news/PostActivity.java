@@ -2,6 +2,7 @@ package com.Zakovskiy.lwaf.news;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -161,7 +162,8 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                         this.tvPostAuthor.setText(post.author.nickname);
                         this.tvPostDate.setText(TimeUtils.getDateAndTime(post.time * 1000));
                         this.tvPostTitle.setText(post.title);
-                        this.tvPostContent.setText(post.content);
+                        String content = post.content.replace("\n", "<br>");
+                        this.tvPostContent.setText(Html.fromHtml(content));
                         this.authorId = post.author.userId;
                         List<PostComment> responseComments = Lists.reverse(post.comments);
 
