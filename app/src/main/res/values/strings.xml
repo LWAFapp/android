@@ -166,6 +166,7 @@
     <string name="left"> вышел</string>
     <string name="actions">Действия</string>
     <string name="add_track">поставил трек</string>
+    <string name="add_track_out_of_turn">поставил трек вне очереди</string>
     <string name="set_like">лайк на трек</string>
     <string name="set_dislike">дизлайк на трек</string>
     <string name="set_superlike">СуперЛайк на трек</string>
@@ -305,4 +306,5 @@
     <string name="s"><strike>St</strike></string>
     <string name="out_of_turn">Вне очереди</string>
     <string name="help_tv_out_of_turn_track_title">Вы можете поставить трек вне очереди за 10</string>
+    <string name="error_95">Чтобы поставить трек вне очереди, нужно 10 монет</string>
 </resources>

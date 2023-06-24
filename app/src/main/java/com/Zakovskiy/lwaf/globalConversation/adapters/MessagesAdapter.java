@@ -3,6 +3,7 @@ package com.Zakovskiy.lwaf.globalConversation.adapters;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -188,8 +189,16 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             systemHolder.message.setText(context.getString(R.string.loto_winners));
             systemHolder.message.setTextSize(16);
             List<LotoWinner> lotoWinnerList = JsonUtils.convertJsonStringToList(messageGlobal.message, LotoWinner.class);
-            Logs.info(lotoWinnerList.toString());
             systemHolder.changeLotoWinners(lotoWinnerList);
+        } else if(messageGlobal.type == MessageType.TRACK_OUT_OF_TURN) {
+            SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
+            systemHolder.message.setText(Html.fromHtml(String.format("<b>%s</b> %s %s",
+                    messageGlobal.user.nickname,
+                    this.context.getString(R.string.add_track_out_of_turn),
+                    messageGlobal.message)));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                systemHolder.message.setTextColor(context.getColor(R.color.coin));
+            }
         }
     }
 
