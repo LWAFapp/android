@@ -1,6 +1,7 @@
 package com.Zakovskiy.lwaf.news;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +10,7 @@ import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.application.Application;
+import com.Zakovskiy.lwaf.createPost.CreatePostActivity;
 import com.Zakovskiy.lwaf.models.post.PostInList;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.news.adapters.PostsAdapter;
@@ -17,6 +19,7 @@ import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONObject;
 
@@ -30,12 +33,33 @@ public class NewsActivity extends ABCActivity implements SocketHelper.SocketList
     private RecyclerView postsView;
     private List<PostInList> posts = new ArrayList<>();
     private PostsAdapter adapter;
+    private FloatingActionButton btnCreatePost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
         this.postsView = findViewById(R.id.postsView);
+        this.postsView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 || dy < 0 && btnCreatePost.isShown())
+                    btnCreatePost.hide();
+            }
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    btnCreatePost.show();
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+        this.btnCreatePost = findViewById(R.id.btnCreatePost);
+        if(Application.lwafCurrentUser.role >= Application.lwafServerConfig.allowed.createPost) {
+            this.btnCreatePost.setVisibility(View.VISIBLE);
+            this.btnCreatePost.setOnClickListener((view)->{
+                newActivity(CreatePostActivity.class);
+            });
+        }
     }
 
     @Override

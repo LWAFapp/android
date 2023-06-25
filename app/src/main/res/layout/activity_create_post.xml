@@ -26,7 +26,10 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="#00FFFFFF"
-            app:srcCompat="@drawable/ic_eye" />
+            app:srcCompat="@drawable/ic_eye"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:focusable="true"/>
     </LinearLayout>
 
     <LinearLayout
@@ -42,7 +45,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#00FFFFFF"
-            android:text="@string/b" />
+            android:text="@string/b"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:focusable="true"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/createPostItalic"
@@ -50,7 +56,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#00FFFFFF"
-            android:text="@string/i" />
+            android:text="@string/i"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:focusable="true"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/createPostUnderline"
@@ -58,7 +67,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#00FFFFFF"
-            android:text="@string/u" />
+            android:text="@string/u"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:focusable="true"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/createPostStrike"
@@ -66,7 +78,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#00FFFFFF"
-            android:text="@string/s" />
+            android:text="@string/s"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:focusable="true"/>
 
     </LinearLayout>
 
@@ -115,6 +130,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_rectangle"
-        android:text="@string/create_post_end" />
+        android:text="@string/create_post_end"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:focusable="true"/>
 
 </LinearLayout>

@@ -425,30 +425,38 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     public void onReceive(JsonNode json) {
         if(json.has(PacketDataKeys.TYPE_EVENT)) {
             String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
-            if(typeEvent.equals(PacketDataKeys.GET_USER)) {
-                User user = (User) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), User.class);
-                getActivity().runOnUiThread(()->bind(user));
-            } else if(typeEvent.equals(PacketDataKeys.REMOVE_FAVORITE_TRACK)) {
-                getActivity().runOnUiThread(()->changeFavoriteTracks(null));
-            } else if (typeEvent.equals(PacketDataKeys.SET_FAVORITE_TRACK)) {
-                FavoriteTrack favoriteTrack = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.FAVORITE_TRACK), FavoriteTrack.class);
-                getActivity().runOnUiThread(()->changeFavoriteTracks(favoriteTrack));
-            } else if(typeEvent.equals(PacketDataKeys.FRIEND_ADD_TO_FRIENDSHIP_LIST)) {
-                user.friendId = json.get(PacketDataKeys.FRIEND_ID).asText();
-                user.friendType = FriendType.CANCEL_REQUEST;
-            } else if(typeEvent.equals(PacketDataKeys.FRIEND_DELETE_FRIENDSHIP)) {
-                user.friendType = FriendType.ADD_FRIEND;
-            } else if(typeEvent.equals(PacketDataKeys.FRIEND_ACCEPT_FRIENDSHIP)) {
-                user.friendType = FriendType.REMOVE_FRIEND;
-            } else if(typeEvent.equals(PacketDataKeys.REMOVE_AVATAR)) {
-                user.avatar = "";
-                civAvatar.post(()-> {
-                    civAvatar.setUser(user);
-                });
-            } else if(typeEvent.equals(PacketDataKeys.REPORT_USER_SEND)) {
-                getActivity().runOnUiThread(()->{
-                    new DialogTextBox(context, context.getString(R.string.report_success_send)).show();
-                });
+            switch (typeEvent) {
+                case PacketDataKeys.GET_USER:
+                    getActivity().runOnUiThread(() -> bind((User) JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.USER), User.class)));
+                    break;
+                case PacketDataKeys.REMOVE_FAVORITE_TRACK:
+                    getActivity().runOnUiThread(() -> changeFavoriteTracks(null));
+                    break;
+                case PacketDataKeys.SET_FAVORITE_TRACK:
+                    FavoriteTrack favoriteTrack = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.FAVORITE_TRACK), FavoriteTrack.class);
+                    getActivity().runOnUiThread(() -> changeFavoriteTracks(favoriteTrack));
+                    break;
+                case PacketDataKeys.FRIEND_ADD_TO_FRIENDSHIP_LIST:
+                    this.user.friendId = json.get(PacketDataKeys.FRIEND_ID).asText();
+                    this.user.friendType = FriendType.CANCEL_REQUEST;
+                    break;
+                case PacketDataKeys.FRIEND_DELETE_FRIENDSHIP:
+                    this.user.friendType = FriendType.ADD_FRIEND;
+                    break;
+                case PacketDataKeys.FRIEND_ACCEPT_FRIENDSHIP:
+                    this.user.friendType = FriendType.REMOVE_FRIEND;
+                    break;
+                case PacketDataKeys.REMOVE_AVATAR:
+                    this.user.avatar = "";
+                    civAvatar.post(() -> {
+                        civAvatar.setUser(this.user);
+                    });
+                    break;
+                case PacketDataKeys.REPORT_USER_SEND:
+                    getActivity().runOnUiThread(() -> {
+                        new DialogTextBox(context, context.getString(R.string.report_success_send)).show();
+                    });
+                    break;
             }
         }
     }

@@ -16,6 +16,8 @@ import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.application.Application;
+import com.Zakovskiy.lwaf.menuDialog.MenuButton;
+import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.RoomInLobby;
 import com.Zakovskiy.lwaf.models.post.Post;
 import com.Zakovskiy.lwaf.models.post.PostComment;
@@ -65,6 +67,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
     private ImageView btnLikes;
     private ImageView btnDislikes;
     private LinearLayout authorLayout;
+    private ImageButton ibMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
         this.tvPostTitle = findViewById(R.id.postTitle);
         this.tvPostContent = findViewById(R.id.postContent);
         this.authorLayout = findViewById(R.id.authorLayout);
+        this.ibMenu = findViewById(R.id.menuButtons);
         this.authorLayout.setOnClickListener((view)->{
             if(this.authorId.isEmpty()) return;
             ProfileDialogFragment.newInstance(this, this.authorId).show(getSupportFragmentManager(), "ProfileDialogFragment");
@@ -106,12 +110,20 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
             socketHelper.sendData(new JSONObject(data));
             findViewById(R.id.replyComment).setVisibility(View.GONE);
         });
-        ImageButton crc = findViewById(R.id.cancelReplyComment);
-        crc.setOnClickListener(v -> {
+        findViewById(R.id.cancelReplyComment).setOnClickListener(v -> {
             replyComment = null;
             findViewById(R.id.replyComment).setVisibility(View.GONE);
         });
-
+        this.ibMenu.setOnClickListener((view)->{
+            List<MenuButton> btns = new ArrayList<>();
+            btns.add(new MenuButton(getString(R.string.delete), "#E10F4A", (vb) -> {
+                HashMap<String, Object> data = new HashMap<>();
+                data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.POSTS_DELETE);
+                data.put(PacketDataKeys.POST_ID, id);
+                socketHelper.sendData(new JSONObject(data));
+            }));
+            MenuDialogFragment.newInstance(this, btns).show(getSupportFragmentManager(), "MenuDialogFragment");
+        });
     }
 
     public void setReply(PostComment comment) {
@@ -156,7 +168,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
             } else if (json.has(PacketDataKeys.TYPE_EVENT)) {
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
                 switch (typeEvent) {
-                    case "pgi":
+                    case PacketDataKeys.POST_GET_INFO:
                         Post post = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.POST_INFO), Post.class);
                         this.userAvatar.setUser(post.author, this);
                         this.tvPostAuthor.setText(post.author.nickname);
@@ -166,16 +178,18 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                         this.tvPostContent.setText(Html.fromHtml(content));
                         this.authorId = post.author.userId;
                         List<PostComment> responseComments = Lists.reverse(post.comments);
-
+                        if(post.author.userId.equals(Application.lwafCurrentUser.userId)) {
+                            this.ibMenu.setVisibility(View.VISIBLE);
+                        }
                         changeComments(responseComments);
                         changeReactions(post.likes, post.dislikes);
                         break;
-                    case "psr":
+                    case PacketDataKeys.POST_SET_REACTION:
                         List<PostReaction> newLikes = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.POST_LIKES), PostReaction.class);
                         List<PostReaction> newDislikes = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.POST_DISLIKES), PostReaction.class);
                         changeReactions(newLikes, newDislikes);
                         break;
-                    case "pcc": // post_create_comment
+                    case PacketDataKeys.POST_CREATE_COMMENT: // post_create_comment
                         PostComment newComment = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.POST_COMMENTS), PostComment.class);
                         List<PostComment> newCommentsWithAdd = new ArrayList<>(this.comments);
                         if(!newComment.replyCommentId.isEmpty()) {
@@ -199,7 +213,7 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                         }
                         changeComments(newCommentsWithAdd);
                         break;
-                    case "prc":
+                    case PacketDataKeys.POSTS_REMOVE_COMMENT:
                         String removedCommentId = json.get(PacketDataKeys.COMMENT_ID).asText();
                         List<PostComment> newCommentsWithRemoved = new ArrayList<>(this.comments);
                         Iterator<PostComment> it = newCommentsWithRemoved.iterator();
@@ -221,6 +235,9 @@ public class PostActivity extends ABCActivity implements SocketHelper.SocketList
                             }
                         }
                         changeComments(newCommentsWithRemoved);
+                        break;
+                    case PacketDataKeys.POSTS_DELETE:
+                        finish();
                         break;
                 }
             }

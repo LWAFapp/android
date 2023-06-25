@@ -169,17 +169,17 @@ public class SettingsActivity extends ABCActivity implements SocketHelper.Socket
             } else if (json.has(PacketDataKeys.TYPE_EVENT)) {
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
                 switch (typeEvent) {
-                    case "vktc":
+                    case PacketDataKeys.VK_TOKEN_CHANGE:
                         Application.lwafCurrentUser.vkontakteToken = json.get(PacketDataKeys.VK_TOKEN).asText();
                         Application.lwafCurrentUser.vkontakteSecret = json.get(PacketDataKeys.VK_SECRET).asText();
                         Application.lwafCurrentUser.vkontakteId = json.get(PacketDataKeys.VK_ID).asInt();
                         linkVKButton.setText(getString(R.string.unlink_vk));
                         break;
-                    case "vktr":
+                    case PacketDataKeys.VK_TOKEN_REMOVE:
                         Application.lwafCurrentUser.vkontakteToken = "";
                         linkVKButton.setText(getString(R.string.link_vk));
                         break;
-                    case "cn":
+                    case PacketDataKeys.CHANGE_NICKNAME:
                         new DialogTextBox(this, getString(R.string.successfully_change_nickname)).show();
                         break;
                 }

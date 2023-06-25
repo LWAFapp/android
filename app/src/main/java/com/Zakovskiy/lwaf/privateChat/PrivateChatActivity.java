@@ -149,7 +149,6 @@ public class PrivateChatActivity extends ABCActivity implements SocketHelper.Soc
 
     @Override
     public void onStart() {
-
         this.socketHelper.subscribe(this);
         super.onStart();
     }

@@ -40,13 +40,13 @@ public class ServerConfig {
     public String rootUserId;
     @JsonProperty("wheel_items")
     public List<WheelItem> wheelItems;
-    @JsonProperty("allows")
-    public Allows allows;
+    @JsonProperty("allowed")
+    public Allowed allowed;
 
     // Данный класс нужен для задания разрешний у всяких ролей
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Allows {
+    public static class Allowed {
         @JsonProperty("create_post")
         public Integer createPost = 90;
         @JsonProperty("unallowed_service")

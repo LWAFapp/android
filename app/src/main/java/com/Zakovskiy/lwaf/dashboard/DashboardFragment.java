@@ -159,7 +159,7 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
             } else if (json.has(PacketDataKeys.TYPE_EVENT)) {
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
                 switch (typeEvent) {
-                    case "db": // dashboard
+                    case PacketDataKeys.DASHBOARD: // dashboard
                         Application.lwafCurrentUser = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ACCOUNT), User.class);
                         HashMap<String, Object> data = new HashMap<>();
                         data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.ROOM_LIST);
@@ -176,21 +176,21 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                             this.tvNewsFriends.setVisibility(View.VISIBLE);
                         }
                         break;
-                    case "rli": // room list
+                    case PacketDataKeys.ROOM_LIST: // room list
                         List<RoomInLobby> roomsInLobby = JsonUtils.convertJsonNodeToList(json.get("rr"), RoomInLobby.class);
                         changesRooms(roomsInLobby);
                         changeShimmer(false);
                         if(Application.lwafCurrentUser.wheelCount > 0)
                             new DialogWheel( DashboardFragment.this).show();
                         break;
-                    case "lo": // logout
+                    case PacketDataKeys.LOGOUT: // logout
                         SharedPreferences sPref = getSharedPreferences("lwaf_user", 0);
                         SharedPreferences.Editor ed = sPref.edit();
                         ed.clear();
                         ed.apply();
                         newActivity(WelcomeActivity.class, true, null);
                         break;
-                    case "rj": // room join
+                    case PacketDataKeys.ROOM_JOIN: // room join
                         RoomInLobby room = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.ROOM), RoomInLobby.class);
                         Bundle b = new Bundle();
                         b.putSerializable("room", room);
@@ -200,13 +200,13 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
             } else if (json.has(PacketDataKeys.ROOM_TYPE_EVENT)) {
                 String roomTypeEvent = json.get(PacketDataKeys.ROOM_TYPE_EVENT).asText();
                 switch(roomTypeEvent) {
-                    case "rc": // room create
+                    case PacketDataKeys.ROOM_CREATE: // room create
                         RoomInLobby newRoom = JsonUtils.convertJsonNodeToObject(json.get("rr"), RoomInLobby.class);
                         List<RoomInLobby> newList = new ArrayList<>(rooms);
                         newList.add(newRoom);
                         changesRooms(newList);
                         break;
-                    case "pc": // players count size
+                    case PacketDataKeys.PLAYERS_COUNT: // players count
                        String roomId = json.get(PacketDataKeys.ROOM_IDENTIFICATOR).asText();
                         List<RoomInLobby> newListPCS = new ArrayList<>(rooms);
                         for (RoomInLobby roomInLobby : newListPCS) {
@@ -216,7 +216,7 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
                         }
                         changesRooms(newListPCS);
                         break;
-                    case "dr": // delete room
+                    case PacketDataKeys.DELETE_ROOM: // delete room
                         List<RoomInLobby> newRooms = new ArrayList<>(rooms);
                         Iterator<RoomInLobby> it = newRooms.iterator();
                         while (it.hasNext()) {

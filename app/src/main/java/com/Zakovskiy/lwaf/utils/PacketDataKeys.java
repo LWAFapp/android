@@ -165,4 +165,5 @@ public class PacketDataKeys {
     public static final String POST_CREATE = "pc";
     public static final String POST_CONTENT = "pcn";
     public static final String POST_TITLE = "pt";
+    public static final String POSTS_DELETE = "pde";
 }

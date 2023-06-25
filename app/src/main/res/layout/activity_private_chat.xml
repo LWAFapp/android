@@ -47,7 +47,10 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="#00FFFFFF"
-                app:srcCompat="@drawable/ic_more" />
+                app:srcCompat="@drawable/ic_more"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:focusable="true"/>
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

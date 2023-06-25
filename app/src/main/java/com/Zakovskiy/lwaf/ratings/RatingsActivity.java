@@ -115,7 +115,7 @@ public class RatingsActivity extends ABCActivity implements SocketHelper.SocketL
             } else if (json.has(PacketDataKeys.TYPE_EVENT)) {
                 String typeEvent = json.get(PacketDataKeys.TYPE_EVENT).asText();
                 switch (typeEvent) {
-                    case "gr":
+                    case PacketDataKeys.GET_RATING:
                         List<RatingUser> newCoinsRatingUsers = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.BALANCE), RatingUser.class);
                         List<RatingUser> newSuperLikesRatingUsers = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.SUPER_LIKES), RatingUser.class);
                         this.coinsRatingUsersList = new ArrayList<>(newCoinsRatingUsers);
