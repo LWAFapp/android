@@ -17,11 +17,11 @@ import retrofit2.http.Query;
 public interface VKApi {
 
     @Headers("User-Agent: VKAndroidApp/7.2.10076 (Android 9; SDK 28; A; F; zakovskiy; ru)")
-    @GET("audio.get?v=5.102&count=100")
-    Call<ResponseBody> audioGet (@Query("access_token") String access_token, @Query("owner_id") Integer owner_id, @Query("sig") String sig);
+    @GET("audio.get?v=5.102&count=20")
+    Call<ResponseBody> audioGet (@Query("offset") int offset,@Query("access_token") String access_token, @Query("owner_id") Integer owner_id, @Query("sig") String sig);
     @Headers("User-Agent: VKAndroidApp/7.2.10076 (Android 9; SDK 28; A; F; zakovskiy; ru)")
-    @GET("audio.search?v=5.102&count=50")
-    Call<ResponseBody> audioSearch (@Query("access_token") String access_token, @Query("q") String search_text, @Query("sig") String sig);
+    @GET("audio.search?v=5.102&count=20")
+    Call<ResponseBody> audioSearch (@Query("offset") int offset, @Query("access_token") String access_token, @Query("q") String search_text, @Query("sig") String sig);
 
     @Headers("User-Agent: VKAndroidApp/7.2.10076 (Android 9; SDK 28; A; F; zakovskiy; ru)")
     @GET("audio.getById?v=5.102")

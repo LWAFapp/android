@@ -1,7 +1,9 @@
 package com.Zakovskiy.lwaf.utils;
 
 public class PacketDataKeys {
-
+    public static final String IP = "ip";
+    public static final String TIME_CLOSE = "tcl";
+    public static final String PORT = "port";
     public static final String USERS = "us";
     public static final String SEARCH_USER = "su";
     public static final String NEW_TRACK = "nt";
@@ -67,6 +69,7 @@ public class PacketDataKeys {
     public static final String TRACK = "t";
     public static final String TRACK_TIME_SET = "ts";
     public static final String TRACK_TITLE = "tt";
+    public static final String TRACK_ARTIST = "ta";
     public static final String TRACK_AUTHOR = "a";
     public static final String FRIEND_LIST = "fli";
     public static final String FRIEND_ID = "fid";
@@ -165,5 +168,42 @@ public class PacketDataKeys {
     public static final String POST_CREATE = "pc";
     public static final String POST_CONTENT = "pcn";
     public static final String POST_TITLE = "pt";
+    public static final String PREVIEW_ID = "prid";
     public static final String POSTS_DELETE = "pde";
+    public static final String ADMIN_GET_CLIENTS = "agc";
+    public static final String CLIENTS = "c";
+    public static final String FROM_USER = "fu";
+    public static final String TO_USER = "tu";
+    public static final String REPORT_ID = "rid";
+    public static final String ADMIN_DELETE_USER_FROM_SERVER = "adufs";
+    public static final String TIME_CREATE = "tc";
+    public static final String STATUS = "s";
+    public static final String ADMIN_GET_REPORTS = "agr";
+    public static final String REPORTS = "rs";
+    public static final String ADMIN_CLOSE_REPORT = "acr";
+    public static final String ADMIN_BAN_USER = "abu";
+    public static final String TIMESTAMP = "ts";
+    public static final String ADMIN_ENGINE_SERVICE = "aes";
+    public static final String SERVICE_NAME = "sn";
+    public static final String ADMIN_GET_SERVICES = "ags";
+    public static final String SERVICES = "s";
+    public static final String ADMIN_DATABASE = "adb";
+    public static final String ADMIN_DATABASE_REQUEST = "adbr";
+    public static final String RESPONSE = "response";
+    public static final String BLOCKED_TYPE = "blocked_type";
+    public static final String BLOCKS = "blocks";
+    public static final String USER_BLOCK = "ub";
+    public static final String GET_LAST_TRACKS = "gltr";
+    public static final String SIZE = "size";
+    public static final String OFFSET = "offset";
+    public static final String POST_TIME_CREATE = "ptc";
+    public static final String POST_GET_COMMENTS = "pgcm";
+    public static final String OWNER_ID = "oid";
+    public static final String LOTO_ENABLED = "le";
+    public static final String OPERATION_TYPE = "ot";
+    public static final String VALUE = "v";
+    public static final String EXTENSION = "ex";
+    public static final String GET_OPERATIONS = "go";
+    public static final String OPERATIONS = "os";
+    public static final String PROMOCODE_ENTER = "pre";
 }

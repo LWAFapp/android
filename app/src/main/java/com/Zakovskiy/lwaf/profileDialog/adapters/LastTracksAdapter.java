@@ -21,6 +21,7 @@ import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.HashMap;
@@ -29,7 +30,8 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LastTracksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private List<LastTrack> lastTrackList;
     private Context context;
@@ -41,18 +43,34 @@ public class LastTracksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.self = self;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return lastTrackList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        return new LastTrackViewHolder(inflater.inflate(R.layout.item_last_track, parent, false));
+        if (viewType == VIEW_TYPE_ITEM) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            return new LastTrackViewHolder(inflater.inflate(R.layout.item_last_track, parent, false));
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_shimmer_last_track, parent, false);
+            return new LoadingViewHolder(view);
+        }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        LastTrack lastTrack = getItem(position);
-        LastTrackViewHolder lastTrackViewHolder = (LastTrackViewHolder) holder;
-        lastTrackViewHolder.bind(lastTrack);
+        if (holder instanceof LastTrackViewHolder) {
+            LastTrack lastTrack = getItem(position);
+            LastTrackViewHolder lastTrackViewHolder = (LastTrackViewHolder) holder;
+            lastTrackViewHolder.bind(lastTrack);
+        } else {
+            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
+            loadingViewHolder.bind();
+        }
     }
 
     public LastTrack getItem(int position) {
@@ -80,7 +98,7 @@ public class LastTracksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if(!lastTrack.icon.isEmpty()) {
                 ImageUtils.loadImage(context, lastTrack.icon, imageView, true, true);
             }
-            materialTextView.setText(Html.fromHtml(lastTrack.title));
+            materialTextView.setText(Html.fromHtml(String.format("<b>%s</b> - %s", lastTrack.artist, lastTrack.title)));
             item.setOnClickListener((v)->{
                 PopupMenu popupMenu = new PopupMenu(context, v);
                 popupMenu.getMenuInflater().inflate(R.menu.pm_last_track, popupMenu.getMenu());
@@ -104,6 +122,19 @@ public class LastTracksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 popupMenu.show();
             });
+        }
+    }
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public ShimmerFrameLayout shimmerLayout;
+
+        public LoadingViewHolder(View view) {
+            super(view);
+            shimmerLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmerLastTrack);
+        }
+
+        public void bind() {
+            shimmerLayout.startShimmer();
         }
     }
 }

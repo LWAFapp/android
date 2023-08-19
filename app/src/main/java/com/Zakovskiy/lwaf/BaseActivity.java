@@ -73,6 +73,7 @@ public class BaseActivity extends ABCActivity implements SocketHelper.SocketList
         Config.ERRORS.put(132, getString(R.string.error_132));
         Config.ERRORS.put(140, getString(R.string.error_140));
         Config.ERRORS.put(141, getString(R.string.error_141));
+        Config.ERRORS.put(142, getString(R.string.error_142));
         Config.ERRORS.put(150, getString(R.string.error_150));
         Config.ERRORS.put(170, getString(R.string.error_170));
         Config.ERRORS.put(190, getString(R.string.error_190));
@@ -97,6 +98,9 @@ public class BaseActivity extends ABCActivity implements SocketHelper.SocketList
         Config.ERRORS.put(290, getString(R.string.error_290));
         Config.ERRORS.put(300, getString(R.string.error_300));
         Config.ERRORS.put(310, getString(R.string.error_310));
+        Config.ERRORS.put(400, getString(R.string.error_400));
+        Config.ERRORS.put(401, getString(R.string.error_401));
+        Config.ERRORS.put(402, getString(R.string.error_402));
         Config.ERRORS.put(9999, getString(R.string.error_9999));
         Config.ERRORS.put(10001, getString(R.string.error_10001));
         Config.ERRORS.put(10101, getString(R.string.error_10101));

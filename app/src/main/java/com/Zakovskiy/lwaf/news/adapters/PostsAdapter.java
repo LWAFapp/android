@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Zakovskiy.lwaf.ABCActivity;
 import com.Zakovskiy.lwaf.R;
+import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.models.post.PostInList;
 import com.Zakovskiy.lwaf.news.PostActivity;
+import com.Zakovskiy.lwaf.utils.ImageUtils;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 
@@ -71,7 +74,10 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView content;
         private TextView likes;
         private TextView dislikes;
+        private TextView comments;
         private View item;
+        private ImageView ivPreview;
+
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
             avatar = itemView.findViewById(R.id.userAvatar);
@@ -81,6 +87,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             content = itemView.findViewById(R.id.itemPostContent);
             likes = itemView.findViewById(R.id.postLikes);
             dislikes = itemView.findViewById(R.id.postDislikes);
+            comments = itemView.findViewById(R.id.tvPostComments);
+            ivPreview = itemView.findViewById(R.id.ivPreviewPost);
             this.item = itemView;
         }
 
@@ -93,6 +101,11 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             content.setText(Html.fromHtml(content_));
             likes.setText(String.valueOf(post.likes));
             dislikes.setText(String.valueOf(post.dislikes));
+            comments.setText(String.valueOf(post.comments));
+            if(post.previewId != null && !post.previewId.isEmpty()) {
+                ImageUtils.loadImage(context, String.format("%spreviews/%s", Application.lwafServerConfig.imgsPath, post.previewId), this.ivPreview, true, true);
+                ivPreview.setVisibility(View.VISIBLE);
+            }
             this.item.setOnClickListener(v -> {
                 Bundle b = new Bundle();
                 b.putSerializable("id", post.id);

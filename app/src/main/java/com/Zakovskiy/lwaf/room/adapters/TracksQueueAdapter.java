@@ -78,7 +78,7 @@ public class TracksQueueAdapter extends ArrayAdapter<Track> {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.queueReplace.setOnClickListener(v -> {
-            new DialogPickTrack(context, 3).show();
+            new DialogPickTrack(context, null, 3).show();
         });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             holder.queueReplace.setTooltipText(context.getString(R.string.replace_track));
@@ -89,7 +89,7 @@ public class TracksQueueAdapter extends ArrayAdapter<Track> {
             dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.DELETE_TRACK);
             this.socketHelper.sendData(new JSONObject(dataMessage));
         });
-        holder.title.setText(Html.fromHtml(track.title));
+        holder.title.setText(Html.fromHtml(String.format("<b>%s</b> - %s", track.artist, track.title)));
         Integer durationMinutes = (Integer) track.duration / 60;
         Integer durationSeconds = (Integer) track.duration % 60;
         holder.duration.setText(String.format("%02d:%02d", durationMinutes, durationSeconds));

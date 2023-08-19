@@ -10,6 +10,8 @@
         android:id="@+id/profileScrollContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="invisible"
+        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
@@ -67,7 +69,6 @@
                         android:id="@+id/profileLastSeen"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/online"
                         android:textAlignment="center"
                         android:textSize="14sp"
                         app:layout_constraintTop_toBottomOf="@+id/profileUsername" />
@@ -76,10 +77,15 @@
                         android:id="@+id/tvBalance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:elevation="6dp"
+                        android:padding="5dp"
                         android:textAlignment="center"
                         android:textSize="24sp"
+                        android:textStyle="bold"
                         android:visibility="gone"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
                         app:drawableLeftCompat="@drawable/coin_icon"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -87,11 +93,13 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvRanks"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginStart="10dp"
+                        android:layout_marginTop="4dp"
                         android:layout_marginEnd="10dp"
-                        android:gravity="center"
+                        android:gravity="center_horizontal"
                         android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -200,6 +208,7 @@
                         android:layout_marginEnd="10dp"
                         android:minHeight="100dp"
                         android:outlineSpotShadowColor="@color/white"
+                        android:visibility="visible"
                         app:cardBackgroundColor="@color/black_primary"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp"
@@ -265,6 +274,7 @@
                         android:layout_marginEnd="10dp"
                         android:minHeight="100dp"
                         android:outlineSpotShadowColor="@color/white"
+                        android:visibility="visible"
                         app:cardBackgroundColor="@color/black_primary"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp"
@@ -358,6 +368,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginEnd="10dp"
                         android:outlineSpotShadowColor="@color/white"
+                        android:visibility="visible"
                         app:cardBackgroundColor="@color/black_primary"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp"
@@ -398,6 +409,35 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardViewBlocked"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:outlineSpotShadowColor="@color/white"
+                        android:visibility="gone"
+                        app:cardBackgroundColor="@color/red"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cardViewLastTracks">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+
+                            android:text="@string/you_are_blocked"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+                    </androidx.cardview.widget.CardView>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -407,7 +447,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/dark_transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -416,7 +456,8 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
-            app:menu="@menu/top_app_bar" />
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/top_app_bar"
+            app:navigationIcon="@drawable/ic_back" />
     </com.google.android.material.appbar.AppBarLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

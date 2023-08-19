@@ -5,17 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_primary"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:orientation="vertical">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/svPost"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="8dp">
 
             <LinearLayout
                 android:id="@+id/authorLayout"
@@ -49,16 +50,17 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/date" />
                 </LinearLayout>
+
                 <ImageButton
                     android:id="@+id/menuButtons"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="#00FFFFFF"
-                    app:srcCompat="@drawable/ic_more"
-                    android:visibility="gone"
                     android:clickable="true"
+                    android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    android:focusable="true"/>
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_more" />
 
             </LinearLayout>
 
@@ -75,6 +77,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/ivPreviewPost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -103,8 +111,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="3dp"
-                        android:textSize="22sp"
-                        android:text="0"/>
+                        android:text="0"
+                        android:textSize="22sp" />
 
                 </LinearLayout>
 
@@ -131,25 +139,42 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dp"
-                        android:textSize="22sp"
-                        android:text="0"/>
+                        android:text="0"
+                        android:textSize="22sp" />
                 </LinearLayout>
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvCommentsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/comments_counts"
+                android:textStyle="bold"
+                android:textSize="22sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <com.Zakovskiy.lwaf.widgets.UserAvatar
+                    android:id="@+id/uaOwner"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    app:civ_border_width="2dp"
+                    android:layout_gravity="bottom"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/commentInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
                     android:hint="@string/leave_comment"
                     app:endIconDrawable="@drawable/ic_send"
                     app:endIconMode="custom"
-                    app:endIconTint="#FFAAAAAA">
+                    app:endIconTint="#FFAAAAAA"
+                    android:layout_gravity="center">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/CommentTIEText"
@@ -169,7 +194,6 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     tools:srcCompat="@drawable/ic_reply" />
@@ -214,14 +238,15 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="5dp" />
+                android:layout_height="8dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/commentsView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp" />
+                android:fadeScrollbars="true"
+                android:nestedScrollingEnabled="false" />
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

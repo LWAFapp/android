@@ -3,7 +3,6 @@ package com.Zakovskiy.lwaf.globalConversation.adapters;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,17 +22,14 @@ import com.Zakovskiy.lwaf.globalConversation.GlobalConversationActivity;
 import com.Zakovskiy.lwaf.menuDialog.MenuButton;
 import com.Zakovskiy.lwaf.menuDialog.MenuDialogFragment;
 import com.Zakovskiy.lwaf.models.Bubble;
-import com.Zakovskiy.lwaf.models.Friend;
 import com.Zakovskiy.lwaf.models.LotoWinner;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.enums.BubbleType;
 import com.Zakovskiy.lwaf.models.enums.MessageType;
 import com.Zakovskiy.lwaf.models.enums.ReadType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
-import com.Zakovskiy.lwaf.privateChat.PrivateChatActivity;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
 import com.Zakovskiy.lwaf.utils.JsonUtils;
-import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
@@ -124,7 +120,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (messageGlobal.type == MessageType.TEXT) {
             TextMessageViewHolder textHolder = (TextMessageViewHolder) holder;
             try {
-                textHolder.bind(messageGlobal);
+                textHolder.bind(messageGlobal, position);
             } catch (IOException | XmlPullParserException e) {
                 throw new RuntimeException(e);
             }
@@ -143,6 +139,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     this.context.getString(R.string.left))));
         } else if (messageGlobal.type == MessageType.ADD_TRACK) {
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
+            systemHolder.message.setTextColor(Color.WHITE);
             systemHolder.message.setText(Html.fromHtml(String.format("<b>%s</b> %s %s",
                     messageGlobal.user.nickname,
                     this.context.getString(R.string.add_track),
@@ -170,12 +167,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     this.context.getString(R.string.set_superlike))));
         } else if (messageGlobal.type == MessageType.REPLACE_TRACK) {
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
+            systemHolder.message.setTextColor(Color.WHITE);
             systemHolder.message.setText(Html.fromHtml(String.format("<b>%s</b> %s %s",
                     messageGlobal.user.nickname,
                     this.context.getString(R.string.replace),
                     this.context.getString(R.string.yourself_track))));
         } else if (messageGlobal.type == MessageType.DELETE_TRACK) {
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
+            systemHolder.message.setTextColor(Color.WHITE);
             systemHolder.message.setText(Html.fromHtml(String.format("<b>%s</b> %s %s",
                     messageGlobal.user.nickname,
                     this.context.getString(R.string.deleted),
@@ -187,6 +186,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else if (messageGlobal.type == MessageType.LOTO_WINNERS) {
             SystemMessageViewHolder systemHolder = (SystemMessageViewHolder) holder;
             systemHolder.message.setText(context.getString(R.string.loto_winners));
+            systemHolder.message.setTextColor(Color.WHITE);
             systemHolder.message.setTextSize(16);
             List<LotoWinner> lotoWinnerList = JsonUtils.convertJsonStringToList(messageGlobal.message, LotoWinner.class);
             systemHolder.changeLotoWinners(lotoWinnerList);
@@ -196,13 +196,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     messageGlobal.user.nickname,
                     this.context.getString(R.string.add_track_out_of_turn),
                     messageGlobal.message)));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                systemHolder.message.setTextColor(context.getColor(R.color.coin));
-            }
+            systemHolder.message.setTextColor(context.getColor(R.color.coin));
         }
     }
 
-    public boolean isSwipeable(int position) {
+    public boolean isSwappable(int position) {
         Message message = getItem(position);
         return message.type == MessageType.TEXT;
     }
@@ -233,7 +231,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             llLayoutMessage = itemView.findViewById(R.id.layoutMessageSender);
         }
 
-        public void bind(Message message) throws IOException, XmlPullParserException {
+        public void bind(Message message, int position) throws IOException, XmlPullParserException {
             if (ac.getClass() == GlobalConversationActivity.class) {
                 this.replyLayout.setOnClickListener(v -> {
                     int pos = ((GlobalConversationActivity) ac).ids.indexOf(message.replyMessage.messageId);
@@ -243,6 +241,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if(message.read == ReadType.UNREAD && message.user.userId.equals(Application.lwafCurrentUser.userId)) {
                 llLayoutMessage.setBackgroundColor(context.getColor(R.color.message_last_transparent));
             }
+            avatar.setUser(message.user);
+            avatar.setOnClickListener((v)->{
+                ProfileDialogFragment.newInstance(context, message.user.userId).show(fragmentManager, "ProfileDialogFragment");
+            });
             this.messageBubble.setOnClickListener(v -> {
                 List<MenuButton> btns = new ArrayList<>();
                 if (ac != null && ac.getClass() == GlobalConversationActivity.class)
@@ -290,12 +292,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     messageBubble.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(resourceSend[1])));
                 }
             }
-            avatar.setUser(message.user);
-            avatar.setOnClickListener((v)->{
-                ProfileDialogFragment.newInstance(context, message.user.userId).show(fragmentManager, "ProfileDialogFragment");
-            });
             this.messageCon.setText(message.message);
-            date.setText(TimeUtils.getTime(message.timeSend * 1000));
+            date.setText(TimeUtils.getTime(message.timeSend));
             if (message.replyMessage != null) {
                 replyUsername.setText(message.replyMessage.user.nickname);
                 replyMessage.setText(message.replyMessage.message);

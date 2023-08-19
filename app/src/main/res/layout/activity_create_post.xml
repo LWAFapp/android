@@ -32,107 +32,125 @@
             android:focusable="true"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/createPostTagsLayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_rectangle"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/createPostBold"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#00FFFFFF"
-            android:text="@string/b"
-            android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:focusable="true"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/createPostItalic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#00FFFFFF"
-            android:text="@string/i"
-            android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:focusable="true"/>
+            <LinearLayout
+                android:id="@+id/createPostTagsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_rectangle"
+                android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/createPostUnderline"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#00FFFFFF"
-            android:text="@string/u"
-            android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:focusable="true"/>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/createPostBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:text="@string/b" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/createPostStrike"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#00FFFFFF"
-            android:text="@string/s"
-            android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:focusable="true"/>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/createPostItalic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:text="@string/i" />
 
-    </LinearLayout>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/createPostUnderline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:text="@string/u" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="2dp" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/createPostStrike"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#00FFFFFF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:text="@string/s" />
 
-    <EditText
-        android:id="@+id/createPostTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_rectangle"
-        android:ems="10"
-        android:inputType="text"
-        android:maxLength="50"
-        android:padding="8dp"
-        android:text="@string/title"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+            </LinearLayout>
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="2dp" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="2dp" />
 
-    <EditText
-        android:id="@+id/createPostContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@drawable/rounded_rectangle"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="text|textMultiLine"
-        android:padding="5dp"
-        android:text="@string/content"
-        android:singleLine="false"
-        android:textColor="#FFFFFF" />
+            <EditText
+                android:id="@+id/createPostTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_rectangle"
+                android:ems="10"
+                android:hint="@string/title"
+                android:inputType="text"
+                android:maxLength="50"
+                android:padding="8dp"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="2dp" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="2dp" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/createPostSubmit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_rectangle"
-        android:text="@string/create_post_end"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:focusable="true"/>
+            <EditText
+                android:id="@+id/createPostContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_rectangle"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/content"
+                android:inputType="text|textMultiLine"
+                android:padding="5dp"
+                android:singleLine="false"
+                android:textColor="#FFFFFF" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="2dp" />
+
+            <ImageView
+                android:id="@+id/ivPreviewPost"
+                android:layout_width="wrap_content"
+                android:layout_height="200dip"
+                app:srcCompat="@drawable/ic_set_preview_post" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/createPostSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_rectangle"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:text="@string/create_post_end" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

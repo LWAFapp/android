@@ -24,74 +24,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="400dp"
         android:padding="5sp">
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmerListTracks"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <include
-                    layout="@layout/shimmer_track_in_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/shimmer_track_in_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/shimmer_track_in_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/shimmer_track_in_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/shimmer_track_in_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/shimmer_track_in_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/shimmer_track_in_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/shimmer_track_in_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/shimmer_track_in_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listTracks"
             style="@style/AppTheme.ListViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible" />
+            android:layout_height="match_parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

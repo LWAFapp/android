@@ -51,7 +51,6 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
     private List<ShortUser> globalUsers = new ArrayList<>();
     private String replyId = "";
     private LinearLayout replyToLayout;
-    public HashMap<Message, Integer> replyPositions = new HashMap<>();
     public List<String> ids = new ArrayList<>();
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -67,7 +66,7 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
 
         @Override
         public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            return messagesAdapter.isSwipeable(viewHolder.getAdapterPosition()) ? super.getSwipeDirs(recyclerView, viewHolder) : 0;
+            return messagesAdapter.isSwappable(viewHolder.getAdapterPosition()) ? super.getSwipeDirs(recyclerView, viewHolder) : 0;
         }
 
         @Override
@@ -162,8 +161,6 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
         this.listUsers.setVisibility(type ? View.INVISIBLE : View.VISIBLE);
     }
 
-
-
     @Override
     public void onStop() {
         HashMap<String, Object> data = new HashMap<>();
@@ -218,18 +215,18 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         List<Message> messagesInConversation = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
                         for (int i = 0; i < messagesInConversation.size()-1; i++) {
                             ids.add(messagesInConversation.get(i).messageId);
-                            String date1 = TimeUtils.getTime(messagesInConversation.get(i).timeSend*1000, "dd");
-                            String finalDay = TimeUtils.getTime(messagesInConversation.get(i+1).timeSend*1000, "dd");
-                            int month1 = Integer.parseInt(TimeUtils.getTime(messagesInConversation.get(i).timeSend*1000, "MM"));
-                            int finalMonth = Integer.parseInt(TimeUtils.getTime(messagesInConversation.get(i+1).timeSend*1000, "MM"));
-                            String year = TimeUtils.getTime(System.currentTimeMillis(), "yyyy").equals(TimeUtils.getTime(messagesInConversation.get(i + 1).timeSend * 1000, "yyyy")) ? "" : TimeUtils.getTime(messagesInConversation.get(i + 1).timeSend * 1000, "yyyy");
+                            String date1 = TimeUtils.getTime(messagesInConversation.get(i).timeSend, "dd");
+                            String finalDay = TimeUtils.getTime(messagesInConversation.get(i+1).timeSend, "dd");
+                            int month1 = Integer.parseInt(TimeUtils.getTime(messagesInConversation.get(i).timeSend, "MM"));
+                            int finalMonth = Integer.parseInt(TimeUtils.getTime(messagesInConversation.get(i+1).timeSend, "MM"));
+                            String year = TimeUtils.getTime(System.currentTimeMillis(), "yyyy").equals(TimeUtils.getTime(messagesInConversation.get(i + 1).timeSend, "yyyy")) ? "" : TimeUtils.getTime(messagesInConversation.get(i + 1).timeSend, "yyyy");
                             //Logs.info(String.format("MESSAGE %s.%s %s.%s", date1, month1, finalDay, finalMonth));
                             if (Integer.parseInt(date1) < Integer.parseInt(finalDay) || month1 < finalMonth) {
                                 Message msg = new Message();
                                 msg.type = MessageType.MESSAGE_DATE;
                                 msg.message = finalDay + " " + TimeUtils.convertToWords(this, finalMonth, true) + " " + year;
                                 //Logs.info(TimeUtils.getTime(System.currentTimeMillis(), "dd:MM:yyyy"));
-                                if (TimeUtils.getTime(System.currentTimeMillis(), "dd:MM:yyyy").equals(TimeUtils.getTime(messagesInConversation.get(i + 1).timeSend * 1000, "dd:MM:yyyy"))) {
+                                if (TimeUtils.getTime(System.currentTimeMillis(), "dd:MM:yyyy").equals(TimeUtils.getTime(messagesInConversation.get(i + 1).timeSend, "dd:MM:yyyy"))) {
                                     msg.message = this.getString(R.string.today);
                                 }
                                 messagesInConversation.add(i+1, msg);
@@ -252,10 +249,10 @@ public class GlobalConversationActivity extends ABCActivity implements SocketHel
                         List<Message> newMessages = new ArrayList<>(globalMessages);
                         Message newMessage = JsonUtils.convertJsonNodeToObject(json.get(PacketDataKeys.CONVERSATION_MESSAGE), Message.class);
                         Message lastMessage = newMessages.get(newMessages.size()-1);
-                        String lastMessageDate = TimeUtils.getTime(lastMessage.timeSend*1000, "dd");
-                        String lastMessageMonth = TimeUtils.getTime(lastMessage.timeSend*1000, "MM");
-                        String newMessageDate = TimeUtils.getTime(newMessage.timeSend*1000, "dd");
-                        String newMessageMonth = TimeUtils.getTime(newMessage.timeSend*1000, "MM");
+                        String lastMessageDate = TimeUtils.getTime(lastMessage.timeSend, "dd");
+                        String lastMessageMonth = TimeUtils.getTime(lastMessage.timeSend, "MM");
+                        String newMessageDate = TimeUtils.getTime(newMessage.timeSend, "dd");
+                        String newMessageMonth = TimeUtils.getTime(newMessage.timeSend, "MM");
                         if (Integer.parseInt(lastMessageDate) < Integer.parseInt(newMessageDate) || Integer.parseInt(lastMessageMonth) < Integer.parseInt(newMessageMonth)) {
                             Message msg = new Message();
                             msg.type = MessageType.MESSAGE_DATE;

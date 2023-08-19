@@ -17,6 +17,10 @@ public interface LWAFApi {
     @POST("upload/photo")
     Call<ResponseBody> uploadPhoto(@Query("token") String token, @Part MultipartBody.Part file);
 
+    @Multipart
+    @POST("upload/preview")
+    Call<ResponseBody> uploadPreview(@Query("token") String token, @Part MultipartBody.Part file);
+
     @GET("{resource}")
     Call<ResponseBody> getResource(@Path("resource") String resource);
 }

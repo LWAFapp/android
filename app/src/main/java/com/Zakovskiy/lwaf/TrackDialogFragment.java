@@ -61,9 +61,12 @@ public class TrackDialogFragment extends DialogFragment {
         } else {
             ImageUtils.loadImage(this.context, this.track.icon, trackIcon, false, false);
         }
-        TextView author = dialog.findViewById(R.id.trackAuthor);
-        author.setText(Html.fromHtml(this.track.title));
+        TextView author = dialog.findViewById(R.id.tvTrackAuthor);
+        author.setText(this.track.artist);
         author.setSelected(true);
+        TextView title = dialog.findViewById(R.id.tvTrackTitle);
+        title.setText(this.track.title);
+        title.setSelected(true);
         this.seekBar = dialog.findViewById(R.id.seekBar);
         TextView allTime = dialog.findViewById(R.id.allTime);
         allTime.setText(TimeUtils.secondsToDur(this.track.duration));

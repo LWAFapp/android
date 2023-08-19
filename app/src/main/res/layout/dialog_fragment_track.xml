@@ -25,15 +25,26 @@
             android:layout_height="300dp" />
 
         <TextView
-            android:id="@+id/trackAuthor"
+            android:id="@+id/tvTrackAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/author"
             android:singleLine="true"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:focusable="true"
+            android:textStyle="bold"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/tvTrackTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:textSize="18sp" />
 
     </LinearLayout>

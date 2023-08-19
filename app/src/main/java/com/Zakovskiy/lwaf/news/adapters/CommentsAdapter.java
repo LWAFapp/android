@@ -26,6 +26,7 @@ import com.Zakovskiy.lwaf.models.post.PostReaction;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.news.PostActivity;
 import com.Zakovskiy.lwaf.profileDialog.ProfileDialogFragment;
+import com.Zakovskiy.lwaf.profileDialog.adapters.LastTracksAdapter;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
@@ -43,11 +44,12 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
     private Context context;
     private FragmentManager fragmentManager;
     private List<PostComment> comments = new ArrayList<>();
     private PostActivity ac;
-    private CommentsAdapter adapter;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
 
     public CommentsAdapter(Context context, FragmentManager fragmentManager, List<PostComment> comments, PostActivity ac) {
@@ -57,23 +59,40 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.ac = ac;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return comments.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.item_comment_post, parent, false);
-        return new CommentViewHolder(view);
+
+        if (viewType == VIEW_TYPE_ITEM) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View view = inflater.inflate(R.layout.item_comment_post, parent, false);
+            return new CommentViewHolder(view);
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View view = inflater.inflate(R.layout.item_shimmer_comment_post, parent, false);
+            return new LoadingViewHolder(view);
+        }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        PostComment comment = this.comments.get(position);
+        if(holder instanceof CommentViewHolder) {
+            PostComment comment = this.comments.get(position);
 
-        CommentViewHolder commentViewHolder = (CommentViewHolder) holder;
-        try {
-            commentViewHolder.bind(comment, position);
-        } catch (IOException | XmlPullParserException e) {
-            throw new RuntimeException(e);
+            CommentViewHolder commentViewHolder = (CommentViewHolder) holder;
+            try {
+                commentViewHolder.bind(comment, position);
+            } catch (IOException | XmlPullParserException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (holder instanceof LoadingViewHolder) {
+            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
         }
     }
 
@@ -98,6 +117,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public CommentViewHolder(View itemView) {
             super(itemView);
+            Logs.info("v");
             this.avatar = itemView.findViewById(R.id.commentAvatar);
             this.commentAuthor = itemView.findViewById(R.id.commentUsername);
             this.commentContent = itemView.findViewById(R.id.commentContent);
@@ -151,25 +171,32 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
             this.commentAuthor.setText(comment.user.nickname);
             this.commentContent.setText(comment.content);
-            this.commentDate.setText(TimeUtils.getDateAndTime(comment.timestamp * 1000));
+            this.commentDate.setText(TimeUtils.getDateAndTime(comment.timestamp));
             this.clickableReply.setOnClickListener(v -> {
                 ac.setReply(comment);
             });
+            labelShowReplies.setText(String.format("%s (%s)", context.getString(R.string.show_replies), comment.replyComments.size()));
             this.clickableShowHide.setOnClickListener(v -> {
                 if (lvReplyComments.getVisibility() == View.VISIBLE) {
                     lvReplyComments.setVisibility(View.GONE);
-                    labelShowReplies.setText(R.string.show_replies);
+                    labelShowReplies.setText(String.format("%s (%s)", context.getString(R.string.show_replies), comment.replyComments.size()));
                     decorativeArrow.setRotationX(0);
                 }
                 else {
                     lvReplyComments.setVisibility(View.VISIBLE);
-                    labelShowReplies.setText(R.string.hide_replies);
+                    labelShowReplies.setText(String.format("%s (%s)", context.getString(R.string.hide_replies), comment.replyComments.size()));
                     decorativeArrow.setRotationX(180);
                 }
             });
             if (!comment.replyComments.isEmpty()) {
                 changeReplys(comment.replyComments, position);
             }
+        }
+    }
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

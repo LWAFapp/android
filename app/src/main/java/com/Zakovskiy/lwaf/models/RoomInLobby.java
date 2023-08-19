@@ -17,6 +17,8 @@ public class RoomInLobby implements Serializable {
 
     @JsonProperty(PacketDataKeys.ROOM_IDENTIFICATOR)
     public String roomId = "";
+    @JsonProperty(PacketDataKeys.LOTO_ENABLED)
+    public Boolean lotoEnabled = false;
     @JsonProperty(PacketDataKeys.ROOM_TYPE)
     public RoomType roomType = RoomType.VK;
     @JsonProperty(PacketDataKeys.ROOM_NAME)

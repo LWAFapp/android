@@ -72,15 +72,13 @@ public class AvatarDialogFragment extends DialogFragment {
             btns.add(new MenuButton(this.context.getString(R.string.download_image), "#FFFFFF", (vb) -> {
                 File downloads_dir = new File(Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_DOWNLOADS);
                 OutputStream fOut = null;
-                Uri outputFileUri;
                 avatarImage.buildDrawingCache();
                 Bitmap bm=avatarImage.getDrawingCache();
                 try {
                     File sdImageMainDirectory = new File(downloads_dir, (System.currentTimeMillis()/1000)+".png");
-                    outputFileUri = Uri.fromFile(sdImageMainDirectory);
                     fOut = new FileOutputStream(sdImageMainDirectory);
                 } catch (Exception e) {
-                    new DialogTextBox(this.context, "Ошибка", Config.ERRORS.get(1)).show();
+                    new DialogTextBox(this.context, getString(R.string.error), Config.ERRORS.get(1)).show();
                     e.printStackTrace();
                 }
                 try {
@@ -88,7 +86,7 @@ public class AvatarDialogFragment extends DialogFragment {
                     fOut.flush();
                     fOut.close();
                 } catch (Exception e) {
-                    new DialogTextBox(this.context, "Ошибка", "Не удалось сохранить файл").show();
+                    new DialogTextBox(this.context, getString(R.string.error), getString(R.string.error_save_photo)).show();
                     e.printStackTrace();
                 }
             }));

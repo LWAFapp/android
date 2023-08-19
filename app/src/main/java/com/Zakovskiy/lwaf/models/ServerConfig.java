@@ -48,9 +48,19 @@ public class ServerConfig {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Allowed {
         @JsonProperty("create_post")
-        public Integer createPost = 90;
+        public Integer createPost = 0;
         @JsonProperty("unallowed_service")
-        public Integer unallowedService = 10;
+        public Integer unallowedService = 0;
+        @JsonProperty("db")
+        public Integer db = 0;
+        @JsonProperty("ban")
+        public Integer ban = 0;
+        @JsonProperty("kick")
+        public Integer kick = 0;
+        @JsonProperty("reports")
+        public Integer reports = 0;
+        @JsonProperty("clients")
+        public Integer clients = 0;
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

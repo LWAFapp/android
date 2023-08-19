@@ -7,18 +7,17 @@
     android:orientation="horizontal"
     android:paddingBottom="3sp">
 
-    <View
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/sexShape"
-        android:layout_width="10sp"
-        android:layout_height="10sp"
-        android:background="@color/shimmer_color"
-        android:scaleType="centerInside" />
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@color/shimmer_color" />
 
     <View
         android:id="@+id/username"
-        android:layout_width="100sp"
-        android:layout_height="25sp"
-        android:layout_marginStart="5sp"
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="5dp"
         android:background="@color/shimmer_color"
         android:gravity="left" />
 </LinearLayout>

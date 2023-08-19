@@ -1,5 +1,6 @@
 package com.Zakovskiy.lwaf.models;
 
+import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.models.enums.Sex;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -26,5 +27,25 @@ public class ShortUser implements Serializable {
 
     public boolean isAdmin() {
         return this.role >= 5;
+    }
+
+    public Boolean isUnallowedService() {
+        return this.role >= Application.lwafServerConfig.allowed.unallowedService;
+    }
+
+    public Boolean isDb() {
+        return this.role >= Application.lwafServerConfig.allowed.db;
+    }
+
+    public Boolean isReports() {
+        return this.role >= Application.lwafServerConfig.allowed.reports;
+    }
+
+    public Boolean isClients() {
+        return this.role >= Application.lwafServerConfig.allowed.reports;
+    }
+
+    public Boolean isBan() {
+        return this.role >= Application.lwafServerConfig.allowed.ban;
     }
 }

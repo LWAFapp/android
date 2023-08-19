@@ -131,7 +131,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Message lastMessage = friend.lastMessage;
                 this.lastMessage.setText(Html.fromHtml(String.format("<b>%s</b> %s", lastMessage.user.nickname, lastMessage.message)));
                 this.dateLastMessage.setVisibility(View.VISIBLE);
-                this.dateLastMessage.setText(TimeUtils.getDateAndTime(lastMessage.timeSend*1000));
+                this.dateLastMessage.setText(TimeUtils.getDateAndTime(lastMessage.timeSend));
                 if(friend.lastMessage.read == ReadType.UNREAD) {
                     if(friend.lastMessage.user.userId.equals(Application.lwafCurrentUser.userId)) {
                         llLastMessage.setBackgroundColor(context.getColor(R.color.message_last_transparent));

@@ -12,6 +12,8 @@ import java.io.Serializable;
 public class Track implements Serializable {
     @JsonProperty(PacketDataKeys.TRACK_TITLE)
     public String title = "";
+    @JsonProperty(PacketDataKeys.TRACK_ARTIST)
+    public String artist = "";
     @JsonProperty(PacketDataKeys.ICON)
     public String icon = "";
     @JsonProperty(PacketDataKeys.USER)

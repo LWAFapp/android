@@ -154,10 +154,27 @@
         <activity android:name=".createPost.CreatePostActivity"
             android:exported="true"
             android:label="@string/create_post_activity_label"
+            android:theme="@style/Base.Theme.LWAF">
+            <intent-filter>
+                <action android:name="com.Zakovskiy.lwaf.createPost.CreatePostActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".wallet.WalletActivity"
+            android:exported="true"
+            android:label="@string/wallet_activity_label">
+            <intent-filter>
+                <action android:name="com.Zakovskiy.lwaf.wallet.WalletActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".adminPanel.AdminPanelActivity"
+            android:exported="true"
+            android:label="@string/admin_panel_activity_label"
             android:theme="@style/Base.Theme.LWAF"
             android:noHistory="true">
             <intent-filter>
-                <action android:name="com.Zakovskiy.lwaf.createPost.CreatePostActivity"/>
+                <action android:name="com.Zakovskiy.lwaf.adminPanel.AdminPanelActivity"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>

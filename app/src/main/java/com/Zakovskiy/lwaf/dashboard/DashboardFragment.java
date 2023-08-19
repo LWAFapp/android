@@ -21,6 +21,7 @@ import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
 import com.Zakovskiy.lwaf.SetNicknameDialog;
 import com.Zakovskiy.lwaf.WelcomeActivity;
+import com.Zakovskiy.lwaf.adminPanel.AdminPanelActivity;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.createPost.CreatePostActivity;
 import com.Zakovskiy.lwaf.dashboard.adapters.RoomsAdapter;
@@ -97,7 +98,11 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
         findViewById(R.id.menu__settings).setOnClickListener(this);
         findViewById(R.id.menu__button_friends).setOnClickListener(downButtonsListener);
         this.ivAdmin = findViewById(R.id.menu__admin_panel);
+        this.ivAdmin.setOnClickListener(this);
         this.tvNewsFriends = findViewById(R.id.tvNewsFriends);
+        if(Application.lwafCurrentUser == null) {
+            newActivity(BaseActivity.class, true, new Bundle());
+        }
         if(Application.lwafCurrentUser.freeNickname) {
             new SetNicknameDialog(this, 0).show();
         }
@@ -249,6 +254,8 @@ public class DashboardFragment extends ABCActivity implements SocketHelper.Socke
             newActivity(NewsActivity.class);
         } else if (id == R.id.menu__settings) {
             newActivity(SettingsActivity.class);
+        } else if(id == R.id.menu__admin_panel) {
+            newActivity(AdminPanelActivity.class);
         }
     }
 }

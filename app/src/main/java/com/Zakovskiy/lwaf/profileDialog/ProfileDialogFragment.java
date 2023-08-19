@@ -31,6 +31,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Zakovskiy.lwaf.ABCActivity;
+import com.Zakovskiy.lwaf.DialogBanUser;
 import com.Zakovskiy.lwaf.DialogReport;
 import com.Zakovskiy.lwaf.DialogTextBox;
 import com.Zakovskiy.lwaf.R;
@@ -43,6 +45,7 @@ import com.Zakovskiy.lwaf.models.FavoriteTrack;
 import com.Zakovskiy.lwaf.models.LastTrack;
 import com.Zakovskiy.lwaf.models.Rank;
 import com.Zakovskiy.lwaf.models.User;
+import com.Zakovskiy.lwaf.models.enums.BlockedType;
 import com.Zakovskiy.lwaf.models.enums.FriendType;
 import com.Zakovskiy.lwaf.network.SocketHelper;
 import com.Zakovskiy.lwaf.profileDialog.adapters.LastTracksAdapter;
@@ -54,8 +57,10 @@ import com.Zakovskiy.lwaf.utils.JsonUtils;
 import com.Zakovskiy.lwaf.utils.Logs;
 import com.Zakovskiy.lwaf.utils.PacketDataKeys;
 import com.Zakovskiy.lwaf.utils.TimeUtils;
+import com.Zakovskiy.lwaf.wallet.WalletActivity;
 import com.Zakovskiy.lwaf.widgets.UserAvatar;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import org.json.JSONObject;
 
@@ -77,6 +82,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ProfileDialogFragment extends DialogFragment implements SocketHelper.SocketListener {
+    private static final int SIZE = 10;
+
     private List<MenuButton> buttons;
     private Context context;
     private String userId;
@@ -91,8 +98,6 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
 
     private RecyclerView rvLastTracks;
     private RecyclerView rvRanks;
-
-    private float newScale;
 
     private User user;
 
@@ -111,16 +116,12 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     private RanksAdapter ranksAdapter;
     private SocketHelper socketHelper = SocketHelper.getSocketHelper();
     private CardView cvLastTracks;
+    private CardView cvAbout;
+    private CardView cvFavoriteTrack;
+    private CardView cvBlocked;
     private Boolean changedAbout = false;
-    private Handler handler = new Handler();
-    private Runnable runnableAvatarScroll = new Runnable() {
-        @Override
-        public void run() {
-            civAvatar.setScaleX(newScale);
-            civAvatar.setScaleY(newScale);
-        }
-    };
-
+    public boolean isLoadingLastTracks = false;
+    public boolean canLoadLastTracks = true;
     public ProfileDialogFragment() {}
 
     public static ProfileDialogFragment newInstance(Context context, String userId) {
@@ -149,7 +150,6 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     @Override
     public void onStop() {
         socketHelper.unsubscribe(this);
-        Logs.info("STOP");
         if(isSelf() && changedAbout) {
             HashMap<String, Object> data = new HashMap<>();
             data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.CHANGE_ABOUT);
@@ -177,40 +177,44 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
         this.rvLastTracks = dialog.findViewById(R.id.rvLastTracks);
         this.rvRanks = dialog.findViewById(R.id.rvRanks);
         this.cvLastTracks = dialog.findViewById(R.id.cardViewLastTracks);
+        this.cvAbout = dialog.findViewById(R.id.cardViewAbout);
+        this.cvBlocked = dialog.findViewById(R.id.cardViewBlocked);
+        this.cvFavoriteTrack = dialog.findViewById(R.id.cardViewLoveTrack);
         this.svContent = dialog.findViewById(R.id.profileScrollContent);
         this.menuItemMore = dialog.findViewById(R.id.more);
         this.tvBalance = dialog.findViewById(R.id.tvBalance);
+        ((MaterialToolbar) dialog.findViewById(R.id.topAppBar)).setNavigationOnClickListener((v) -> {
+            dismiss();
+        });
+        this.rvLastTracks.getRecycledViewPool().setMaxRecycledViews(0, 0);
         ranksAdapter = new RanksAdapter(context, rankList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvRanks.setLayoutManager(linearLayoutManager);
-        rvRanks.setAdapter(ranksAdapter);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            this.svContent.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-                if (scrollY > oldScrollY) {  // скролл вниз
-                    newScale = Math.max(civAvatar.getScaleX() - 0.01f, 0.5f);  // уменьшаем масштаб на 0.01, но не меньше 0.5
-                } else if (scrollY < oldScrollY) {  // скролл вверх
-                    newScale = Math.min(civAvatar.getScaleX() + 0.01f, 1.0f);  // увеличиваем масштаб на 0.01, но не больше 1
-                    if (scrollY == 0) {  // достигнут верх экрана
-                        newScale = 1.0f;  // возвращаем масштаб к начальному значению
-                    }
-                } else {
-                    return;
+        LinearLayoutManager llmLastTracks = new LinearLayoutManager(context);
+        llmLastTracks.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvLastTracks.setLayoutManager(llmLastTracks);
+        this.rvLastTracks.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int totalItemCount = llmLastTracks.getItemCount();
+                int lastVisibleItem = llmLastTracks.findLastVisibleItemPosition();
+                if (!isLoadingLastTracks && totalItemCount <= (lastVisibleItem + 3) && canLoadLastTracks) {
+                    getLastTracks();
                 }
-
-                handler.removeCallbacks(runnableAvatarScroll);
-                handler.postDelayed(runnableAvatarScroll, 8);
-            });
-        }
+            }
+        });
+        rvRanks.setAdapter(ranksAdapter);
         return dialog;
     }
 
     private View.OnClickListener onClickAddFavoriteTrack = v -> {
-        new DialogPickTrack(context, 1).show();
+        new DialogPickTrack(context, null, 1).show();
     };
 
     private View.OnClickListener onClickFavorite = v -> {
-        new DialogPickTrack(context, 2).show();
+        new DialogPickTrack(context, null, 2).show();
     };
 
     public void changeAvatar () {
@@ -290,7 +294,7 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
                 this.llFavoriteTrack.setOnClickListener(onClickFavorite);
             }
             ImageUtils.loadImage(context, favoriteTrack.icon.isEmpty() ? R.drawable.without_preview : favoriteTrack.icon, this.civFavoriteTrack, true, true);
-            tvFavoriteTrack.setText(Html.fromHtml(favoriteTrack.title));
+            tvFavoriteTrack.setText(Html.fromHtml(String.format("<b>%s</b> - %s", favoriteTrack.artist, favoriteTrack.title)));
             this.llFavoriteTrack.setVisibility(View.VISIBLE);
         }
     }
@@ -300,6 +304,10 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     }
 
     private void changeLastTracks(List<LastTrack> list) {
+        Logs.debug(String.format("%s %s", list.size(), lastTracks.size()));
+        if(list.size() == 0 || list.size() == (lastTracks.size() - 1)) {
+            canLoadLastTracks = false;
+        }
         lastTracks.clear();
         lastTracks.addAll(list);
         lastTracksAdapter.notifyDataSetChanged();
@@ -314,9 +322,6 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
     private void bind(User user) {
         this.user = user;
         lastTracksAdapter = new LastTracksAdapter(context, lastTracks, isSelf());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rvLastTracks.setLayoutManager(linearLayoutManager);
         rvLastTracks.setAdapter(lastTracksAdapter);
         this.btnAddFavoriteTrack.setOnClickListener(onClickAddFavoriteTrack);
         this.tvUsername.setText(user.nickname);
@@ -347,21 +352,29 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
                 menuButtons.add(new MenuButton(getString(R.string.report), "#E10F4A", (vb) -> {
                     new DialogReport(context, user).show();
                 }));
+                menuButtons.add(new MenuButton(getString(user.blockedType.title), "#E10F4A", (vb)->{
+                    HashMap<String, Object> data = new HashMap<>();
+                    data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.USER_BLOCK);
+                    data.put(PacketDataKeys.USER_ID, user.userId);
+                    this.socketHelper.sendData(new JSONObject(data));
+                }));
+                if(Application.lwafCurrentUser.isBan()) {
+                    menuButtons.add(new MenuButton(getString(R.string.will_ban), "#E10F4A", (vb)->{
+                        new DialogBanUser(context, user).show();
+                    }));
+                }
             }
             MenuDialogFragment.newInstance(context, menuButtons).show(getFragmentManager(), "MenuButtons");
         });
-        ((TextView)this.llStatistics.findViewById(R.id.textTracks)).setText(String.valueOf(user.tracks));
-        ((TextView)this.llStatistics.findViewById(R.id.textDislikes)).setText(String.valueOf(user.dislikes));
-        ((TextView)this.llStatistics.findViewById(R.id.textSuperlikes)).setText(String.valueOf(user.superLikes));
-        ((TextView)this.llStatistics.findViewById(R.id.textLikes)).setText(String.valueOf(user.likes));
+        ((TextView) this.llStatistics.findViewById(R.id.textTracks)).setText(String.valueOf(user.tracks));
+        ((TextView) this.llStatistics.findViewById(R.id.textDislikes)).setText(String.valueOf(user.dislikes));
+        ((TextView) this.llStatistics.findViewById(R.id.textSuperlikes)).setText(String.valueOf(user.superLikes));
+        ((TextView) this.llStatistics.findViewById(R.id.textLikes)).setText(String.valueOf(user.likes));
         Long currentTimeStamp = System.currentTimeMillis() / 1000;
         if((currentTimeStamp - user.lastSeen) > Application.lwafServerConfig.onlineTime) {
             this.tvLastSeen.setText(TimeUtils.getTime(user.lastSeen*1000, "dd.MM.yyyy HH:mm"));
-        }
-        if(user.lastTracks.size() > 0 || isSelf()) {
-            changeLastTracks(user.lastTracks);
         } else {
-            cvLastTracks.setVisibility(View.GONE);
+            this.tvLastSeen.setText(getString(R.string.online));
         }
         if(user.ranks.size() > 0) {
             rvRanks.setVisibility(View.VISIBLE);
@@ -372,10 +385,13 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
             if(user.avatar != null && !user.avatar.isEmpty()) {
                 this.civAvatar.setOnClickListener((v) -> {
                     new AvatarDialogFragment(context, user.avatar, user.nickname).show(getFragmentManager(), "AvatarDialogFragment");
-
                 });
             }
         } else {
+            tvBalance.setBackgroundDrawable(context.getDrawable(R.drawable.bg_wallet));
+            tvBalance.setOnClickListener((v) -> {
+                ((ABCActivity) getActivity()).newActivity(WalletActivity.class);
+            });
             this.tvAbout.setEnabled(true);
             this.civAvatar.setOnClickListener((v) -> {
                 if(user.avatar == null || user.avatar.isEmpty()) {
@@ -408,7 +424,28 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
             this.tvAbout.setText(user.about);
         }
 
+        if(user.blocks) {
+            this.cvAbout.setVisibility(View.GONE);
+            this.cvFavoriteTrack.setVisibility(View.GONE);
+            this.cvLastTracks.setVisibility(View.GONE);
+            this.cvBlocked.setVisibility(View.VISIBLE);
+        } else {
+            getLastTracks();
+        }
+        this.svContent.setVisibility(View.VISIBLE);
         this.civAvatar.setUser(user);
+    }
+
+    private void getLastTracks() {
+        lastTracks.add(null);
+        lastTracksAdapter.notifyItemInserted(lastTracks.size() - 1);
+        this.isLoadingLastTracks = true;
+        HashMap<String, Object> data = new HashMap<>();
+        data.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GET_LAST_TRACKS);
+        data.put(PacketDataKeys.USER_ID, this.userId);
+        data.put(PacketDataKeys.SIZE, SIZE);
+        data.put(PacketDataKeys.OFFSET, lastTracks.size() - 1);
+        this.socketHelper.sendData(new JSONObject(data));
     }
 
     @Override
@@ -455,6 +492,25 @@ public class ProfileDialogFragment extends DialogFragment implements SocketHelpe
                 case PacketDataKeys.REPORT_USER_SEND:
                     getActivity().runOnUiThread(() -> {
                         new DialogTextBox(context, context.getString(R.string.report_success_send)).show();
+                    });
+                    break;
+                case PacketDataKeys.USER_BLOCK:
+                    this.user.blockedType = BlockedType.fromInteger(json.get(PacketDataKeys.BLOCKED_TYPE).asInt());
+                    break;
+                case PacketDataKeys.GET_LAST_TRACKS:
+                    List<LastTrack> responseLastTracks = JsonUtils.convertJsonNodeToList(json.get(PacketDataKeys.LAST_TRACKS), LastTrack.class);
+                    getActivity().runOnUiThread(() -> {
+                        if(responseLastTracks.size() > 0 || isSelf()) {
+                            List<LastTrack> newLastTracks = new ArrayList<>(lastTracks);
+                            if(isLoadingLastTracks) {
+                                newLastTracks.remove(newLastTracks.size() - 1);
+                                isLoadingLastTracks = false;
+                            }
+                            newLastTracks.addAll(responseLastTracks);
+                            changeLastTracks(newLastTracks);
+                        } else {
+                            cvLastTracks.setVisibility(View.GONE);
+                        }
                     });
                     break;
             }

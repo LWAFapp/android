@@ -44,7 +44,6 @@
                     android:id="@+id/itemPostAuthor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/author"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -52,7 +51,6 @@
                     android:id="@+id/itemPostDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="01.01.77"
                     android:textColor="#838383" />
             </LinearLayout>
         </LinearLayout>
@@ -80,6 +78,12 @@
                 android:singleLine="true"
                 android:text="@string/content" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivPreviewPost"
+            android:layout_width="match_parent"
+            android:layout_height="130dip"
+            android:visibility="gone" />
 
         <Space
             android:layout_width="match_parent"
@@ -109,7 +113,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
-                    android:text="00"
                     android:textSize="22sp" />
 
             </LinearLayout>
@@ -133,11 +136,28 @@
                     android:id="@+id/postDislikes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:text="00"
+                    android:layout_marginLeft="2dp"
                     android:textSize="22sp" />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    app:srcCompat="@drawable/ic_outline_comment" />
+
+                <TextView
+                    android:id="@+id/tvPostComments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="1dp"
+                    android:textSize="22sp" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

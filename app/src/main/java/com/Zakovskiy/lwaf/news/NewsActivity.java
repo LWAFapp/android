@@ -61,6 +61,12 @@ public class NewsActivity extends ABCActivity implements SocketHelper.SocketList
             });
         }
     }
+    @Override
+    public void onStop() {
+        this.socketHelper.unsubscribe(this);
+        super.onStop();
+    }
+
 
     @Override
     public void onStart() {

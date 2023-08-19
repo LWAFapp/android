@@ -14,6 +14,7 @@
     <color name="shimmer_color">#dddddd</color>
     <color name="light_transparent">#16000000</color>
     <color name="dark_transparent">#24000000</color>
+    <color name="green">#FF40D517</color>
     <color name="blue">#160FE1</color>
     <color name="red">#E10F4A</color>
     <color name="message_last_transparent">#1AFFFFFF</color>

@@ -11,6 +11,8 @@ import java.io.Serializable;
 public class FavoriteTrack implements Serializable {
     @JsonProperty("title")
     public String title = "";
+    @JsonProperty("artist")
+    public String artist = "";
     @JsonProperty("icon")
     public String icon = "";
     @JsonProperty("duration")

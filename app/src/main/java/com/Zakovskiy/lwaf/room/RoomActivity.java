@@ -3,8 +3,11 @@ package com.Zakovskiy.lwaf.room;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +22,7 @@ import com.Zakovskiy.lwaf.api.VKApi;
 import com.Zakovskiy.lwaf.api.models.ModelTrackResponse;
 import com.Zakovskiy.lwaf.application.Application;
 import com.Zakovskiy.lwaf.globalConversation.adapters.MessagesAdapter;
+import com.Zakovskiy.lwaf.profileDialog.AvatarDialogFragment;
 import com.Zakovskiy.lwaf.room.adapters.PlayersAdapter;
 import com.Zakovskiy.lwaf.models.Message;
 import com.Zakovskiy.lwaf.models.Player;
@@ -137,10 +141,14 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     @Override
     public void onStop() {
         this.socketHelper.unsubscribe(this);
-        this.audioPlayer.stopSong();
         super.onStop();
     }
 
+    @Override
+    public void onBackPressed() {
+        this.audioPlayer.stopSong();
+        super.onBackPressed();
+    }
     private void getBalance() {
         HashMap<String, Object> dataMessage = new HashMap<>();
         dataMessage.put(PacketDataKeys.TYPE_EVENT, PacketDataKeys.GET_BALANCE);
@@ -269,14 +277,12 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     public void onDisconnected() {
         socketHelper.unsubscribe(this);
         newActivity(BaseActivity.class, true, new Bundle());
-        socketHelper.unsubscribe(this);
     }
 
     @Override
     public void onReceiveError(String str) {
         socketHelper.unsubscribe(this);
         newActivity(BaseActivity.class, true, new Bundle());
-        socketHelper.unsubscribe(this);
     }
 
     public void changesMessages(List<Message> list) {
@@ -293,7 +299,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
 
     public void setCurrentTrack() {
         Track currentTrack = roomTracks.get(0);
-        this.llPlayerTrack.setTitle(currentTrack.title);
+        this.llPlayerTrack.setTitle(String.format("<b>%s</b> - %s", currentTrack.artist, currentTrack.title));
         this.llPlayerTrack.setIcon(currentTrack.icon.isEmpty() ? R.drawable.without_preview : currentTrack.icon);
         this.llPlayerTrack.setTrack(currentTrack);
         llPlayerTrack.resetReactions(currentTrack);
@@ -360,7 +366,7 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
             startActivityForResult(chooseFile, 1);
             return;
         }
-        new DialogPickTrack(this, type).show();
+        new DialogPickTrack(this, this, type).show();
     }
 
 
@@ -373,7 +379,19 @@ public class RoomActivity extends ABCActivity implements SocketHelper.SocketList
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btnSetTrack) {
-            setTrack(0);
+            PopupMenu popupMenu = new PopupMenu(this, v);
+            popupMenu.getMenuInflater().inflate(R.menu.pm_set_track, popupMenu.getMenu());
+            MenuItem menuItemFromVk = popupMenu.getMenu().findItem(R.id.pm_fromVk);
+            MenuItem menuItemFromRecentTracks = popupMenu.getMenu().findItem(R.id.pm_fromRecentTracks);
+            menuItemFromVk.setOnMenuItemClickListener((mv)->{
+                setTrack(0);
+                return false;
+            });
+            menuItemFromRecentTracks.setOnMenuItemClickListener((mv)->{
+                setTrack(5);
+                return false;
+            });
+            popupMenu.show();
         }
     }
 

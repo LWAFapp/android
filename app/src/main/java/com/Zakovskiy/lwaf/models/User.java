@@ -1,5 +1,6 @@
 package com.Zakovskiy.lwaf.models;
 
+import com.Zakovskiy.lwaf.models.enums.BlockedType;
 import com.Zakovskiy.lwaf.models.enums.FriendType;
 import com.Zakovskiy.lwaf.models.enums.NewsType;
 import com.Zakovskiy.lwaf.models.enums.Sex;
@@ -66,4 +67,8 @@ public class User extends ShortUser{
     public Boolean hidenLastTracks = false;
     @JsonProperty(PacketDataKeys.HIDEN_FRIENDS)
     public Boolean hidenFriends = false;
+    @JsonProperty(PacketDataKeys.BLOCKED_TYPE)
+    public BlockedType blockedType;
+    @JsonProperty(PacketDataKeys.BLOCKS)
+    public Boolean blocks;
 }

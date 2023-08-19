@@ -24,13 +24,13 @@ public class ModelTrackResponse {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public class Album {
+    public static class Album {
         @JsonProperty("thumb")
         public Thumb thumb = new Thumb();
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
         @JsonIgnoreProperties(ignoreUnknown = true)
-        public class Thumb {
+        public static class Thumb {
             @JsonProperty("width")
             public Integer width = 0;
             @JsonProperty("height")
